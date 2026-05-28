@@ -347,13 +347,6 @@ const Admin = () => {
             <nav className="space-y-2">
               {sidebarItems.map((item, index) => (
                 <div key={index}>
-                  {(() => {
-                    const itemAny = item as any;
-                    const isDashboardActive = itemAny.label === 'Dashboard' && activePath === '/admin/dashboard';
-                    const isParentActive = activeMeta.parentIndex === index;
-                    const isActive = isDashboardActive || isParentActive;
-                    return null;
-                  })()}
                   <div 
                     className={`${sidebarCollapsed ? 'flex items-center justify-center p-4 relative group' : 'flex items-center space-x-4 p-3'} rounded-xl cursor-pointer transition-all duration-200 ${((item.label === 'Dashboard' && activePath === '/admin/dashboard') || activeMeta.parentIndex === index) ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 shadow-lg' : 'hover:bg-gray-700/50 hover:shadow-md'}`}
                     onClick={() => handleParentClick(index, item)}
