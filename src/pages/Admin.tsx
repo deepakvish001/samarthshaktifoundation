@@ -500,6 +500,11 @@ const Admin = () => {
             <Route path="/state-master" element={<StateMasterContent />} />
             <Route path="/district-master" element={<DistrictMasterContent />} />
             <Route path="/course-master" element={<CourseMasterContent />} />
+            <Route path="/study-center-master" element={<StudyCenterMasterContent />} />
+            <Route path="/title-master" element={<TitleMasterContent />} />
+            <Route path="/gender-master" element={<GenderMasterContent />} />
+            <Route path="/caste-category-master" element={<CasteCategoryMasterContent />} />
+            <Route path="/qualification-master" element={<QualificationMasterContent />} />
             <Route path="/add-news" element={<AddNewsContent />} />
             <Route path="/add-course-category" element={<AddCourseCategoryContent />} />
             <Route path="/add-competition-courses" element={<AddCompetitionCoursesContent />} />
