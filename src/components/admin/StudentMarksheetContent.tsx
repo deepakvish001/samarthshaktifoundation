@@ -49,6 +49,17 @@ interface CourseSubject {
   semester_year: string;
 }
 
+const resolveCertificateImageUrl = (value?: string | null) => {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+  if (/^(https?:|data:|blob:|\/)/i.test(trimmed)) return trimmed;
+  if (trimmed.includes('/')) {
+    const { data } = supabase.storage.from('avatars').getPublicUrl(trimmed);
+    return data.publicUrl;
+  }
+  return undefined;
+};
+
 const StudentMarksheetContent = () => {
   console.log("StudentMarksheetContent component is loading - v2.0");
   
@@ -162,8 +173,8 @@ const StudentMarksheetContent = () => {
           ...prev,
           father_name: prev.father_name || (alot as any).student_father_name || undefined,
           mother_name: prev.mother_name || (alot as any).student_mother_name || undefined,
-          photo_url: prev.photo_url || (alot as any).student_photo_url || undefined,
-          director_signature_url: (alot as any).director_signature_url || undefined,
+          photo_url: resolveCertificateImageUrl(prev.photo_url) || resolveCertificateImageUrl((alot as any).student_photo_url),
+          director_signature_url: resolveCertificateImageUrl((alot as any).director_signature_url) || resolveCertificateImageUrl(prev.director_signature_url),
         }) : prev);
 
         // Derive course subjects from alot if master list is empty
@@ -242,6 +253,15 @@ const StudentMarksheetContent = () => {
 
       const element = marksheetRef.current;
       setIsGenerating(true);
+
+      const images = Array.from(element.querySelectorAll('img')) as HTMLImageElement[];
+      await Promise.all(images.map((img) => img.complete && img.naturalWidth > 0
+        ? Promise.resolve()
+        : new Promise((resolve) => {
+            img.onload = () => resolve(null);
+            img.onerror = () => resolve(null);
+          })
+      ));
 
       // High-DPI capture for crisp text
       const canvas = await html2canvas(element, {
