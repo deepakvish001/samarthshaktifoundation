@@ -26,6 +26,7 @@ import MyCertificates from "./pages/MyCertificates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import VerifyMarksheet from "./pages/VerifyMarksheet";
+import StudentsCorner from "./pages/StudentsCorner";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,7 @@ const AppContent = () => {
         <Route path="/my-courses" element={<AuthGuard requireAuth={true}><MyCourses /></AuthGuard>} />
         <Route path="/my-certificates" element={<AuthGuard requireAuth={true}><MyCertificates /></AuthGuard>} />
         <Route path="/settings" element={<AuthGuard requireAuth={true}><Settings /></AuthGuard>} />
+        <Route path="/students-corner" element={<AuthGuard requireAuth={true}><StudentsCorner /></AuthGuard>} />
 
         {/* Protected routes */}
         <Route 
