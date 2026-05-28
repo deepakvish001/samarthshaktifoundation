@@ -11,6 +11,8 @@ import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import { Loader2, UserPlus, Search, Users, Calendar, MapPin, GraduationCap, Mail, Phone, Edit, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Copy, CheckCircle2 } from "lucide-react";
 
 interface LookupItem {
   id: string;
@@ -146,6 +148,8 @@ const StudentRegistrationContent = () => {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [credentials, setCredentials] = useState<{ id: string; password: string; name: string } | null>(null);
+  const [copied, setCopied] = useState<"id" | "pwd" | "both" | null>(null);
 
   // Get unique course categories from course master
   const courseCategories = useMemo(() => {
@@ -351,7 +355,9 @@ const StudentRegistrationContent = () => {
 
       await create(studentData);
 
-      toast.success(`Student registered! ID: ${studentId}`, { duration: 6000 });
+      // Show credentials in a persistent modal so admin can copy them
+      setCredentials({ id: studentId, password, name: formData.applicantName });
+      toast.success(`Student registered successfully!`);
       setFormData(initialFormState);
       setPhotoFile(null);
     } catch (error: any) {
