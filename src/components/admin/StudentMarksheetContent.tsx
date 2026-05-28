@@ -834,7 +834,6 @@ const StudentMarksheetContent = () => {
                         <div style={{ width: 90, height: 90, border: '1px dashed #9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>QR</div>
                       )}
                     </div>
-                    </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontStyle: 'italic', marginBottom: 4 }}>Digitally signed by</div>
                       <div style={{ borderTop: '1px solid #111', paddingTop: 4, minWidth: 160, fontWeight: 700 }}>SECRETARY/DIRECTOR</div>
