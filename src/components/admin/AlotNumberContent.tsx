@@ -437,54 +437,11 @@ const AlotNumberContent = () => {
                 </div>
               </div>
 
-              {/* Marks Section */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Marks Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Theory Max Marks</label>
-                    <Input
-                      value={formData.theoryMaxMarks}
-                      onChange={(e) => handleInputChange('theoryMaxMarks', e.target.value)}
-                      className="border-border/40 bg-background focus:border-primary/50 focus:ring-primary/20 transition-all duration-200"
-                      placeholder="Theory Max Marks"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Practical Max Marks</label>
-                    <Input
-                      value={formData.practicalMaxMarks}
-                      onChange={(e) => handleInputChange('practicalMaxMarks', e.target.value)}
-                      className="border-border/40 bg-background focus:border-primary/50 focus:ring-primary/20 transition-all duration-200"
-                      placeholder="Practical Max Marks"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Obtain Theory Marks</label>
-                    <Input
-                      value={formData.obtainTheoryMarks}
-                      onChange={(e) => handleInputChange('obtainTheoryMarks', e.target.value)}
-                      className="border-border/40 bg-background focus:border-primary/50 focus:ring-primary/20 transition-all duration-200"
-                      placeholder="Obtain Theory Marks"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Obtain Practical Marks</label>
-                    <Input
-                      value={formData.obtainPracticalMarks}
-                      onChange={(e) => handleInputChange('obtainPracticalMarks', e.target.value)}
-                      className="border-border/40 bg-background focus:border-primary/50 focus:ring-primary/20 transition-all duration-200"
-                      placeholder="Obtain Practical Marks"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Subjects Section */}
+              {/* Subject Marks Information Section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
                   <BookOpen className="h-5 w-5 text-primary" />
-                  Subjects
+                  Subject Marks Information
                 </h3>
 
                 {/* Picker row */}
