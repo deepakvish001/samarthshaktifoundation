@@ -193,8 +193,7 @@ async function renderTemplates(certData: CertificateData, marksData: MarksheetDa
 }
 
 export async function downloadReportPdf(studentId: string) {
-  const { certData, course, studentName } = await buildData(studentId);
-  const { marksData } = await buildData(studentId);
+  const { certData, marksData, course, studentName } = await buildData(studentId);
   const pdf = await renderTemplates(certData, marksData);
   const safe = (studentName || studentId).replace(/[^a-z0-9]+/gi, "_");
   pdf.save(`${safe}_${course.code}_Certificate_Marksheet.pdf`);
@@ -205,6 +204,52 @@ export async function printReportPdf(studentId: string) {
   const pdf = await renderTemplates(certData, marksData);
   const url = pdf.output("bloburl");
   const w = window.open(url as any, "_blank");
+  if (w) {
+    w.onload = () => {
+      try {
+        w.focus();
+        w.print();
+      } catch {}
+    };
+  }
+}
+
+export async function generateAndUploadReportPdf(studentId: string): Promise<string | null> {
+  try {
+    const { certData, marksData, course, studentName } = await buildData(studentId);
+    const pdf = await renderTemplates(certData, marksData);
+    const blob = pdf.output("blob") as Blob;
+    const safe = (studentName || studentId).replace(/[^a-z0-9]+/gi, "_");
+    const { data: u } = await supabase.auth.getUser();
+    const folder = u.user?.id || "shared";
+    const path = `${folder}/certificates/${safe}_${course.code}_${Date.now()}.pdf`;
+    const { error } = await supabase.storage
+      .from("avatars")
+      .upload(path, blob, { upsert: true, contentType: "application/pdf" });
+    if (error) throw error;
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    return data.publicUrl;
+  } catch (e) {
+    console.error("generateAndUploadReportPdf failed", e);
+    return null;
+  }
+}
+
+export async function downloadSavedPdf(url: string, filename: string) {
+  const res = await fetch(url);
+  const blob = await res.blob();
+  const objUrl = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = objUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
+}
+
+export function printSavedPdf(url: string) {
+  const w = window.open(url, "_blank");
   if (w) {
     w.onload = () => {
       try {
