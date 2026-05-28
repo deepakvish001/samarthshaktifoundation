@@ -397,6 +397,22 @@ const StudentRegistrationContent = () => {
       // Refresh table so the new row is visible immediately
       await refresh();
 
+      // Provision auth account so the student can log in immediately
+      try {
+        const { error: provisionErr } = await supabase.functions.invoke(
+          "provision-student-auth",
+          { body: { student_id: studentId } }
+        );
+        if (provisionErr) {
+          console.error("Auth provisioning error:", provisionErr);
+          toast.warning(
+            "Student saved, but login account could not be created automatically. Please retry from Student Management."
+          );
+        }
+      } catch (provisionErr) {
+        console.error("Auth provisioning exception:", provisionErr);
+      }
+
       // Show credentials in a persistent modal so admin can copy them
       setCredentials({ id: studentId, password, name: formData.applicantName });
       toast.success(`Student registered successfully!`);
