@@ -143,38 +143,38 @@ const Login = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50 to-white">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-400"></div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 p-4 overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50 to-white p-4 overflow-hidden">
       {/* Ambient glow */}
-      <div className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full bg-indigo-500/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl" />
+      <div className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full bg-indigo-300/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-blue-300/30 blur-3xl" />
 
       <div className="relative w-full max-w-md space-y-6">
         
         {/* Back to Home */}
         <Link 
           to="/" 
-          className="inline-flex items-center text-slate-400 hover:text-indigo-300 transition-colors"
+          className="inline-flex items-center text-slate-600 hover:text-indigo-600 transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Link>
 
         {/* Main Auth Card */}
-        <Card className="border border-white/10 bg-slate-900/70 backdrop-blur-xl shadow-2xl shadow-indigo-950/50 text-slate-100">
+        <Card className="border border-slate-200 bg-white/90 backdrop-blur-xl shadow-2xl shadow-indigo-200/40 text-slate-900">
           <CardHeader className="text-center space-y-4">
             <div className="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br from-indigo-500 to-blue-600 shadow-lg shadow-indigo-500/30">
               <Shield className="h-8 w-8 text-white" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold text-white">Welcome</CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardTitle className="text-2xl font-bold text-slate-900">Welcome</CardTitle>
+              <CardDescription className="text-slate-600">
                 Sign in to your account or create a new one
               </CardDescription>
             </div>
@@ -183,41 +183,41 @@ const Login = () => {
           <CardContent>
             {!showResetForm ? (
               <Tabs defaultValue="signin" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-2 bg-slate-800/60 border border-white/5">
-                  <TabsTrigger value="signin" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-slate-300">Sign In</TabsTrigger>
-                  <TabsTrigger value="signup" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-slate-300">Sign Up</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 bg-slate-100 border border-slate-200">
+                  <TabsTrigger value="signin" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-slate-600">Sign In</TabsTrigger>
+                  <TabsTrigger value="signup" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-slate-600">Sign Up</TabsTrigger>
                 </TabsList>
 
                 {/* Sign In Tab */}
                 <TabsContent value="signin" className="space-y-4">
                   <form onSubmit={handleSignIn} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signin-email" className="text-slate-300">Email</Label>
+                      <Label htmlFor="signin-email" className="text-slate-700">Email</Label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                        <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                         <Input
                           id="signin-email"
                           type="email"
                           placeholder="Enter your email"
-                          className="pl-10 bg-slate-800/60 border-white/10 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
+                          className="pl-10 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
                           value={signInForm.email}
                           onChange={(e) => setSignInForm({ ...signInForm, email: e.target.value })}
                         />
                       </div>
                       {errors.email && (
-                        <p className="text-sm text-rose-400">{errors.email}</p>
+                        <p className="text-sm text-rose-600">{errors.email}</p>
                       )}
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signin-password" className="text-slate-300">Password</Label>
+                      <Label htmlFor="signin-password" className="text-slate-700">Password</Label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                         <Input
                           id="signin-password"
                           type={showPassword ? "text" : "password"}
                           placeholder="Enter your password"
-                          className="pl-10 pr-10 bg-slate-800/60 border-white/10 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
+                          className="pl-10 pr-10 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
                           value={signInForm.password}
                           onChange={(e) => setSignInForm({ ...signInForm, password: e.target.value })}
                         />
@@ -225,7 +225,7 @@ const Login = () => {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-1 top-1 h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-white/5"
+                          className="absolute right-1 top-1 h-8 w-8 p-0 text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
@@ -236,7 +236,7 @@ const Login = () => {
                         </Button>
                       </div>
                       {errors.password && (
-                        <p className="text-sm text-rose-400">{errors.password}</p>
+                        <p className="text-sm text-rose-600">{errors.password}</p>
                       )}
                     </div>
 
@@ -254,7 +254,7 @@ const Login = () => {
                     <Button
                       type="button"
                       variant="link"
-                      className="w-full text-sm text-indigo-300 hover:text-indigo-200"
+                      className="w-full text-sm text-indigo-600 hover:text-indigo-700"
                       onClick={() => setShowResetForm(true)}
                     >
                       Forgot your password?
@@ -266,50 +266,50 @@ const Login = () => {
                 <TabsContent value="signup" className="space-y-4">
                   <form onSubmit={handleSignUp} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-name" className="text-slate-300">Full Name</Label>
+                      <Label htmlFor="signup-name" className="text-slate-700">Full Name</Label>
                       <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                        <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                         <Input
                           id="signup-name"
                           type="text"
                           placeholder="Enter your full name"
-                          className="pl-10 bg-slate-800/60 border-white/10 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
+                          className="pl-10 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
                           value={signUpForm.fullName}
                           onChange={(e) => setSignUpForm({ ...signUpForm, fullName: e.target.value })}
                         />
                       </div>
                       {errors.fullName && (
-                        <p className="text-sm text-rose-400">{errors.fullName}</p>
+                        <p className="text-sm text-rose-600">{errors.fullName}</p>
                       )}
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-email" className="text-slate-300">Email</Label>
+                      <Label htmlFor="signup-email" className="text-slate-700">Email</Label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                        <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                         <Input
                           id="signup-email"
                           type="email"
                           placeholder="Enter your email"
-                          className="pl-10 bg-slate-800/60 border-white/10 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
+                          className="pl-10 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
                           value={signUpForm.email}
                           onChange={(e) => setSignUpForm({ ...signUpForm, email: e.target.value })}
                         />
                       </div>
                       {errors.email && (
-                        <p className="text-sm text-rose-400">{errors.email}</p>
+                        <p className="text-sm text-rose-600">{errors.email}</p>
                       )}
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-password" className="text-slate-300">Password</Label>
+                      <Label htmlFor="signup-password" className="text-slate-700">Password</Label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                         <Input
                           id="signup-password"
                           type={showPassword ? "text" : "password"}
                           placeholder="Create a password"
-                          className="pl-10 pr-10 bg-slate-800/60 border-white/10 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
+                          className="pl-10 pr-10 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
                           value={signUpForm.password}
                           onChange={(e) => setSignUpForm({ ...signUpForm, password: e.target.value })}
                         />
@@ -317,7 +317,7 @@ const Login = () => {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-1 top-1 h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-white/5"
+                          className="absolute right-1 top-1 h-8 w-8 p-0 text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
@@ -328,19 +328,19 @@ const Login = () => {
                         </Button>
                       </div>
                       {errors.password && (
-                        <p className="text-sm text-rose-400">{errors.password}</p>
+                        <p className="text-sm text-rose-600">{errors.password}</p>
                       )}
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-confirm-password" className="text-slate-300">Confirm Password</Label>
+                      <Label htmlFor="signup-confirm-password" className="text-slate-700">Confirm Password</Label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                         <Input
                           id="signup-confirm-password"
                           type={showConfirmPassword ? "text" : "password"}
                           placeholder="Confirm your password"
-                          className="pl-10 pr-10 bg-slate-800/60 border-white/10 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
+                          className="pl-10 pr-10 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
                           value={signUpForm.confirmPassword}
                           onChange={(e) => setSignUpForm({ ...signUpForm, confirmPassword: e.target.value })}
                         />
@@ -348,7 +348,7 @@ const Login = () => {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-1 top-1 h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-white/5"
+                          className="absolute right-1 top-1 h-8 w-8 p-0 text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                         >
                           {showConfirmPassword ? (
@@ -359,7 +359,7 @@ const Login = () => {
                         </Button>
                       </div>
                       {errors.confirmPassword && (
-                        <p className="text-sm text-rose-400">{errors.confirmPassword}</p>
+                        <p className="text-sm text-rose-600">{errors.confirmPassword}</p>
                       )}
                     </div>
 
@@ -380,28 +380,28 @@ const Login = () => {
               /* Password Reset Form */
               <div className="space-y-4">
                 <div className="text-center space-y-2">
-                  <h3 className="text-lg font-semibold text-white">Reset Password</h3>
-                  <p className="text-sm text-slate-400">
+                  <h3 className="text-lg font-semibold text-slate-900">Reset Password</h3>
+                  <p className="text-sm text-slate-600">
                     Enter your email to receive password reset instructions
                   </p>
                 </div>
 
                 <form onSubmit={handlePasswordReset} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="reset-email" className="text-slate-300">Email</Label>
+                    <Label htmlFor="reset-email" className="text-slate-700">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
                       <Input
                         id="reset-email"
                         type="email"
                         placeholder="Enter your email"
-                        className="pl-10 bg-slate-800/60 border-white/10 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
+                        className="pl-10 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                       />
                     </div>
                     {errors.resetEmail && (
-                      <p className="text-sm text-rose-400">{errors.resetEmail}</p>
+                      <p className="text-sm text-rose-600">{errors.resetEmail}</p>
                     )}
                   </div>
 
@@ -409,7 +409,7 @@ const Login = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="flex-1 bg-transparent border-white/15 text-slate-200 hover:bg-white/5 hover:text-white"
+                      className="flex-1 bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                       onClick={() => {
                         setShowResetForm(false);
                         setResetEmail('');
@@ -435,9 +435,9 @@ const Login = () => {
           </CardContent>
 
           <CardFooter className="flex-col space-y-4">
-            <Alert className="bg-indigo-500/10 border-indigo-500/30 text-slate-200">
-              <CheckCircle className="h-4 w-4 text-indigo-300" />
-              <AlertDescription className="text-slate-300">
+            <Alert className="bg-indigo-50 border-indigo-200 text-slate-700">
+              <CheckCircle className="h-4 w-4 text-indigo-600" />
+              <AlertDescription className="text-slate-700">
                 Your data is protected with enterprise-grade security and encryption.
               </AlertDescription>
             </Alert>
@@ -445,14 +445,14 @@ const Login = () => {
         </Card>
 
         {/* Footer */}
-        <div className="text-center text-sm text-slate-500">
+        <div className="text-center text-sm text-slate-600">
           <p>
             By signing in, you agree to our{' '}
-            <Link to="/terms" className="text-indigo-300 hover:text-indigo-200 hover:underline">
+            <Link to="/terms" className="text-indigo-600 hover:text-indigo-700 hover:underline">
               Terms of Service
             </Link>{' '}
             and{' '}
-            <Link to="/privacy" className="text-indigo-300 hover:text-indigo-200 hover:underline">
+            <Link to="/privacy" className="text-indigo-600 hover:text-indigo-700 hover:underline">
               Privacy Policy
             </Link>
           </p>
