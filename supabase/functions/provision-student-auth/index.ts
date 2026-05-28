@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { student_id } = await req.json();
+    const { student_id, issue_new } = await req.json();
     if (!student_id || typeof student_id !== "string") {
       return new Response(JSON.stringify({ error: "student_id is required" }), {
         status: 400,
@@ -37,7 +37,27 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    if (!profile.email || !profile.login_password) {
+
+    // Admin "issue new password" flow: regenerate a fresh password, update auth,
+    // persist it to student_profiles.login_password, and clear password_changed_at
+    // (the student is back to the admin-issued credential).
+    let password = profile.login_password as string | null;
+    if (issue_new) {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let out = "";
+      const buf = new Uint8Array(8);
+      crypto.getRandomValues(buf);
+      for (let i = 0; i < 8; i++) out += chars[buf[i] % chars.length];
+      password = out;
+
+      const { error: upProfErr } = await supabase
+        .from("student_profiles")
+        .update({ login_password: password, password_changed_at: null })
+        .eq("student_id", student_id);
+      if (upProfErr) throw upProfErr;
+    }
+
+    if (!profile.email || !password) {
       return new Response(
         JSON.stringify({ error: "Student missing email or login_password" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
@@ -52,27 +72,27 @@ Deno.serve(async (req) => {
 
     if (existing) {
       const { error: updErr } = await supabase.auth.admin.updateUserById(existing.id, {
-        password: profile.login_password,
+        password,
         email_confirm: true,
         user_metadata: { full_name: profile.full_name, student_id },
       });
       if (updErr) throw updErr;
       return new Response(
-        JSON.stringify({ status: "updated", user_id: existing.id, email: profile.email }),
+        JSON.stringify({ status: "updated", user_id: existing.id, email: profile.email, password: issue_new ? password : undefined }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
     const { data: created, error: createErr } = await supabase.auth.admin.createUser({
       email: profile.email,
-      password: profile.login_password,
+      password,
       email_confirm: true,
       user_metadata: { full_name: profile.full_name, student_id },
     });
     if (createErr) throw createErr;
 
     return new Response(
-      JSON.stringify({ status: "created", user_id: created.user?.id, email: profile.email }),
+      JSON.stringify({ status: "created", user_id: created.user?.id, email: profile.email, password: issue_new ? password : undefined }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
