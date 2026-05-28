@@ -938,7 +938,7 @@ const AlotNumberContent = () => {
                             </span>
                           </td>
                           <td className="border-r border-border/20 px-2 py-3 text-center text-foreground">
-                            <span className="text-secondary font-medium">
+                            <span className="text-foreground font-semibold">
                               {alot.obtain_practical_marks || '0'}/{alot.practical_max_marks || '0'}
                             </span>
                           </td>
