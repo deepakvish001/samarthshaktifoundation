@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          department: string | null
+          designation: string | null
+          email: string
+          full_name: string
+          id: string
+          is_active: boolean
+          last_login: string | null
+          permissions: Json | null
+          phone: string | null
+          profile_image_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          designation?: string | null
+          email: string
+          full_name: string
+          id?: string
+          is_active?: boolean
+          last_login?: string | null
+          permissions?: Json | null
+          phone?: string | null
+          profile_image_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          designation?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          last_login?: string | null
+          permissions?: Json | null
+          phone?: string | null
+          profile_image_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       alot_numbers: {
         Row: {
           center_code: string | null
@@ -121,6 +172,48 @@ export type Database = {
           },
         ]
       }
+      attendance_management: {
+        Row: {
+          attendance_date: string
+          course_name: string
+          created_at: string
+          id: string
+          marked_by: string | null
+          remarks: string | null
+          session_type: string
+          status: string
+          student_id: string
+          student_name: string
+          updated_at: string
+        }
+        Insert: {
+          attendance_date: string
+          course_name: string
+          created_at?: string
+          id?: string
+          marked_by?: string | null
+          remarks?: string | null
+          session_type?: string
+          status: string
+          student_id: string
+          student_name: string
+          updated_at?: string
+        }
+        Update: {
+          attendance_date?: string
+          course_name?: string
+          created_at?: string
+          id?: string
+          marked_by?: string | null
+          remarks?: string | null
+          session_type?: string
+          status?: string
+          student_id?: string
+          student_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bank_details: {
         Row: {
           account_number: string
@@ -153,6 +246,54 @@ export type Database = {
           id?: string
           ifsc_code?: string
           micr_code?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      certificate_management: {
+        Row: {
+          certificate_number: string
+          certificate_type: string
+          certificate_url: string | null
+          completion_date: string | null
+          course_name: string
+          created_at: string
+          grade: string | null
+          id: string
+          issue_date: string
+          status: string
+          student_id: string
+          student_name: string
+          updated_at: string
+        }
+        Insert: {
+          certificate_number: string
+          certificate_type?: string
+          certificate_url?: string | null
+          completion_date?: string | null
+          course_name: string
+          created_at?: string
+          grade?: string | null
+          id?: string
+          issue_date: string
+          status?: string
+          student_id: string
+          student_name: string
+          updated_at?: string
+        }
+        Update: {
+          certificate_number?: string
+          certificate_type?: string
+          certificate_url?: string | null
+          completion_date?: string | null
+          course_name?: string
+          created_at?: string
+          grade?: string | null
+          id?: string
+          issue_date?: string
+          status?: string
+          student_id?: string
+          student_name?: string
           updated_at?: string
         }
         Relationships: []
@@ -1008,6 +1149,57 @@ export type Database = {
         }
         Relationships: []
       }
+      marksheet_management: {
+        Row: {
+          course_name: string
+          created_at: string
+          examination_date: string
+          grade: string
+          id: string
+          marksheet_url: string | null
+          obtained_marks: number
+          percentage: number
+          result_status: string
+          roll_number: string
+          student_id: string
+          student_name: string
+          total_marks: number
+          updated_at: string
+        }
+        Insert: {
+          course_name: string
+          created_at?: string
+          examination_date: string
+          grade: string
+          id?: string
+          marksheet_url?: string | null
+          obtained_marks: number
+          percentage: number
+          result_status?: string
+          roll_number: string
+          student_id: string
+          student_name: string
+          total_marks: number
+          updated_at?: string
+        }
+        Update: {
+          course_name?: string
+          created_at?: string
+          examination_date?: string
+          grade?: string
+          id?: string
+          marksheet_url?: string | null
+          obtained_marks?: number
+          percentage?: number
+          result_status?: string
+          roll_number?: string
+          student_id?: string
+          student_name?: string
+          total_marks?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       menu_content: {
         Row: {
           course: string
@@ -1154,6 +1346,39 @@ export type Database = {
           description?: string
           entry_date?: string
           id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      payment_modes: {
+        Row: {
+          created_at: string
+          description: string | null
+          gateway_details: Json | null
+          id: string
+          is_active: boolean
+          mode_name: string
+          processing_fee: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          gateway_details?: Json | null
+          id?: string
+          is_active?: boolean
+          mode_name: string
+          processing_fee?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          gateway_details?: Json | null
+          id?: string
+          is_active?: boolean
+          mode_name?: string
+          processing_fee?: number | null
           updated_at?: string
         }
         Relationships: []
