@@ -38,7 +38,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
     const periodTo = awardedOn;
     const slNo = `NCTI/${data.certificateNumber || "—"}`;
     const regNo = data.studentId || "—";
-    const corpId = `U85306UP${new Date(data.issueDate || Date.now()).getFullYear()}NPL${(data.certificateNumber || "000000").replace(/\D/g, "").slice(-6).padStart(6, "0")}`;
+    const instituteRegNo = "BAL/10760/2019-20";
 
     return (
       <div
@@ -123,9 +123,9 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 Registered Under Societies Registration Act, 1860, Govt. of India
               </div>
 
-              {/* Corporate ID line */}
+              {/* Institute Registration No. line */}
               <div style={{ textAlign: "center", fontSize: 13, color: "#b91c1c", fontWeight: 700 }}>
-                Corporate Identification No.: {corpId}
+                Reg No- {instituteRegNo}
               </div>
 
               {/* Top-right SSF logo */}
