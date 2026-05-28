@@ -229,6 +229,26 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 />
               )}
 
+              {/* Accreditation logos: ISO, MSME, SSF — placed below QR, above Date of Issue */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: 30,
+                  top: 580,
+                  width: 130,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <img src="/cert-logos/iso-9001.png" alt="ISO 9001:2015" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain" }} />
+                  <img src="/cert-logos/msme-new.png" alt="MSME" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain" }} />
+                  <img src="/lovable-uploads/nesan-logo.png" alt="SSF" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain", borderRadius: "50%" }} />
+                </div>
+              </div>
+
               {/* Body */}
               <div
                 style={{
