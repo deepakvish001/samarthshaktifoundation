@@ -80,7 +80,7 @@ const AlotNumberContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCourse, setFilterCourse] = useState("all");
   const [subjects, setSubjects] = useState<AlotSubject[]>([]);
-  const [subjectDraft, setSubjectDraft] = useState<AlotSubject>({ name: "", theory: "", practical: "" });
+  const [subjectDraft, setSubjectDraft] = useState<AlotSubject>({ name: "", theoryMax: "", practicalMax: "", theory: "", practical: "" });
 
   const SUBJECT_OPTIONS = [
     "Fundamental",
@@ -105,7 +105,7 @@ const AlotNumberContent = () => {
       return;
     }
     setSubjects((prev) => [...prev, subjectDraft]);
-    setSubjectDraft({ name: "", theory: "", practical: "" });
+    setSubjectDraft({ name: "", theoryMax: "", practicalMax: "", theory: "", practical: "" });
   };
   const removeSubject = (i: number) =>
     setSubjects((prev) => prev.filter((_, idx) => idx !== i));
