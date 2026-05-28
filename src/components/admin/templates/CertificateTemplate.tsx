@@ -33,11 +33,12 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
       const mm = String(d.getMonth() + 1).padStart(2, "0");
       return `${dd}.${mm}.${d.getFullYear()}`;
     };
-    // Derive a "period from" — issueDate minus course duration is unknown here, so we
-    // just show the issue date as the awarded date and let admin fill DOB for start.
     const awardedOn = fmt(data.issueDate);
     const periodFrom = data.dob ? fmt(data.dob) : awardedOn;
     const periodTo = awardedOn;
+    const slNo = `NCTI/${data.certificateNumber || "—"}`;
+    const regNo = data.studentId || "—";
+    const corpId = `U85306UP${new Date(data.issueDate || Date.now()).getFullYear()}NPL${(data.certificateNumber || "000000").replace(/\D/g, "").slice(-6).padStart(6, "0")}`;
 
     return (
       <div
@@ -75,15 +76,15 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
             <CornerArc position="bl" />
             <CornerArc position="br" />
 
-            <div style={{ position: "relative", padding: "26px 50px", boxSizing: "border-box", height: "100%" }}>
-              {/* Top row: Sl No. / Reg No. (right side leaves room for ISO badge) */}
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0a0a0a", fontWeight: 600, paddingRight: 120 }}>
-                <span>Sl No. <b>NCTI/{data.certificateNumber}</b></span>
-                <span>Reg No. <b>{data.studentId || "—"}</b></span>
+            <div style={{ position: "relative", padding: "22px 50px", boxSizing: "border-box", height: "100%" }}>
+              {/* Top row: Sl No. / Reg No. (centered, leaves room for seal on right) */}
+              <div style={{ display: "flex", justifyContent: "space-around", fontSize: 13, color: "#0a0a0a", fontWeight: 600, padding: "0 130px 0 40px" }}>
+                <span>Sl No. <b>{slNo}</b></span>
+                <span>Reg No. <b>{regNo}</b></span>
               </div>
 
               {/* ISO line */}
-              <div style={{ textAlign: "center", marginTop: 6, fontSize: 14, color: "#0a0a0a" }}>
+              <div style={{ textAlign: "center", marginTop: 6, fontSize: 14, color: "#0a0a0a", paddingRight: 110 }}>
                 An ISO 9001:2015 Certified Education Organization
               </div>
 
@@ -91,8 +92,8 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <h1
                 style={{
                   textAlign: "center",
-                  margin: "4px 130px 2px 60px",
-                  fontSize: 32,
+                  margin: "4px 130px 2px 40px",
+                  fontSize: 34,
                   fontWeight: 900,
                   color: "#0b2a6b",
                   letterSpacing: "0.3px",
@@ -101,35 +102,40 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               >
                 NESAN COMPUTER AND TECHNICAL INSTITUTE
               </h1>
-              <div style={{ textAlign: "center", fontStyle: "italic", fontSize: 15, color: "#0a0a0a" }}>
-                A Unit of Samarth Shakti Foundation
+              <div style={{ textAlign: "center", fontStyle: "italic", fontSize: 15, color: "#0a0a0a", paddingRight: 110 }}>
+                A Venture of Samarth Shakti Foundation
               </div>
 
               {/* Green band */}
               <div
                 style={{
-                  margin: "8px auto 0",
+                  margin: "8px auto 4px",
                   background: "#15803d",
                   color: "#fff",
                   textAlign: "center",
                   fontWeight: 700,
-                  fontSize: 15,
-                  padding: "5px 12px",
+                  fontSize: 14,
+                  padding: "4px 14px",
                   width: "fit-content",
                   border: "1px solid #064e2c",
                 }}
               >
-                Registered Under Societies Registration Act, 1860 · MSME Reg No BAL/10760/2019-20
+                Registered Under Societies Registration Act, 1860, Govt. of India
+              </div>
+
+              {/* Corporate ID line */}
+              <div style={{ textAlign: "center", fontSize: 14, color: "#b91c1c", fontWeight: 700, paddingRight: 110 }}>
+                Corporate Identification No.: {corpId}
               </div>
 
               {/* Top-right ISO badge */}
               <div
                 style={{
                   position: "absolute",
-                  top: 24,
+                  top: 20,
                   right: 60,
-                  width: 92,
-                  height: 92,
+                  width: 96,
+                  height: 96,
                   borderRadius: "50%",
                   background: "radial-gradient(circle, #fff 55%, #0b2a6b 56%)",
                   border: "3px solid #b91c1c",
@@ -137,7 +143,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   alignItems: "center",
                   justifyContent: "center",
                   textAlign: "center",
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: 800,
                   color: "#0b2a6b",
                   lineHeight: 1.1,
@@ -148,14 +154,15 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               </div>
 
               {/* Certificate of Achievement ribbon */}
-              <div style={{ textAlign: "center", marginTop: 22 }}>
+              <div style={{ textAlign: "center", marginTop: 14 }}>
+                <div style={{ fontSize: 14, color: "#b91c1c", letterSpacing: 8, marginBottom: 2 }}>❖ ❖ ❖</div>
                 <div
                   style={{
                     display: "inline-block",
                     fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
-                    fontSize: 46,
+                    fontSize: 48,
                     color: "#b91c1c",
-                    padding: "2px 50px",
+                    padding: "2px 60px",
                     borderTop: "2px solid #b91c1c",
                     borderBottom: "2px solid #b91c1c",
                     letterSpacing: "1px",
@@ -164,15 +171,16 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 >
                   Certificate of Achievement
                 </div>
+                <div style={{ fontSize: 14, color: "#b91c1c", letterSpacing: 8, marginTop: 2 }}>❖ ❖ ❖</div>
               </div>
 
               {/* QR (left) */}
               {data.verifyUrl && (
                 <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(data.verifyUrl)}`}
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(data.verifyUrl)}`}
                   alt="verify"
                   crossOrigin="anonymous"
-                  style={{ position: "absolute", top: 215, left: 60, width: 80, height: 80 }}
+                  style={{ position: "absolute", top: 300, left: 60, width: 90, height: 90, border: "1px solid #0b2a6b", padding: 2, background: "#fff" }}
                 />
               )}
 
@@ -184,10 +192,10 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   crossOrigin="anonymous"
                   style={{
                     position: "absolute",
-                    top: 305,
+                    top: 340,
                     right: 70,
-                    width: 110,
-                    height: 130,
+                    width: 120,
+                    height: 140,
                     objectFit: "cover",
                     border: "2px solid #0b2a6b",
                   }}
@@ -197,10 +205,10 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               {/* Body */}
               <div
                 style={{
-                  marginTop: 30,
-                  padding: "0 200px 0 60px",
+                  marginTop: 24,
+                  padding: "0 210px 0 170px",
                   fontSize: 16,
-                  lineHeight: 1.7,
+                  lineHeight: 1.75,
                   color: "#0a0a0a",
                   textAlign: "justify",
                 }}
@@ -210,7 +218,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 {data.fatherName ? <>, Son/Daughter of <b>{data.fatherName}</b></> : null}
                 {data.motherName ? <> and <b>{data.motherName}</b></> : null}{" "}
                 Has Successfully Completed The Course of{" "}
-                <b>{data.course.certificateTitle}</b> At Our Authorised Study Centre{" "}
+                <b>{data.course.certificateTitle} ({data.course.code})</b> At Our Authorised Study Centre{" "}
                 <b>{data.centerName || "—"}</b>
                 {data.centerCode ? <> (Code: <b>{data.centerCode}</b>)</> : null}
                 , Period from <b>{periodFrom}</b> to <b>{periodTo}</b>. This Certificate Was Awarded on{" "}
@@ -221,7 +229,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  bottom: 60,
+                  bottom: 56,
                   left: 50,
                   right: 50,
                   display: "flex",
@@ -253,11 +261,11 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 </div>
               </div>
 
-              {/* Grading scale red strip */}
+              {/* Grading scale red strip + website */}
               <div
                 style={{
                   position: "absolute",
-                  bottom: 22,
+                  bottom: 24,
                   left: 50,
                   right: 50,
                   background: "#b91c1c",
@@ -265,11 +273,14 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   textAlign: "center",
                   fontWeight: 700,
                   fontSize: 13,
-                  padding: "5px 8px",
+                  padding: "4px 8px",
                   letterSpacing: "0.5px",
                 }}
               >
                 AA&gt;=90%, A+&gt;=80%, A&gt;=60%, B+&gt;=45%, B&gt;=35%, C&gt;=30%
+              </div>
+              <div style={{ position: "absolute", bottom: 6, left: 0, right: 0, textAlign: "center", fontSize: 12, color: "#0b2a6b", fontWeight: 700 }}>
+                www.samarthshaktifoundation.in
               </div>
             </div>
           </div>
