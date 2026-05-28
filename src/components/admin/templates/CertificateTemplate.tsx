@@ -76,10 +76,10 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
             <CornerArc position="br" />
 
             <div style={{ position: "relative", padding: "26px 50px", boxSizing: "border-box", height: "100%" }}>
-              {/* Top row: Sl No. / Reg No. */}
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0a0a0a", fontWeight: 600 }}>
+              {/* Top row: Sl No. / Reg No. (right side leaves room for ISO badge) */}
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0a0a0a", fontWeight: 600, paddingRight: 120 }}>
                 <span>Sl No. <b>NCTI/{data.certificateNumber}</b></span>
-                <span>Reg No. <b>{data.studentId}</b></span>
+                <span>Reg No. <b>{data.studentId || "—"}</b></span>
               </div>
 
               {/* ISO line */}
@@ -87,15 +87,15 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 An ISO 9001:2015 Certified Education Organization
               </div>
 
-              {/* Main institute name */}
+              {/* Main institute name (right padding clears the ISO badge) */}
               <h1
                 style={{
                   textAlign: "center",
-                  margin: "4px 60px 2px",
-                  fontSize: 36,
+                  margin: "4px 130px 2px 60px",
+                  fontSize: 32,
                   fontWeight: 900,
                   color: "#0b2a6b",
-                  letterSpacing: "0.5px",
+                  letterSpacing: "0.3px",
                   lineHeight: 1.05,
                 }}
               >
