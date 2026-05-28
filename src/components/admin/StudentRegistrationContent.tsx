@@ -547,14 +547,16 @@ const StudentRegistrationContent = () => {
                 Applicant's Full Name / आवेदक का पूरा नाम *
               </div>
               <div className="col-span-2 px-3 py-2 border-r-2 border-gray-600 flex items-center bg-white">
-                <Select>
+                <Select value={formData.titleApplicant} onValueChange={(v) => handleInputChange('titleApplicant', v)}>
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
-                    <SelectValue placeholder="Mr./श्री" />
+                    <SelectValue placeholder="Title" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mr">Mr./श्री</SelectItem>
-                    <SelectItem value="mrs">Mrs./श्रीमती</SelectItem>
-                    <SelectItem value="ms">Ms./सुश्री</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {titles.length > 0 ? (
+                      titles.map((t) => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)
+                    ) : (
+                      <SelectItem value="no-data" disabled>No titles</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -574,12 +576,12 @@ const StudentRegistrationContent = () => {
                 Father's Name / पिता का नाम *
               </div>
               <div className="col-span-2 px-3 py-2 border-r-2 border-gray-600 flex items-center bg-blue-50">
-                <Select>
+                <Select value={formData.titleFather} onValueChange={(v) => handleInputChange('titleFather', v)}>
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
-                    <SelectValue placeholder="Mr./श्री" />
+                    <SelectValue placeholder="Title" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mr">Mr./श्री</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {titles.map((t) => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -599,12 +601,12 @@ const StudentRegistrationContent = () => {
                 Mother's Name / माता का नाम *
               </div>
               <div className="col-span-2 px-3 py-2 border-r-2 border-gray-600 flex items-center bg-white">
-                <Select>
+                <Select value={formData.titleMother} onValueChange={(v) => handleInputChange('titleMother', v)}>
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
-                    <SelectValue placeholder="Mrs./श्रीमती" />
+                    <SelectValue placeholder="Title" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mrs">Mrs./श्रीमती</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {titles.map((t) => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
