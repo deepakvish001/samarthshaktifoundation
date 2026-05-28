@@ -187,6 +187,7 @@ const AlotNumberContent = () => {
 
   const handleReset = () => {
     setEditingAlot(null);
+    setSubjects([]);
     setFormData({
       studentsId: "",
       courseName: "",
