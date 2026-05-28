@@ -165,6 +165,7 @@ const AlotNumberContent = () => {
 
   const handleEdit = (alot: AlotNumber) => {
     setEditingAlot(alot);
+    setSubjects(Array.isArray(alot.subjects) ? alot.subjects : []);
     setFormData({
       studentsId: alot.student_id,
       courseName: alot.course_name,
