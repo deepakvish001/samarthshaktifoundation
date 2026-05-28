@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
+import StudentPicker from "@/components/admin/shared/StudentPicker";
 import { Loader2, Edit, Trash2, Search, Filter, FileText, Calculator, TrendingUp, Users, Award, BarChart3, CheckCircle, Plus, BookOpen } from "lucide-react";
 
 interface MarksheetManagement {
