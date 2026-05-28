@@ -448,57 +448,10 @@ const Admin = () => {
         }}>
           <div>
             <h1 className="text-3xl font-bold text-gray-800 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-              {currentView === 'dashboard' ? 'Dashboard' : 
-               currentView === 'edit-profile' ? 'Admin Profile' : 
-               currentView === 'change-password' ? 'Change Password' : 
-               currentView === 'video' ? 'Add Videos' : 
-               currentView === 'head-office' ? 'Head Office Details' : 
-               currentView === 'menu-content' ? 'Add Menu Content' : 
-               currentView === 'photo-gallery' ? 'Add Photo To Gallery' : 
-               currentView === 'bank-details' ? 'Add Bank Details' : 
-               currentView === 'employee-master' ? 'Employee Master' : 
-                currentView === 'state-master' ? 'State Master' : 
-                currentView === 'district-master' ? 'District Master' : 
-                currentView === 'course-master' ? 'Course Master' : 
-                currentView === 'add-news' ? 'Add News' : 
-                currentView === 'add-course-category' ? 'Add Course Category' : 
-                currentView === 'add-competition-courses' ? 'Add Competition Courses' : 
-                currentView === 'add-vision' ? 'Add Our Vision' : 
-                currentView === 'add-mission' ? 'Add Our Mission' : 
-                currentView === 'add-director-message' ? 'Add Director Message' : 
-                currentView === 'enquiry' ? 'My All Enquiry' : 
-                currentView === 'contact-us' ? 'My All Contacts' : 
-                currentView === 'student-registration' ? 'Student Registration' : 
-               currentView === 'student-approval' ? 'Student Approval' : 
-               currentView === 'student-management' ? 'Student Management' : 
-               currentView === 'search-by-student-data' ? 'Search By Student Data' : 
-               currentView === 'student-verification' ? 'Student Verification' : 
-               currentView === 'verification' ? 'Verification' : 
-               currentView === 'verification-report' ? 'Verification Report' : 
-               currentView === 'student-data' ? 'Student Data' : 'Dashboard'}
+              {activeMeta.title}
             </h1>
             <p className="text-gray-600 font-medium mt-1">
-              {currentView === 'dashboard' ? 'Control panel' : 
-               currentView === 'edit-profile' ? 'Edit your profile information' : 
-               currentView === 'change-password' ? 'Update your login password' : 
-               currentView === 'video' ? 'Upload and manage videos' : 
-               currentView === 'head-office' ? 'Manage head office information' : 
-               currentView === 'menu-content' ? 'Upload and manage menu content' : 
-               currentView === 'photo-gallery' ? 'Upload and manage gallery photos' : 
-               currentView === 'bank-details' ? 'Manage bank account details' : 
-               currentView === 'employee-master' ? 'Manage employee information' : 
-                currentView === 'state-master' ? 'Manage state information' : 
-                currentView === 'district-master' ? 'Manage district information' : 
-                currentView === 'course-master' ? 'Manage course information' : 
-                currentView === 'add-news' ? 'Manage news and announcements' : 
-                currentView === 'add-course-category' ? 'Manage course categories' : 
-                currentView === 'add-competition-courses' ? 'Manage competition courses and events' : 
-                currentView === 'add-vision' ? 'Manage organization vision' : 
-                currentView === 'add-mission' ? 'Manage organization mission' : 
-                currentView === 'add-director-message' ? 'Manage director messages' : 
-                currentView === 'enquiry' ? 'View and manage enquiries' : 
-                currentView === 'contact-us' ? 'View and manage contacts' : 
-               currentView === 'student-registration' ? 'Register new students' : 'Control panel'}
+              {activeMeta.subtitle}
             </p>
           </div>
           <div className="flex items-center space-x-6">
