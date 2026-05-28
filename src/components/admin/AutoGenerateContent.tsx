@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Sparkles, Download, Eye, Save, Loader2, FileText, Award, Printer, X } from "lucide-react";
+import { Sparkles, Download, Eye, Save, Loader2, FileText, Award, Printer, X, Search } from "lucide-react";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -38,8 +38,10 @@ const AutoGenerateContent = () => {
   const course: CourseTemplate = COURSE_TEMPLATES[courseCode];
 
   const [manualMode, setManualMode] = useState(false);
-  const [students, setStudents] = useState<StudentOption[]>([]);
-  const [selectedStudentKey, setSelectedStudentKey] = useState<string>("");
+  const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
   const [form, setForm] = useState({
     studentId: "",
@@ -72,27 +74,12 @@ const AutoGenerateContent = () => {
   // Load students + director sign once
   useEffect(() => {
     (async () => {
-      const [a, b, d] = await Promise.all([
-        supabase.from("alot_numbers").select("student_id, student_name, student_father_name, student_mother_name, student_photo_url, course_name").limit(500),
-        supabase.from("student_profiles").select("id, full_name, course_name").limit(500),
-        supabase.from("director_messages").select("photo").limit(1).maybeSingle(),
-      ]);
-      const merged: StudentOption[] = [];
-      a.data?.forEach((r: any) => merged.push({
-        student_id: r.student_id,
-        student_name: r.student_name || "",
-        father_name: r.student_father_name || "",
-        mother_name: r.student_mother_name || "",
-        photo_url: r.student_photo_url || "",
-        course_name: r.course_name,
-      }));
-      b.data?.forEach((r: any) => {
-        if (!merged.find((m) => m.student_id === r.id)) {
-          merged.push({ student_id: r.id, student_name: r.full_name, course_name: r.course_name });
-        }
-      });
-      setStudents(merged);
-      if (d.data?.photo) setDirectorSignUrl(d.data.photo);
+      const { data: d } = await supabase
+        .from("director_messages")
+        .select("photo")
+        .limit(1)
+        .maybeSingle();
+      if (d?.photo) setDirectorSignUrl(d.photo);
     })();
   }, []);
 
