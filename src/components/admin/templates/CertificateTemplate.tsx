@@ -15,6 +15,11 @@ export interface CertificateData {
   photoUrl?: string;
   directorSignUrl?: string;
   sealUrl?: string;
+  dob?: string;
+  centerCode?: string;
+  centerName?: string;
+  batch?: string;
+  verifyUrl?: string;
 }
 
 export const CertificateTemplate = forwardRef<HTMLDivElement, { data: CertificateData }>(
@@ -25,23 +30,50 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
         style={{
           width: "1123px",
           height: "794px",
-          background: "linear-gradient(135deg, #fffaf0 0%, #fff8e1 100%)",
+          background: "linear-gradient(135deg, #fffaf0 0%, #fef3c7 50%, #fffaf0 100%)",
           fontFamily: "Georgia, 'Times New Roman', serif",
           color: "#1a1a1a",
           position: "relative",
           padding: "30px",
           boxSizing: "border-box",
+          overflow: "hidden",
         }}
       >
+        {/* Corner ornaments */}
+        <CornerOrnament position="tl" />
+        <CornerOrnament position="tr" />
+        <CornerOrnament position="bl" />
+        <CornerOrnament position="br" />
+
+        {/* Watermark logo */}
+        <img
+          src="/favicon.png"
+          alt=""
+          crossOrigin="anonymous"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 500,
+            height: 500,
+            opacity: 0.05,
+            pointerEvents: "none",
+          }}
+        />
+
         {/* Decorative gold border */}
         <div
           style={{
-            border: "8px double #b8860b",
+            border: "6px double #b8860b",
+            outline: "2px solid #d4af37",
+            outlineOffset: "6px",
             borderRadius: "12px",
             height: "100%",
             padding: "30px 60px",
             position: "relative",
             boxSizing: "border-box",
+            background: "rgba(255,255,255,0.4)",
           }}
         >
           {/* Header */}
@@ -65,6 +97,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
             </h2>
             <p style={{ fontSize: "14px", color: "#4b5563", marginTop: "4px" }}>
               Certificate No: <b>{data.certificateNumber}</b> &nbsp;|&nbsp; Student ID: <b>{data.studentId}</b>
+              {data.batch ? <> &nbsp;|&nbsp; Batch: <b>{data.batch}</b></> : null}
             </p>
           </div>
 
@@ -83,33 +116,49 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 objectFit: "cover",
                 border: "3px solid #b8860b",
                 borderRadius: "4px",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
               }}
             />
           )}
 
           {/* Body */}
-          <div style={{ marginTop: "40px", textAlign: "center", padding: "0 60px", lineHeight: 1.9 }}>
+          <div style={{ marginTop: "30px", textAlign: "center", padding: "0 60px", lineHeight: 1.8 }}>
             <p style={{ fontSize: "18px" }}>This is to certify that</p>
-            <h3 style={{ fontSize: "32px", color: "#7c2d12", margin: "10px 0", borderBottom: "1px dashed #b8860b", display: "inline-block", padding: "0 30px" }}>
+            <h3 style={{ fontSize: "34px", color: "#7c2d12", margin: "10px 0", borderBottom: "2px dashed #b8860b", display: "inline-block", padding: "0 40px", fontFamily: "'Brush Script MT', cursive" }}>
               {data.studentName}
             </h3>
-            <p style={{ fontSize: "16px", marginTop: "16px" }}>
+            <p style={{ fontSize: "15px", marginTop: "12px" }}>
               Son/Daughter of <b>{data.fatherName || "—"}</b> and <b>{data.motherName || "—"}</b>
+              {data.dob ? <> &nbsp;·&nbsp; DOB: <b>{data.dob}</b></> : null}
             </p>
-            <p style={{ fontSize: "16px" }}>
+            <p style={{ fontSize: "15px" }}>
               has successfully completed the course
             </p>
-            <h4 style={{ fontSize: "24px", color: "#b8860b", margin: "8px 0" }}>
+            <h4 style={{ fontSize: "26px", color: "#b8860b", margin: "6px 0", fontWeight: 700 }}>
               {data.course.certificateTitle}
             </h4>
-            <p style={{ fontSize: "16px" }}>
+            <p style={{ fontSize: "15px" }}>
               of duration <b>{data.course.duration}</b>, securing <b>{data.percentage.toFixed(2)}%</b> with grade <b>{data.grade}</b>.
             </p>
+            {(data.centerName || data.centerCode) && (
+              <p style={{ fontSize: "13px", color: "#4b5563", marginTop: 4 }}>
+                Examination conducted at <b>{data.centerName}</b>{data.centerCode ? ` (Code: ${data.centerCode})` : ""}
+              </p>
+            )}
           </div>
 
           {/* Footer */}
-          <div style={{ position: "absolute", bottom: "60px", left: "60px", right: "60px", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+          <div style={{ position: "absolute", bottom: "50px", left: "60px", right: "60px", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
             <div style={{ textAlign: "center" }}>
+              {data.verifyUrl && (
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(data.verifyUrl)}`}
+                  alt="verify"
+                  crossOrigin="anonymous"
+                  style={{ width: 80, height: 80, marginBottom: 4 }}
+                />
+              )}
+              <p style={{ fontSize: "10px", margin: 0, color: "#6b7280" }}>Scan to verify</p>
               <p style={{ fontSize: "13px", margin: 0, color: "#374151" }}>
                 Date: <b>{data.issueDate}</b>
               </p>
@@ -118,7 +167,10 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               </p>
             </div>
             {data.sealUrl && (
-              <img src={data.sealUrl} alt="seal" crossOrigin="anonymous" style={{ width: 90, height: 90, opacity: 0.85 }} />
+              <div style={{ textAlign: "center" }}>
+                <img src={data.sealUrl} alt="seal" crossOrigin="anonymous" style={{ width: 100, height: 100, opacity: 0.9 }} />
+                <p style={{ fontSize: 10, margin: 0, color: "#6b7280" }}>Official Seal</p>
+              </div>
             )}
             <div style={{ textAlign: "center" }}>
               {data.directorSignUrl && (
@@ -136,3 +188,13 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
   }
 );
 CertificateTemplate.displayName = "CertificateTemplate";
+
+const CornerOrnament = ({ position }: { position: "tl" | "tr" | "bl" | "br" }) => {
+  const map: Record<string, React.CSSProperties> = {
+    tl: { top: 10, left: 10, borderTop: "4px solid #b8860b", borderLeft: "4px solid #b8860b" },
+    tr: { top: 10, right: 10, borderTop: "4px solid #b8860b", borderRight: "4px solid #b8860b" },
+    bl: { bottom: 10, left: 10, borderBottom: "4px solid #b8860b", borderLeft: "4px solid #b8860b" },
+    br: { bottom: 10, right: 10, borderBottom: "4px solid #b8860b", borderRight: "4px solid #b8860b" },
+  };
+  return <div style={{ position: "absolute", width: 40, height: 40, ...map[position] }} />;
+};
