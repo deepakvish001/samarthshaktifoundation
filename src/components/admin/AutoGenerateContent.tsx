@@ -596,11 +596,7 @@ const PreviewModal = ({
                 transformOrigin: "top left",
               }}
             >
-              {open === "cert" ? (
-                <CertificateTemplate data={certData} />
-              ) : open === "marks" ? (
-                <MarksheetTemplate data={marksData} />
-              ) : null}
+              {open === "cert" ? <CertificateTemplate data={certData} /> : null}
             </div>
           </div>
         </div>
