@@ -182,27 +182,28 @@ async function renderTemplates(certData: CertificateData, marksData: MarksheetDa
   const c1 = await html2canvas(certNode, opts);
   const c2 = await html2canvas(marksNode, opts);
 
-  const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1123, 794] });
-  pdf.addImage(c1.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
-  pdf.addPage([1123, 794], "landscape");
-  pdf.addImage(c2.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
+  const certPdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1123, 794] });
+  certPdf.addImage(c1.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
+
+  const marksPdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1123, 794] });
+  marksPdf.addImage(c2.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
 
   root.unmount();
   host.remove();
-  return pdf;
+  return { certPdf, marksPdf };
 }
 
 export async function downloadReportPdf(studentId: string) {
   const { certData, marksData, course, studentName } = await buildData(studentId);
-  const pdf = await renderTemplates(certData, marksData);
+  const { certPdf } = await renderTemplates(certData, marksData);
   const safe = (studentName || studentId).replace(/[^a-z0-9]+/gi, "_");
-  pdf.save(`${safe}_${course.code}_Certificate_Marksheet.pdf`);
+  certPdf.save(`${safe}_${course.code}_Certificate.pdf`);
 }
 
 export async function printReportPdf(studentId: string) {
   const { certData, marksData } = await buildData(studentId);
-  const pdf = await renderTemplates(certData, marksData);
-  const url = pdf.output("bloburl");
+  const { certPdf } = await renderTemplates(certData, marksData);
+  const url = certPdf.output("bloburl");
   const w = window.open(url as any, "_blank");
   if (w) {
     w.onload = () => {
@@ -214,24 +215,35 @@ export async function printReportPdf(studentId: string) {
   }
 }
 
-export async function generateAndUploadReportPdf(studentId: string): Promise<string | null> {
+async function uploadPdf(pdf: jsPDF, namePrefix: string): Promise<string | null> {
+  const blob = pdf.output("blob") as Blob;
+  const { data: u } = await supabase.auth.getUser();
+  const folder = u.user?.id || "shared";
+  const path = `${folder}/certificates/${namePrefix}_${Date.now()}.pdf`;
+  const { error } = await supabase.storage
+    .from("avatars")
+    .upload(path, blob, { upsert: true, contentType: "application/pdf" });
+  if (error) {
+    console.error("upload failed", error);
+    return null;
+  }
+  const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+export async function generateAndUploadReportPdf(
+  studentId: string
+): Promise<{ certificateUrl: string | null; marksheetUrl: string | null }> {
   try {
     const { certData, marksData, course, studentName } = await buildData(studentId);
-    const pdf = await renderTemplates(certData, marksData);
-    const blob = pdf.output("blob") as Blob;
+    const { certPdf, marksPdf } = await renderTemplates(certData, marksData);
     const safe = (studentName || studentId).replace(/[^a-z0-9]+/gi, "_");
-    const { data: u } = await supabase.auth.getUser();
-    const folder = u.user?.id || "shared";
-    const path = `${folder}/certificates/${safe}_${course.code}_${Date.now()}.pdf`;
-    const { error } = await supabase.storage
-      .from("avatars")
-      .upload(path, blob, { upsert: true, contentType: "application/pdf" });
-    if (error) throw error;
-    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-    return data.publicUrl;
+    const certificateUrl = await uploadPdf(certPdf, `${safe}_${course.code}_Certificate`);
+    const marksheetUrl = await uploadPdf(marksPdf, `${safe}_${course.code}_Marksheet`);
+    return { certificateUrl, marksheetUrl };
   } catch (e) {
     console.error("generateAndUploadReportPdf failed", e);
-    return null;
+    return { certificateUrl: null, marksheetUrl: null };
   }
 }
 
