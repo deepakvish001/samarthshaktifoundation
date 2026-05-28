@@ -43,8 +43,8 @@ const MyCourses = () => {
           .from('courses')
           .select('id, title, description, instructor, duration_weeks, total_lessons')
           .in('id', ids);
-        const map = new Map((courses || []).map((c: any) => [c.id, c]));
-        list.forEach((e) => (e.course = map.get(e.course_id) || null));
+        const map = new Map<string, any>((courses || []).map((c: any) => [c.id, c]));
+        list.forEach((e) => (e.course = (map.get(e.course_id) as Enrollment['course']) || null));
       }
       setEnrollments(list);
       setLoading(false);
