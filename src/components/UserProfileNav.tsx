@@ -107,22 +107,22 @@ const UserProfileNav = () => {
         </DropdownMenuLabel>
         
         <div className="px-1 py-1 space-y-0.5">
-          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm">
+          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm" onClick={() => navigate('/profile')}>
             <User className="h-4 w-4 mr-2 text-primary" />
             <span>Profile</span>
           </DropdownMenuItem>
           
-          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm">
+          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm" onClick={() => navigate('/my-courses')}>
             <BookOpen className="h-4 w-4 mr-2 text-primary" />
             <span>Courses</span>
           </DropdownMenuItem>
           
-          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm">
+          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm" onClick={() => navigate('/my-certificates')}>
             <Award className="h-4 w-4 mr-2 text-primary" />
             <span>Certificates</span>
           </DropdownMenuItem>
           
-          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm">
+          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm" onClick={() => navigate('/settings')}>
             <Settings className="h-4 w-4 mr-2 text-primary" />
             <span>Settings</span>
           </DropdownMenuItem>
