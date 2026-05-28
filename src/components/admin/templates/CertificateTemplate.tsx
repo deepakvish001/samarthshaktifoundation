@@ -238,12 +238,16 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   alignItems: "flex-end",
                 }}
               >
-                <div style={{ display: "flex", gap: 14, alignItems: "flex-end" }}>
-                  <RectBadge title="NCTI" subtitle="Education" titleColor="#0b2a6b" subBg="#b91c1c" />
-                  <ShieldBadge title="SSF" subtitle="CERT LTD" />
-                  <RectBadge title="MSME" subtitle="Govt. of India" titleColor="#0b2a6b" subBg="#0b2a6b" wide />
-                  <SealBadge title="ISO" subtitle="9001:2015" ringColor="#ea580c" />
-                  <SealBadge title="SRA" subtitle="1860" ringColor="#f59e0b" />
+                <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+                  {["ncti", "ssf", "msme", "iso", "sra"].map((n) => (
+                    <img
+                      key={n}
+                      src={`/cert-logos/${n}.png`}
+                      alt={n}
+                      crossOrigin="anonymous"
+                      style={{ height: 54, width: "auto", objectFit: "contain" }}
+                    />
+                  ))}
                 </div>
                 <div style={{ textAlign: "center" }}>
                   {data.directorSignUrl ? (
