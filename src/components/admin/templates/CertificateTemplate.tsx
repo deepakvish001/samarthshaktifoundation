@@ -296,19 +296,10 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   left: 50,
                   right: 50,
                   display: "flex",
-                  justifyContent: "space-between",
+                  justifyContent: "flex-end",
                   alignItems: "flex-end",
                 }}
               >
-                <div style={{ textAlign: "center", minWidth: 220 }}>
-                  <div style={{ height: 44 }} />
-                  <div style={{ borderTop: "1px solid #0a0a0a", paddingTop: 2, fontSize: 13, fontWeight: 700 }}>
-                    Registrar
-                  </div>
-                  <div style={{ fontSize: 11, color: "#374151" }}>
-                    Examination Cell
-                  </div>
-                </div>
                 <div style={{ textAlign: "center" }}>
                   {data.directorSignUrl ? (
                     <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 44, objectFit: "contain" }} />
