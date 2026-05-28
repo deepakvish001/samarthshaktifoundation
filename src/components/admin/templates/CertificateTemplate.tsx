@@ -280,29 +280,29 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   left: 50,
                   right: 46,
                   display: "flex",
+                  justifyContent: "space-between",
                   alignItems: "flex-end",
                 }}
               >
-                <div style={{ flex: 1, fontSize: 14, color: "#0a0a0a", lineHeight: 1.8 }}>
+                <div style={{ fontSize: 14, color: "#0a0a0a", lineHeight: 1.8 }}>
                   <div>Date of Issue:&nbsp;<b>{awardedOn}</b></div>
                   <div>Place:&nbsp;<b>{data.place || "—"}</b></div>
                 </div>
-                <div style={{ flex: 1, textAlign: "center" }}>
+                <div style={{ textAlign: "center" }}>
                   {data.directorSignUrl ? (
-                    <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 60, objectFit: "contain" }} />
+                    <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 48, objectFit: "contain" }} />
                   ) : (
-                    <div style={{ height: 60, fontFamily: "'Brush Script MT', cursive", fontSize: 34, color: "#0b2a6b", lineHeight: 1.6 }}>
+                    <div style={{ height: 48, fontFamily: "'Brush Script MT', cursive", fontSize: 28, color: "#0b2a6b" }}>
                       Authorised
                     </div>
                   )}
-                  <div style={{ display: "inline-block", borderTop: "1px solid #0a0a0a", paddingTop: 4, minWidth: 260, fontSize: 15, fontWeight: 700 }}>
+                  <div style={{ borderTop: "1px solid #0a0a0a", paddingTop: 3, minWidth: 230, fontSize: 13, fontWeight: 700 }}>
                     Chairman's Signature
                   </div>
-                  <div style={{ fontSize: 12, color: "#374151", marginTop: 2 }}>
+                  <div style={{ fontSize: 11, color: "#374151", marginTop: 1 }}>
                     Nesan Computer and Technical Institute
                   </div>
                 </div>
-                <div style={{ flex: 1 }} />
               </div>
 
               {/* Grading scale red strip + website */}
