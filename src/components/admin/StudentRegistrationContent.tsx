@@ -84,6 +84,13 @@ const StudentRegistrationContent = () => {
     loading: districtsLoading
   } = useOptimisticCrud<DistrictData>({ tableName: 'district_master' });
 
+  // Fetch admin-managed lookup tables
+  const { data: studyCenters } = useOptimisticCrud<LookupItem>({ tableName: 'study_centers' });
+  const { data: titles } = useOptimisticCrud<LookupItem>({ tableName: 'titles' });
+  const { data: genders } = useOptimisticCrud<LookupItem>({ tableName: 'genders' });
+  const { data: casteCategories } = useOptimisticCrud<LookupItem>({ tableName: 'caste_categories' });
+  const { data: qualifications } = useOptimisticCrud<LookupItem>({ tableName: 'qualifications' });
+
   useAdminRealTime({
     tableName: 'student_profiles'
   });
@@ -99,6 +106,11 @@ const StudentRegistrationContent = () => {
   useAdminRealTime({
     tableName: 'district_master'
   });
+  useAdminRealTime({ tableName: 'study_centers' });
+  useAdminRealTime({ tableName: 'titles' });
+  useAdminRealTime({ tableName: 'genders' });
+  useAdminRealTime({ tableName: 'caste_categories' });
+  useAdminRealTime({ tableName: 'qualifications' });
   
   // Form state
   const [formData, setFormData] = useState({
@@ -106,6 +118,9 @@ const StudentRegistrationContent = () => {
     courseName: "",
     courseFees: "",
     studyCenter: "",
+    titleApplicant: "",
+    titleFather: "",
+    titleMother: "",
     applicantName: "",
     fatherName: "",
     motherName: "",
@@ -123,11 +138,13 @@ const StudentRegistrationContent = () => {
     qualification: "",
     yearOfPassing: "",
     aadharNumber: "",
-    studentId: "2002318",
-    password: "58742318",
+    studentId: "",
+    password: "",
     declaration: false
   });
 
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Get unique course categories from course master
