@@ -10,6 +10,14 @@ import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import { Loader2, UserPlus, Search, Users, Calendar, MapPin, GraduationCap, Mail, Phone, Edit, Trash2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface LookupItem {
+  id: string;
+  name: string;
+  is_active?: boolean;
+  sort_order?: number;
+}
 
 interface StudentProfile {
   id: string;
@@ -76,6 +84,13 @@ const StudentRegistrationContent = () => {
     loading: districtsLoading
   } = useOptimisticCrud<DistrictData>({ tableName: 'district_master' });
 
+  // Fetch admin-managed lookup tables
+  const { data: studyCenters } = useOptimisticCrud<LookupItem>({ tableName: 'study_centers' });
+  const { data: titles } = useOptimisticCrud<LookupItem>({ tableName: 'titles' });
+  const { data: genders } = useOptimisticCrud<LookupItem>({ tableName: 'genders' });
+  const { data: casteCategories } = useOptimisticCrud<LookupItem>({ tableName: 'caste_categories' });
+  const { data: qualifications } = useOptimisticCrud<LookupItem>({ tableName: 'qualifications' });
+
   useAdminRealTime({
     tableName: 'student_profiles'
   });
@@ -91,6 +106,11 @@ const StudentRegistrationContent = () => {
   useAdminRealTime({
     tableName: 'district_master'
   });
+  useAdminRealTime({ tableName: 'study_centers' });
+  useAdminRealTime({ tableName: 'titles' });
+  useAdminRealTime({ tableName: 'genders' });
+  useAdminRealTime({ tableName: 'caste_categories' });
+  useAdminRealTime({ tableName: 'qualifications' });
   
   // Form state
   const [formData, setFormData] = useState({
@@ -98,6 +118,9 @@ const StudentRegistrationContent = () => {
     courseName: "",
     courseFees: "",
     studyCenter: "",
+    titleApplicant: "",
+    titleFather: "",
+    titleMother: "",
     applicantName: "",
     fatherName: "",
     motherName: "",
@@ -115,11 +138,13 @@ const StudentRegistrationContent = () => {
     qualification: "",
     yearOfPassing: "",
     aadharNumber: "",
-    studentId: "2002318",
-    password: "58742318",
+    studentId: "",
+    password: "",
     declaration: false
   });
 
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Get unique course categories from course master
@@ -196,62 +221,144 @@ const StudentRegistrationContent = () => {
     });
   };
 
+  const initialFormState = {
+    courseCategory: "",
+    courseName: "",
+    courseFees: "",
+    studyCenter: "",
+    titleApplicant: "",
+    titleFather: "",
+    titleMother: "",
+    applicantName: "",
+    fatherName: "",
+    motherName: "",
+    gender: "",
+    dateOfBirth: "",
+    category: "",
+    registrationDate: "",
+    mobile: "",
+    email: "",
+    fullAddress: "",
+    cityName: "",
+    state: "",
+    district: "",
+    pinCode: "",
+    qualification: "",
+    yearOfPassing: "",
+    aadharNumber: "",
+    studentId: "",
+    password: "",
+    declaration: false,
+  };
+
+  const parseDOB = (s: string): string | null => {
+    if (!s) return null;
+    // Accept dd/MM/yyyy or yyyy-MM-dd
+    const slash = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (slash) return `${slash[3]}-${slash[2]}-${slash[1]}`;
+    const iso = s.match(/^\d{4}-\d{2}-\d{2}$/);
+    if (iso) return s;
+    return null;
+  };
+
+  const generatePassword = () => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let p = "";
+    for (let i = 0; i < 8; i++) p += chars[Math.floor(Math.random() * chars.length)];
+    return p;
+  };
+
   const handleSubmit = async () => {
+    if (submitting) return;
     if (!formData.declaration) {
       toast.error("Please accept the declaration to proceed");
       return;
     }
-
     if (!formData.applicantName || !formData.email || !formData.mobile) {
-      toast.error("Please fill in all required fields");
+      toast.error("Please fill in Applicant Name, Email and Mobile");
       return;
     }
 
-    const studentData = {
-      full_name: formData.applicantName,
-      email: formData.email,
-      phone: formData.mobile,
-      course_name: formData.courseName,
-      status: 'active',
-      city: formData.cityName,
-      state: formData.state,
-      enrollment_date: new Date().toISOString()
-    };
-
+    setSubmitting(true);
     try {
+      // 1. Resolve State/District UUIDs -> names so downstream pages show readable text
+      const stateName =
+        states.find((s) => s.id === formData.state)?.city_name || formData.state;
+      const districtName =
+        districts.find((d) => d.id === formData.district)?.site_name || formData.district;
+
+      // 2. Student ID — auto-generate if admin left it blank
+      let studentId = formData.studentId.trim();
+      if (!studentId) {
+        const { data: gen, error: genErr } = await (supabase as any).rpc("generate_student_id");
+        if (genErr || !gen) {
+          // Fallback if RPC fails
+          studentId = `SSF-${new Date().getFullYear()}-${Math.floor(Math.random() * 9000 + 1000)}`;
+        } else {
+          studentId = gen as string;
+        }
+      }
+
+      // 3. Upload photo (optional)
+      let photoUrl: string | null = null;
+      if (photoFile) {
+        const ext = photoFile.name.split(".").pop() || "jpg";
+        const path = `students/${studentId}-${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("avatars")
+          .upload(path, photoFile, { upsert: true, contentType: photoFile.type });
+        if (upErr) {
+          toast.error(`Photo upload failed: ${upErr.message}`);
+        } else {
+          const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+          photoUrl = pub.publicUrl;
+        }
+      }
+
+      // 4. Password — auto-generate if blank
+      const password = formData.password.trim() || generatePassword();
+
+      // 5. Build full payload — every form field is persisted
+      const studentData: any = {
+        student_id: studentId,
+        full_name: formData.applicantName,
+        email: formData.email,
+        phone: formData.mobile,
+        title: formData.titleApplicant || null,
+        father_name: formData.fatherName || null,
+        mother_name: formData.motherName || null,
+        gender: formData.gender || null,
+        date_of_birth: parseDOB(formData.dateOfBirth),
+        caste_category: formData.category || null,
+        registration_date: parseDOB(formData.registrationDate) || new Date().toISOString().slice(0, 10),
+        address: formData.fullAddress || null,
+        city: formData.cityName || null,
+        state: stateName || null,
+        district: districtName || null,
+        pin_code: formData.pinCode || null,
+        qualification: formData.qualification || null,
+        year_of_passing: formData.yearOfPassing || null,
+        aadhar_number: formData.aadharNumber || null,
+        study_center: formData.studyCenter || null,
+        course_category: formData.courseCategory || null,
+        course_name: formData.courseName || null,
+        course_fees: formData.courseFees || null,
+        photo_url: photoUrl,
+        login_password: password,
+        status: "active",
+        enrollment_date: new Date().toISOString(),
+      };
+
       await create(studentData);
-      
-      // Reset form
-      setFormData({
-        courseCategory: "",
-        courseName: "",
-        courseFees: "",
-        studyCenter: "",
-        applicantName: "",
-        fatherName: "",
-        motherName: "",
-        gender: "",
-        dateOfBirth: "",
-        category: "",
-        registrationDate: "",
-        mobile: "",
-        email: "",
-        fullAddress: "",
-        cityName: "",
-        state: "",
-        district: "",
-        pinCode: "",
-        qualification: "",
-        yearOfPassing: "",
-        aadharNumber: "",
-        studentId: "2002318",
-        password: "58742318",
-        declaration: false
-      });
-      
-      toast.success("Student registration submitted successfully!");
-    } catch (error) {
-      toast.error("Failed to register student");
+
+      toast.success(`Student registered! ID: ${studentId}`, { duration: 6000 });
+      setFormData(initialFormState);
+      setPhotoFile(null);
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      toast.error(`Failed to register student: ${error?.message || "Unknown error"}`);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -411,10 +518,16 @@ const StudentRegistrationContent = () => {
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
                     <SelectValue placeholder="-----Select Study Center-----" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="azamgarh">Azamgarh</SelectItem>
-                    <SelectItem value="mau">Mau</SelectItem>
-                    <SelectItem value="baliya">Baliya</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {studyCenters.filter((c) => c.is_active !== false).length > 0 ? (
+                      studyCenters
+                        .filter((c) => c.is_active !== false)
+                        .map((c) => (
+                          <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>
+                        ))
+                    ) : (
+                      <SelectItem value="no-data" disabled>No study centers — add via Master</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -434,14 +547,16 @@ const StudentRegistrationContent = () => {
                 Applicant's Full Name / आवेदक का पूरा नाम *
               </div>
               <div className="col-span-2 px-3 py-2 border-r-2 border-gray-600 flex items-center bg-white">
-                <Select>
+                <Select value={formData.titleApplicant} onValueChange={(v) => handleInputChange('titleApplicant', v)}>
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
-                    <SelectValue placeholder="Mr./श्री" />
+                    <SelectValue placeholder="Title" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mr">Mr./श्री</SelectItem>
-                    <SelectItem value="mrs">Mrs./श्रीमती</SelectItem>
-                    <SelectItem value="ms">Ms./सुश्री</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {titles.length > 0 ? (
+                      titles.map((t) => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)
+                    ) : (
+                      <SelectItem value="no-data" disabled>No titles</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -461,12 +576,12 @@ const StudentRegistrationContent = () => {
                 Father's Name / पिता का नाम *
               </div>
               <div className="col-span-2 px-3 py-2 border-r-2 border-gray-600 flex items-center bg-blue-50">
-                <Select>
+                <Select value={formData.titleFather} onValueChange={(v) => handleInputChange('titleFather', v)}>
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
-                    <SelectValue placeholder="Mr./श्री" />
+                    <SelectValue placeholder="Title" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mr">Mr./श्री</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {titles.map((t) => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -486,12 +601,12 @@ const StudentRegistrationContent = () => {
                 Mother's Name / माता का नाम *
               </div>
               <div className="col-span-2 px-3 py-2 border-r-2 border-gray-600 flex items-center bg-white">
-                <Select>
+                <Select value={formData.titleMother} onValueChange={(v) => handleInputChange('titleMother', v)}>
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
-                    <SelectValue placeholder="Mrs./श्रीमती" />
+                    <SelectValue placeholder="Title" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mrs">Mrs./श्रीमती</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {titles.map((t) => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -515,10 +630,12 @@ const StudentRegistrationContent = () => {
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400 max-w-xs">
                     <SelectValue placeholder="Select One" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {genders.length > 0 ? (
+                      genders.map((g) => <SelectItem key={g.id} value={g.name}>{g.name}</SelectItem>)
+                    ) : (
+                      <SelectItem value="no-data" disabled>No genders configured</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -552,11 +669,12 @@ const StudentRegistrationContent = () => {
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400 max-w-xs">
                     <SelectValue placeholder="Select One" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="general">General</SelectItem>
-                    <SelectItem value="obc">OBC</SelectItem>
-                    <SelectItem value="sc">SC</SelectItem>
-                    <SelectItem value="st">ST</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {casteCategories.length > 0 ? (
+                      casteCategories.map((c) => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)
+                    ) : (
+                      <SelectItem value="no-data" disabled>No categories configured</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -755,11 +873,12 @@ const StudentRegistrationContent = () => {
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
                     <SelectValue placeholder="Select One" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10th">10th</SelectItem>
-                    <SelectItem value="12th">12th</SelectItem>
-                    <SelectItem value="graduate">Graduate</SelectItem>
-                    <SelectItem value="postgraduate">Post Graduate</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {qualifications.length > 0 ? (
+                      qualifications.map((q) => <SelectItem key={q.id} value={q.name}>{q.name}</SelectItem>)
+                    ) : (
+                      <SelectItem value="no-data" disabled>No qualifications configured</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -813,8 +932,12 @@ const StudentRegistrationContent = () => {
                 <input
                   type="file"
                   accept="image/*"
+                  onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
                   className="text-xs border-2 border-gray-400 bg-white p-1 rounded"
                 />
+                {photoFile && (
+                  <span className="ml-3 text-xs text-green-700">{photoFile.name}</span>
+                )}
               </div>
             </div>
           </div>
@@ -827,15 +950,17 @@ const StudentRegistrationContent = () => {
               <div className="col-span-4 px-3 py-2 border-r-2 border-gray-600 flex items-center bg-white">
                 <Input
                   value={formData.studentId}
-                  readOnly
-                  className="h-8 text-xs border-2 border-gray-400 bg-gray-100"
+                  onChange={(e) => handleInputChange('studentId', e.target.value)}
+                  placeholder="Auto-generated (SSF-YYYY-NNNN) — leave blank or override"
+                  className="h-8 text-xs border-2 border-gray-400"
                 />
               </div>
               <div className="col-span-5 px-3 py-2 flex items-center bg-white">
                 <Input
                   value={formData.password}
-                  readOnly
-                  className="h-8 text-xs border-2 border-gray-400 bg-gray-100"
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  placeholder="Auto-generated — leave blank or override"
+                  className="h-8 text-xs border-2 border-gray-400"
                 />
               </div>
             </div>
@@ -860,9 +985,17 @@ const StudentRegistrationContent = () => {
             </div>
             <Button
               onClick={handleSubmit}
+              disabled={submitting}
               className="bg-black hover:bg-gray-800 text-white font-semibold px-8 py-2 text-sm border-2 border-black"
             >
-              Submit Now
+              {submitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Submit Now"
+              )}
             </Button>
           </div>
         </div>
