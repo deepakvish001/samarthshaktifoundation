@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Sparkles, Download, Eye, Save, Loader2, FileText, Award } from "lucide-react";
+import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -52,6 +53,10 @@ const AutoGenerateContent = () => {
     issueDate: todayStr(),
     examinationDate: todayStr(),
     place: "Delhi",
+    dob: "",
+    centerCode: "",
+    centerName: "",
+    batch: "",
   });
 
   const [marks, setMarks] = useState<Array<{ theoryObtained: number; practicalObtained: number }>>([]);
@@ -63,6 +68,8 @@ const AutoGenerateContent = () => {
 
   const certRef = useRef<HTMLDivElement>(null);
   const marksRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
 
   // Load students + director sign once
   useEffect(() => {
@@ -148,6 +155,11 @@ const AutoGenerateContent = () => {
     photoUrl: form.photoUrl,
     directorSignUrl,
     sealUrl: "/favicon.png",
+    dob: form.dob,
+    centerCode: form.centerCode,
+    centerName: form.centerName,
+    batch: form.batch,
+    verifyUrl: `${window.location.origin}/verify/${form.certificateNumber}`,
   };
 
   const marksData: MarksheetData = {
@@ -173,6 +185,10 @@ const AutoGenerateContent = () => {
     photoUrl: form.photoUrl,
     directorSignUrl,
     sealUrl: "/favicon.png",
+    dob: form.dob,
+    centerCode: form.centerCode,
+    centerName: form.centerName,
+    batch: form.batch,
   };
 
   const validate = () => {
@@ -181,6 +197,31 @@ const AutoGenerateContent = () => {
       return false;
     }
     return true;
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      toast.error("Only JPG/PNG allowed"); return;
+    }
+    if (file.size > 5 * 1024 * 1024) { toast.error("Max 5MB"); return; }
+    setUploading(true);
+    try {
+      const { data: u } = await supabase.auth.getUser();
+      const folder = u.user?.id || "shared";
+      const path = `${folder}/cert-${Date.now()}-${file.name}`;
+      const { error } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      setForm((f) => ({ ...f, photoUrl: data.publicUrl }));
+      toast.success("Photo uploaded");
+    } catch (e: any) {
+      toast.error(e.message || "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const handleSave = async () => {
