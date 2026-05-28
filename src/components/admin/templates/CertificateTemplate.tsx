@@ -76,7 +76,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
             <CornerArc position="bl" />
             <CornerArc position="br" />
 
-            <div style={{ position: "relative", padding: "26px 160px 22px 160px", boxSizing: "border-box", height: "100%" }}>
+            <div style={{ position: "relative", padding: "22px 160px 18px 160px", boxSizing: "border-box", height: "100%" }}>
               {/* Top row: Sl No. / Reg No. */}
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0a0a0a", fontWeight: 600 }}>
                 <span>Sl No.&nbsp;<b>{slNo}</b></span>
@@ -180,15 +180,15 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               </div>
 
               {/* Certificate of Achievement ribbon */}
-              <div style={{ textAlign: "center", marginTop: 14 }}>
-                <div style={{ fontSize: 12, color: "#b91c1c", letterSpacing: 8, marginBottom: 2 }}>❖ ❖ ❖</div>
+              <div style={{ textAlign: "center", marginTop: 18 }}>
+                <div style={{ fontSize: 14, color: "#b91c1c", letterSpacing: 8, marginBottom: 4 }}>❖ ❖ ❖</div>
                 <div
                   style={{
                     display: "inline-block",
                     fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
-                    fontSize: 44,
+                    fontSize: 52,
                     color: "#b91c1c",
-                    padding: "0 70px",
+                    padding: "4px 90px",
                     borderTop: "2px solid #b91c1c",
                     borderBottom: "2px solid #b91c1c",
                     letterSpacing: "1px",
@@ -198,7 +198,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 >
                   Certificate of Achievement
                 </div>
-                <div style={{ fontSize: 12, color: "#b91c1c", letterSpacing: 8, marginTop: 2 }}>❖ ❖ ❖</div>
+                <div style={{ fontSize: 14, color: "#b91c1c", letterSpacing: 8, marginTop: 4 }}>❖ ❖ ❖</div>
               </div>
 
               {/* QR (left) */}
@@ -234,7 +234,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 style={{
                   position: "absolute",
                   left: 60,
-                  top: 555,
+                  top: 620,
                   width: 240,
                   display: "flex",
                   flexDirection: "column",
@@ -242,43 +242,43 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   gap: 8,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14 }}>
-                  <img src="/cert-logos/iso-9001.png" alt="ISO 9001:2015" crossOrigin="anonymous" style={{ height: 70, width: 70, objectFit: "contain" }} />
-                  <img src="/cert-logos/msme-new.png" alt="MSME" crossOrigin="anonymous" style={{ height: 70, width: 70, objectFit: "contain" }} />
-                  <img src="/cert-logos/ssf.png" alt="Samarth Shakti Foundation" crossOrigin="anonymous" style={{ height: 70, width: 70, objectFit: "contain" }} />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}>
+                  <img src="/cert-logos/iso-9001.png" alt="ISO 9001:2015" crossOrigin="anonymous" style={{ height: 78, width: 78, objectFit: "contain" }} />
+                  <img src="/cert-logos/msme-new.png" alt="MSME" crossOrigin="anonymous" style={{ height: 78, width: 78, objectFit: "contain" }} />
+                  <img src="/cert-logos/ssf.png" alt="Samarth Shakti Foundation" crossOrigin="anonymous" style={{ height: 78, width: 78, objectFit: "contain" }} />
                 </div>
               </div>
 
               {/* Body */}
               <div
                 style={{
-                  marginTop: 18,
+                  marginTop: 26,
                   padding: "0 90px",
-                  fontSize: 15,
-                  lineHeight: 1.7,
+                  fontSize: 17,
+                  lineHeight: 1.85,
                   color: "#0a0a0a",
                   textAlign: "center",
                 }}
               >
-                <div style={{ fontSize: 14, color: "#374151", marginBottom: 4, letterSpacing: 0.5 }}>
+                <div style={{ fontSize: 16, color: "#374151", marginBottom: 8, letterSpacing: 0.5 }}>
                   This is to certify that
                 </div>
                 <div
                   style={{
                     fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
-                    fontSize: 42,
+                    fontSize: 50,
                     color: "#0b2a6b",
                     fontWeight: 700,
                     lineHeight: 1.1,
-                    margin: "2px auto 8px",
+                    margin: "4px auto 14px",
                     borderBottom: "1.5px solid #0b2a6b",
-                    paddingBottom: 4,
-                    maxWidth: 560,
+                    paddingBottom: 6,
+                    maxWidth: 640,
                   }}
                 >
                   {data.studentName}
                 </div>
-                <div style={{ textAlign: "justify", textAlignLast: "center", fontSize: 15, lineHeight: 1.85 }}>
+                <div style={{ textAlign: "justify", textAlignLast: "center", fontSize: 17, lineHeight: 2 }}>
                   {data.fatherName ? <>Son/Daughter of <b>{data.fatherName}</b></> : null}
                   {data.motherName ? <> and <b>{data.motherName}</b></> : null}
                   {(data.fatherName || data.motherName) ? ", " : ""}
@@ -296,7 +296,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  bottom: 70,
+                  bottom: 60,
                   left: 90,
                   right: 90,
                   display: "flex",
