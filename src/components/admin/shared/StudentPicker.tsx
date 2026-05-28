@@ -34,6 +34,8 @@ export interface PickedStudent {
   state: string | null;
   district: string | null;
   pin_code: string | null;
+  title: string | null;
+  qualification: string | null;
 }
 
 interface Props {
@@ -49,7 +51,7 @@ interface Props {
 
 const PAGE_SIZE = 25;
 const SELECT_COLS =
-  "id, student_id, full_name, email, phone, course_name, course_category, course_fees, father_name, mother_name, photo_url, gender, date_of_birth, caste_category, study_center, address, city, state, district, pin_code, status";
+  "id, student_id, full_name, email, phone, course_name, course_category, course_fees, father_name, mother_name, photo_url, gender, date_of_birth, caste_category, study_center, address, city, state, district, pin_code, title, qualification, status";
 
 /**
  * Searchable Student Picker — server-side search and pagination against

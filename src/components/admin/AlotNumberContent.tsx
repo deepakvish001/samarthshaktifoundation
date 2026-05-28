@@ -352,12 +352,13 @@ const AlotNumberContent = () => {
                       studentFatherName: s.father_name || prev.studentFatherName,
                       studentMotherName: s.mother_name || prev.studentMotherName,
                       courseName: s.course_name || prev.courseName,
+                      centerName: s.study_center || prev.centerName,
                     }));
                   }}
                   className="w-full"
                 />
                 <p className="text-[11px] text-muted-foreground mt-2">
-                  Picking a student auto-fills ID, Name, Father/Mother Name and Course.
+                  Picking a student auto-fills ID, Name, Father/Mother Name, Course, and Center.
                 </p>
               </div>
               {/* Student ID and Course Selection */}
