@@ -23,6 +23,7 @@ interface StudentData {
   photo_url?: string;
   father_name?: string;
   mother_name?: string;
+  director_signature_url?: string;
 }
 
 interface MarksheetData {
