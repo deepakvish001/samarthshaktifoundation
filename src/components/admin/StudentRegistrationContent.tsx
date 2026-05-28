@@ -1123,6 +1123,84 @@ const StudentRegistrationContent = () => {
           </div>
         </CardContent>
       </Card>
+    {/* Credentials Modal — shows Student ID + Password after registration */}
+    <Dialog open={!!credentials} onOpenChange={(open) => { if (!open) { setCredentials(null); setCopied(null); } }}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-green-700">
+            <CheckCircle2 className="h-5 w-5" /> Registration Successful
+          </DialogTitle>
+        </DialogHeader>
+        {credentials && (
+          <div className="space-y-4 pt-2">
+            <p className="text-sm text-muted-foreground">
+              Save these credentials. The student will use them to log in.
+              <br />
+              <span className="font-medium text-foreground">{credentials.name}</span>
+            </p>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Student ID</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <code className="flex-1 px-3 py-2 rounded-md bg-muted font-mono text-sm select-all">{credentials.id}</code>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard.writeText(credentials.id);
+                      setCopied("id");
+                      toast.success("Student ID copied");
+                    }}
+                  >
+                    {copied === "id" ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Password</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <code className="flex-1 px-3 py-2 rounded-md bg-muted font-mono text-sm select-all">{credentials.password}</code>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard.writeText(credentials.password);
+                      setCopied("pwd");
+                      toast.success("Password copied");
+                    }}
+                  >
+                    {copied === "pwd" ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              className="w-full"
+              variant="secondary"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `Student ID: ${credentials.id}\nPassword: ${credentials.password}`
+                );
+                setCopied("both");
+                toast.success("Both copied");
+              }}
+            >
+              {copied === "both" ? <CheckCircle2 className="h-4 w-4 mr-2 text-green-600" /> : <Copy className="h-4 w-4 mr-2" />}
+              Copy both
+            </Button>
+          </div>
+        )}
+        <DialogFooter>
+          <Button onClick={() => { setCredentials(null); setCopied(null); }}>Done</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
     </div>
   );
 };
