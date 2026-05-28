@@ -1,12 +1,11 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileSearch, Search, Download, Edit, Trash2, Loader2, BarChart3, BookOpen, CheckCircle, Filter, Award, FileText } from "lucide-react";
+import { FileSearch, Search, Download, Edit, Trash2, Loader2, BarChart3, BookOpen, CheckCircle, Filter, Award } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import { downloadSavedPdf } from "@/lib/reportPdfGenerator";
@@ -41,25 +40,6 @@ const ReportContent = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [marksheetUrls, setMarksheetUrls] = useState<Record<string, string>>({});
-
-  // Fetch marksheet URLs keyed by student_id
-  useEffect(() => {
-    (async () => {
-      const ids = Array.from(new Set(reports.map((r) => r.student_id))).filter(Boolean);
-      if (ids.length === 0) return;
-      const { data } = await supabase
-        .from("marksheet_management")
-        .select("student_id, marksheet_url, created_at")
-        .in("student_id", ids)
-        .order("created_at", { ascending: false });
-      const map: Record<string, string> = {};
-      (data || []).forEach((row: any) => {
-        if (row.marksheet_url && !map[row.student_id]) map[row.student_id] = row.marksheet_url;
-      });
-      setMarksheetUrls(map);
-    })();
-  }, [reports]);
 
   // Filter and search logic
   const filteredReports = useMemo(() => {
@@ -103,18 +83,6 @@ const ReportContent = () => {
     }
   };
 
-  const handleDownloadMarks = async (report: CertificateMarksheet) => {
-    const url = marksheetUrls[report.student_id];
-    if (!url) return;
-    const t = toast.loading("Downloading marksheet...");
-    try {
-      const safe = (report.student_name || report.student_id).replace(/[^a-z0-9]+/gi, "_");
-      await downloadSavedPdf(url, `${safe}_Marksheet.pdf`);
-      toast.success("Marksheet downloaded", { id: t });
-    } catch (e: any) {
-      toast.error(e?.message || "Download failed", { id: t });
-    }
-  };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this record?")) return;
@@ -355,23 +323,11 @@ const ReportContent = () => {
                                 className="border-green-300 text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20"
                               >
                                 <Award className="h-4 w-4 mr-1" />
-                                Certificate
+                                Download Certificate
                               </Button>
-                            ) : null}
-                            {marksheetUrls[report.student_id] ? (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleDownloadMarks(report)}
-                                className="border-blue-300 text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                              >
-                                <FileText className="h-4 w-4 mr-1" />
-                                Marksheet
-                              </Button>
-                            ) : null}
-                            {!report.certificate_url && !marksheetUrls[report.student_id] ? (
+                            ) : (
                               <span className="text-xs text-muted-foreground italic">Not generated</span>
-                            ) : null}
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
