@@ -63,8 +63,8 @@ export async function validateStudentSelection(
       message: `Student ID "${parsed.data}" is not registered. Pick a student from the dropdown.`,
     };
   }
-  if (data.status && data.status !== "active") {
-    return { ok: false, message: `Student "${data.full_name}" is not active.` };
+  if (data.status === "inactive") {
+    return { ok: false, message: `Student "${data.full_name}" is inactive.` };
   }
 
   if (opts.expectedCourse !== undefined) {
