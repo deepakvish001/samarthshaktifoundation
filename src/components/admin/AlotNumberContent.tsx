@@ -34,6 +34,8 @@ interface AlotNumber {
 
 interface AlotSubject {
   name: string;
+  theoryMax: string;
+  practicalMax: string;
   theory: string;
   practical: string;
 }
