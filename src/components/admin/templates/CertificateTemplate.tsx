@@ -263,7 +263,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   {data.motherName ? <> and <b>{data.motherName}</b></> : null}
                   {(data.fatherName || data.motherName) ? ", " : ""}
                   has successfully completed the course of{" "}
-                  <b>{data.course.certificateTitle}&nbsp;({data.course.code})</b> at our Authorised Study Centre{" "}
+                  <b>{data.course.certificateTitle}</b> at our Authorised Study Centre{" "}
                   <b>{data.centerName || "—"}</b>
                   {data.centerCode ? <> (Code:&nbsp;<b>{data.centerCode}</b>)</> : null}
                   {data.batch ? <>, Batch&nbsp;<b>{data.batch}</b></> : null}, during the period{" "}
