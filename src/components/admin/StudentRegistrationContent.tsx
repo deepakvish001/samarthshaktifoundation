@@ -285,6 +285,27 @@ const StudentRegistrationContent = () => {
 
     setSubmitting(true);
     try {
+      // Pre-flight: confirm an admin is signed in (RLS requires it)
+      const { data: sessionData } = await supabase.auth.getSession();
+      const uid = sessionData.session?.user?.id;
+      if (!uid) {
+        toast.error("You are signed out. Please log in as admin and try again.");
+        setSubmitting(false);
+        return;
+      }
+      const { data: isAdmin, error: roleErr } = await (supabase as any).rpc("has_role", {
+        _user_id: uid,
+        _role: "admin",
+      });
+      if (roleErr) {
+        console.error("has_role check failed:", roleErr);
+      }
+      if (!isAdmin) {
+        toast.error("Only admin accounts can register students. Please sign in as admin.");
+        setSubmitting(false);
+        return;
+      }
+
       // 1. Resolve State/District UUIDs -> names so downstream pages show readable text
       const stateName =
         states.find((s) => s.id === formData.state)?.city_name || formData.state;
@@ -353,7 +374,20 @@ const StudentRegistrationContent = () => {
         enrollment_date: new Date().toISOString(),
       };
 
-      await create(studentData);
+      // Direct insert so we can surface the precise Postgres/RLS error if it fails
+      const { data: inserted, error: insertErr } = await (supabase as any)
+        .from("student_profiles")
+        .insert(studentData)
+        .select()
+        .single();
+      if (insertErr) {
+        console.error("Insert error:", insertErr);
+        throw new Error(
+          `${insertErr.message}${insertErr.details ? ` — ${insertErr.details}` : ""}${insertErr.hint ? ` (${insertErr.hint})` : ""}`
+        );
+      }
+      // Refresh table so the new row is visible immediately
+      await refresh();
 
       // Show credentials in a persistent modal so admin can copy them
       setCredentials({ id: studentId, password, name: formData.applicantName });
