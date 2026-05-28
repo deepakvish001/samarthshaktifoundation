@@ -315,10 +315,18 @@ const StudentRegistrationContent = () => {
       // 2. Student ID — auto-generate if admin left it blank
       let studentId = formData.studentId.trim();
       if (!studentId) {
-        const { data: gen, error: genErr } = await (supabase as any).rpc("generate_student_id");
+        // Pick year from the admin-chosen Registration Date (fallback: today)
+        const regDateStr = parseDOB(formData.registrationDate);
+        const regYear = regDateStr
+          ? new Date(regDateStr).getFullYear()
+          : new Date().getFullYear();
+        const { data: gen, error: genErr } = await (supabase as any).rpc(
+          "generate_enrollment_number",
+          { _year: regYear }
+        );
         if (genErr || !gen) {
-          // Fallback if RPC fails
-          studentId = `SSF-${new Date().getFullYear()}-${Math.floor(Math.random() * 9000 + 1000)}`;
+          // Fallback if RPC fails — still follow NC/AZM/<year>/<n> shape
+          studentId = `NC/AZM/${regYear}/${212 + Math.floor(Math.random() * 9000)}`;
         } else {
           studentId = gen as string;
         }
