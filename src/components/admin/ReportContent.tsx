@@ -1,14 +1,15 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileSearch, Search, Download, Printer, Edit, Trash2, Loader2, BarChart3, Users, BookOpen, CheckCircle, Filter } from "lucide-react";
+import { FileSearch, Search, Download, Edit, Trash2, Loader2, BarChart3, BookOpen, CheckCircle, Filter, Award, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
-import { downloadReportPdf, printReportPdf, downloadSavedPdf, printSavedPdf } from "@/lib/reportPdfGenerator";
+import { downloadSavedPdf } from "@/lib/reportPdfGenerator";
 
 interface CertificateMarksheet {
   id: string;
@@ -40,6 +41,25 @@ const ReportContent = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [marksheetUrls, setMarksheetUrls] = useState<Record<string, string>>({});
+
+  // Fetch marksheet URLs keyed by student_id
+  useEffect(() => {
+    (async () => {
+      const ids = Array.from(new Set(reports.map((r) => r.student_id))).filter(Boolean);
+      if (ids.length === 0) return;
+      const { data } = await supabase
+        .from("marksheet_management")
+        .select("student_id, marksheet_url, created_at")
+        .in("student_id", ids)
+        .order("created_at", { ascending: false });
+      const map: Record<string, string> = {};
+      (data || []).forEach((row: any) => {
+        if (row.marksheet_url && !map[row.student_id]) map[row.student_id] = row.marksheet_url;
+      });
+      setMarksheetUrls(map);
+    })();
+  }, [reports]);
 
   // Filter and search logic
   const filteredReports = useMemo(() => {
@@ -71,32 +91,28 @@ const ReportContent = () => {
     };
   }, [reports, filteredReports]);
 
-  const handleDownload = async (report: CertificateMarksheet) => {
-    const t = toast.loading(`Generating PDF for ${report.student_name}...`);
+  const handleDownloadCert = async (report: CertificateMarksheet) => {
+    if (!report.certificate_url) return;
+    const t = toast.loading("Downloading certificate...");
     try {
-      if (report.certificate_url) {
-        const safe = (report.student_name || report.student_id).replace(/[^a-z0-9]+/gi, "_");
-        await downloadSavedPdf(report.certificate_url, `${safe}_Certificate.pdf`);
-      } else {
-        await downloadReportPdf(report.student_id);
-      }
-      toast.success("PDF downloaded", { id: t });
+      const safe = (report.student_name || report.student_id).replace(/[^a-z0-9]+/gi, "_");
+      await downloadSavedPdf(report.certificate_url, `${safe}_Certificate.pdf`);
+      toast.success("Certificate downloaded", { id: t });
     } catch (e: any) {
       toast.error(e?.message || "Download failed", { id: t });
     }
   };
 
-  const handlePrint = async (report: CertificateMarksheet) => {
-    const t = toast.loading(`Preparing print for ${report.student_name}...`);
+  const handleDownloadMarks = async (report: CertificateMarksheet) => {
+    const url = marksheetUrls[report.student_id];
+    if (!url) return;
+    const t = toast.loading("Downloading marksheet...");
     try {
-      if (report.certificate_url) {
-        printSavedPdf(report.certificate_url);
-      } else {
-        await printReportPdf(report.student_id);
-      }
-      toast.success("Opened print dialog", { id: t });
+      const safe = (report.student_name || report.student_id).replace(/[^a-z0-9]+/gi, "_");
+      await downloadSavedPdf(url, `${safe}_Marksheet.pdf`);
+      toast.success("Marksheet downloaded", { id: t });
     } catch (e: any) {
-      toast.error(e?.message || "Print failed", { id: t });
+      toast.error(e?.message || "Download failed", { id: t });
     }
   };
 
@@ -330,23 +346,32 @@ const ReportContent = () => {
                           </span>
                         </TableCell>
                         <TableCell className="text-center p-4">
-                          <div className="flex justify-center space-x-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDownload(report)}
-                              className="hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-900/20"
-                            >
-                              <Download className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handlePrint(report)}
-                              className="hover:bg-purple-50 hover:text-purple-600 dark:hover:bg-purple-900/20"
-                            >
-                              <Printer className="h-4 w-4" />
-                            </Button>
+                          <div className="flex justify-center gap-2 flex-wrap">
+                            {report.certificate_url ? (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDownloadCert(report)}
+                                className="border-green-300 text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20"
+                              >
+                                <Award className="h-4 w-4 mr-1" />
+                                Certificate
+                              </Button>
+                            ) : null}
+                            {marksheetUrls[report.student_id] ? (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDownloadMarks(report)}
+                                className="border-blue-300 text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                              >
+                                <FileText className="h-4 w-4 mr-1" />
+                                Marksheet
+                              </Button>
+                            ) : null}
+                            {!report.certificate_url && !marksheetUrls[report.student_id] ? (
+                              <span className="text-xs text-muted-foreground italic">Not generated</span>
+                            ) : null}
                           </div>
                         </TableCell>
                       </TableRow>
