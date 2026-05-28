@@ -642,10 +642,27 @@ const StudentMarksheetContent = () => {
                 className="relative bg-white w-[794px] min-h-[1123px] shadow-elegant"
                 style={{ transform: 'scale(0.8)', transformOrigin: 'top center', fontFamily: "'Times New Roman', Times, serif", color: '#111' }}
               >
-                <div style={{ padding: '28px 40px', borderTop: '1px solid #555' }}>
+                {/* Decorative outer + inner ornamental borders */}
+                <div style={{ position: 'absolute', inset: 10, border: '3px double #b8860b', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', inset: 18, border: '1px solid #b8860b', pointerEvents: 'none' }} />
+                {/* Corner ornaments */}
+                {[
+                  { top: 6, left: 6 }, { top: 6, right: 6 },
+                  { bottom: 6, left: 6 }, { bottom: 6, right: 6 },
+                ].map((pos, i) => (
+                  <div key={i} style={{ position: 'absolute', width: 26, height: 26, border: '2px solid #1d4ed8', background: '#fff', transform: 'rotate(45deg)', ...pos, pointerEvents: 'none' }} />
+                ))}
+                {/* Faint watermark logo */}
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', opacity: 0.06 }}>
+                  <img src="/favicon.png" alt="" crossOrigin="anonymous" style={{ width: 420, height: 420, objectFit: 'contain' }} />
+                </div>
+
+                <div style={{ position: 'relative', padding: '34px 46px' }}>
                   {/* Top Logo */}
                   <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
-                    <img src="/favicon.png" alt="logo" crossOrigin="anonymous" style={{ width: 70, height: 70, objectFit: 'contain' }} />
+                    <div style={{ padding: 6, border: '2px solid #b8860b', borderRadius: '50%', background: '#fffdf6' }}>
+                      <img src="/favicon.png" alt="logo" crossOrigin="anonymous" style={{ width: 70, height: 70, objectFit: 'contain', display: 'block' }} />
+                    </div>
                   </div>
 
                   {/* Enroll + Sl No row */}
@@ -661,9 +678,15 @@ const StudentMarksheetContent = () => {
                   </div>
 
                   {/* Institute Title */}
-                  <h1 style={{ textAlign: 'center', color: '#1d4ed8', fontWeight: 800, fontSize: 32, margin: '4px 0 6px', letterSpacing: 0.5 }}>
+                  <h1 style={{ textAlign: 'center', color: '#1d4ed8', fontWeight: 800, fontSize: 34, margin: '6px 0 4px', letterSpacing: 1.2, textShadow: '0 1px 0 rgba(0,0,0,0.04)' }}>
                     SAMARTH SHAKTI FOUNDATION
                   </h1>
+                  {/* Golden divider */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, margin: '2px 0 6px' }}>
+                    <span style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, #b8860b, transparent)' }} />
+                    <span style={{ width: 8, height: 8, background: '#b8860b', transform: 'rotate(45deg)' }} />
+                    <span style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, #b8860b, transparent)' }} />
+                  </div>
                   <div style={{ textAlign: 'center', fontStyle: 'italic', fontSize: 13, color: '#111', marginBottom: 6 }}>
                     A Unit of Nesan Computer And Technical Institute
                   </div>
@@ -685,8 +708,8 @@ const StudentMarksheetContent = () => {
                     </span>
                   </div>
 
-                  <h2 style={{ textAlign: 'center', color: '#dc2626', fontSize: 22, fontWeight: 700, margin: '6px 0 10px' }}>
-                    CERTIFICATE-CUM-MARKS SHEET
+                  <h2 style={{ textAlign: 'center', color: '#dc2626', fontSize: 24, fontWeight: 700, margin: '6px 0 10px', letterSpacing: 2, textTransform: 'uppercase' }}>
+                    <span style={{ borderTop: '2px solid #dc2626', borderBottom: '2px solid #dc2626', padding: '4px 18px' }}>Certificate-Cum-Marks Sheet</span>
                   </h2>
 
                   {/* Photo on the right + certify body */}
@@ -727,15 +750,15 @@ const StudentMarksheetContent = () => {
                     </div>
                   </div>
 
-                  <h3 style={{ textAlign: 'center', color: '#1d4ed8', fontWeight: 700, fontSize: 16, margin: '10px 0 6px' }}>
-                    GRADES AWARDED
+                  <h3 style={{ textAlign: 'center', color: '#1d4ed8', fontWeight: 700, fontSize: 16, margin: '10px 0 6px', letterSpacing: 3 }}>
+                    ◆ GRADES AWARDED ◆
                   </h3>
 
                   {/* Marks table */}
                   <div ref={tableRef}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, border: '1.5px solid #111' }}>
                       <thead>
-                        <tr style={{ background: '#fff' }}>
+                        <tr style={{ background: '#1d4ed8', color: '#fff' }}>
                           <th style={mthCell}>Subjects</th>
                           <th style={mthCell}>Max.Theory Marks</th>
                           <th style={mthCell}>Max.Practical Marks</th>
@@ -818,6 +841,13 @@ const StudentMarksheetContent = () => {
                     <div>
                       <div><b>Issue Date :</b> {marksheetData?.examination_date ? new Date(marksheetData.examination_date).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB')}</div>
                       <div style={{ marginTop: 6 }}><b>Place :</b> AZAMGARH</div>
+                      {/* Official seal */}
+                      <div style={{ marginTop: 12, width: 96, height: 96, borderRadius: '50%', border: '2px solid #b8860b', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: 'rgba(255,253,246,0.7)' }}>
+                        <div style={{ position: 'absolute', inset: 4, borderRadius: '50%', border: '1px dashed #b8860b' }} />
+                        <div style={{ textAlign: 'center', fontSize: 8, color: '#b8860b', fontWeight: 700, letterSpacing: 0.5, lineHeight: 1.2 }}>
+                          OFFICIAL<br/>SEAL<br/>★ SSF ★
+                        </div>
+                      </div>
                     </div>
                     <div style={{ textAlign: 'center', fontSize: 11, color: '#374151' }}>
                       {selectedStudent?.student_id ? (
@@ -836,7 +866,8 @@ const StudentMarksheetContent = () => {
                     </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontStyle: 'italic', marginBottom: 4 }}>Digitally signed by</div>
-                      <div style={{ borderTop: '1px solid #111', paddingTop: 4, minWidth: 160, fontWeight: 700 }}>SECRETARY/DIRECTOR</div>
+                      <div style={{ borderTop: '1px solid #111', paddingTop: 4, minWidth: 180, fontWeight: 700, letterSpacing: 1 }}>SECRETARY / DIRECTOR</div>
+                      <div style={{ fontSize: 10, color: '#6b7280', marginTop: 2 }}>Samarth Shakti Foundation</div>
                     </div>
                   </div>
 
