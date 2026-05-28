@@ -250,6 +250,33 @@ export type Database = {
         }
         Relationships: []
       }
+      caste_categories: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       certificate_management: {
         Row: {
           certificate_number: string
@@ -1095,6 +1122,33 @@ export type Database = {
         }
         Relationships: []
       }
+      genders: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       head_offices: {
         Row: {
           address: string
@@ -1437,6 +1491,33 @@ export type Database = {
         }
         Relationships: []
       }
+      qualifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       state_master: {
         Row: {
           city_id: number
@@ -1568,42 +1649,156 @@ export type Database = {
       }
       student_profiles: {
         Row: {
+          aadhar_number: string | null
+          address: string | null
+          caste_category: string | null
           city: string | null
+          course_category: string | null
+          course_fees: string | null
           course_name: string | null
           created_at: string
+          date_of_birth: string | null
+          district: string | null
           email: string
           enrollment_date: string | null
+          father_name: string | null
           full_name: string
+          gender: string | null
           id: string
+          login_password: string | null
+          mother_name: string | null
           phone: string | null
+          photo_url: string | null
+          pin_code: string | null
+          qualification: string | null
+          registration_date: string | null
           state: string | null
           status: string | null
+          student_id: string | null
+          study_center: string | null
+          title: string | null
+          updated_at: string
+          year_of_passing: string | null
+        }
+        Insert: {
+          aadhar_number?: string | null
+          address?: string | null
+          caste_category?: string | null
+          city?: string | null
+          course_category?: string | null
+          course_fees?: string | null
+          course_name?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          district?: string | null
+          email: string
+          enrollment_date?: string | null
+          father_name?: string | null
+          full_name: string
+          gender?: string | null
+          id?: string
+          login_password?: string | null
+          mother_name?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          pin_code?: string | null
+          qualification?: string | null
+          registration_date?: string | null
+          state?: string | null
+          status?: string | null
+          student_id?: string | null
+          study_center?: string | null
+          title?: string | null
+          updated_at?: string
+          year_of_passing?: string | null
+        }
+        Update: {
+          aadhar_number?: string | null
+          address?: string | null
+          caste_category?: string | null
+          city?: string | null
+          course_category?: string | null
+          course_fees?: string | null
+          course_name?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          district?: string | null
+          email?: string
+          enrollment_date?: string | null
+          father_name?: string | null
+          full_name?: string
+          gender?: string | null
+          id?: string
+          login_password?: string | null
+          mother_name?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          pin_code?: string | null
+          qualification?: string | null
+          registration_date?: string | null
+          state?: string | null
+          status?: string | null
+          student_id?: string | null
+          study_center?: string | null
+          title?: string | null
+          updated_at?: string
+          year_of_passing?: string | null
+        }
+        Relationships: []
+      }
+      study_centers: {
+        Row: {
+          address: string | null
+          code: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
           updated_at: string
         }
         Insert: {
-          city?: string | null
-          course_name?: string | null
+          address?: string | null
+          code?: string | null
           created_at?: string
-          email: string
-          enrollment_date?: string | null
-          full_name: string
           id?: string
-          phone?: string | null
-          state?: string | null
-          status?: string | null
+          is_active?: boolean
+          name: string
           updated_at?: string
         }
         Update: {
-          city?: string | null
-          course_name?: string | null
+          address?: string | null
+          code?: string | null
           created_at?: string
-          email?: string
-          enrollment_date?: string | null
-          full_name?: string
           id?: string
-          phone?: string | null
-          state?: string | null
-          status?: string | null
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      titles: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
           updated_at?: string
         }
         Relationships: []
@@ -1818,6 +2013,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_student_id: { Args: never; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
