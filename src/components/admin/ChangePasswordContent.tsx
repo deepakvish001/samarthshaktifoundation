@@ -87,6 +87,22 @@ const ChangePasswordContent = () => {
         throw updateError;
       }
 
+      // If this account is a student, stamp password_changed_at on their profile
+      // and clear the stored plaintext login_password.
+      try {
+        if (user?.email) {
+          await (supabase as any)
+            .from("student_profiles")
+            .update({
+              password_changed_at: new Date().toISOString(),
+              login_password: null,
+            })
+            .eq("email", user.email);
+        }
+      } catch (stampErr) {
+        console.error("Failed to stamp password_changed_at:", stampErr);
+      }
+
       // Success
       setIsSuccess(true);
       toast.success("Password changed successfully!");
