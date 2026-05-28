@@ -8,6 +8,7 @@ import { FileSearch, Search, Download, Printer, Edit, Trash2, Loader2, BarChart3
 import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
+import { downloadReportPdf, printReportPdf } from "@/lib/reportPdfGenerator";
 
 interface CertificateMarksheet {
   id: string;
@@ -70,12 +71,24 @@ const ReportContent = () => {
     };
   }, [reports, filteredReports]);
 
-  const handleDownload = (report: CertificateMarksheet) => {
-    toast.info(`Downloading certificate/marksheet for ${report.student_name}`);
+  const handleDownload = async (report: CertificateMarksheet) => {
+    const t = toast.loading(`Generating PDF for ${report.student_name}...`);
+    try {
+      await downloadReportPdf(report.student_id);
+      toast.success("PDF downloaded", { id: t });
+    } catch (e: any) {
+      toast.error(e?.message || "Download failed", { id: t });
+    }
   };
 
-  const handlePrint = (report: CertificateMarksheet) => {
-    toast.info(`Printing certificate/marksheet for ${report.student_name}`);
+  const handlePrint = async (report: CertificateMarksheet) => {
+    const t = toast.loading(`Preparing print for ${report.student_name}...`);
+    try {
+      await printReportPdf(report.student_id);
+      toast.success("Opened print dialog", { id: t });
+    } catch (e: any) {
+      toast.error(e?.message || "Print failed", { id: t });
+    }
   };
 
   const handleDelete = async (id: string) => {
