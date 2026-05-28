@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import StudentPicker from "@/components/admin/shared/StudentPicker";
+import { validateStudentSelection } from "@/components/admin/shared/validateStudentSelection";
 
 interface FeesReceipt {
   id: string;
@@ -161,6 +162,16 @@ const FeesManagementContent = () => {
       return;
     }
 
+    const check = await validateStudentSelection({
+      studentId,
+      expectedCourse: course,
+      expectedFee: totalFee,
+    });
+    if (!check.ok) {
+      toast.error(check.message);
+      return;
+    }
+
     try {
       const calculatedAmountDue = parseFloat(totalFee) - parseFloat(amountPaid);
       
@@ -195,6 +206,16 @@ const FeesManagementContent = () => {
 
     if (!receiptNo || !franchiseName || !franchiseId || !date || !course || !student || !studentId || !totalFee || !amountPaid) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    const check = await validateStudentSelection({
+      studentId,
+      expectedCourse: course,
+      expectedFee: totalFee,
+    });
+    if (!check.ok) {
+      toast.error(check.message);
       return;
     }
 
