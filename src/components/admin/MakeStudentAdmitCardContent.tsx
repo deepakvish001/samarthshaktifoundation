@@ -260,7 +260,7 @@ const MakeStudentAdmitCardContent = () => {
 
                   <div className="md:col-span-2 lg:col-span-3 p-4 bg-primary/5 border border-primary/20 rounded-lg">
                     <label className="text-sm font-medium text-foreground mb-2 block">
-                      Select Registered Student (auto-fills Name, Father, Mother, Course)
+                      Select Registered Student (auto-fills Name, Father, Mother, Course, Exam Centre)
                     </label>
                     <StudentPicker
                       value={formData.studentRollNumber}
@@ -272,6 +272,7 @@ const MakeStudentAdmitCardContent = () => {
                           studentFatherName: s.father_name || prev.studentFatherName,
                           studentMotherName: s.mother_name || prev.studentMotherName,
                           course: s.course_name || prev.course,
+                          examCentreAddress: s.study_center || prev.examCentreAddress,
                         }));
                       }}
                       className="w-full"
