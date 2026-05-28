@@ -518,10 +518,16 @@ const StudentRegistrationContent = () => {
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
                     <SelectValue placeholder="-----Select Study Center-----" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="azamgarh">Azamgarh</SelectItem>
-                    <SelectItem value="mau">Mau</SelectItem>
-                    <SelectItem value="baliya">Baliya</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {studyCenters.filter((c) => c.is_active !== false).length > 0 ? (
+                      studyCenters
+                        .filter((c) => c.is_active !== false)
+                        .map((c) => (
+                          <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>
+                        ))
+                    ) : (
+                      <SelectItem value="no-data" disabled>No study centers — add via Master</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
