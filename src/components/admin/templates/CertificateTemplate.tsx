@@ -276,30 +276,47 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  bottom: 60,
-                  left: 50,
-                  right: 46,
+                  bottom: 70,
+                  left: 90,
+                  right: 90,
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-end",
+                  gap: 40,
                 }}
               >
-                <div style={{ fontSize: 14, color: "#0a0a0a", lineHeight: 1.8 }}>
-                  <div>Date of Issue:&nbsp;<b>{awardedOn}</b></div>
-                  <div>Place:&nbsp;<b>{data.place || "—"}</b></div>
+                <div
+                  style={{
+                    fontSize: 14,
+                    color: "#0a0a0a",
+                    lineHeight: 2,
+                    paddingBottom: 6,
+                    minWidth: 230,
+                  }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <span style={{ width: 110, color: "#374151" }}>Date of Issue</span>
+                    <span style={{ marginRight: 6 }}>:</span>
+                    <b>{awardedOn}</b>
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <span style={{ width: 110, color: "#374151" }}>Place</span>
+                    <span style={{ marginRight: 6 }}>:</span>
+                    <b>{data.place || "—"}</b>
+                  </div>
                 </div>
-                <div style={{ textAlign: "center" }}>
+                <div style={{ textAlign: "center", minWidth: 240 }}>
                   {data.directorSignUrl ? (
                     <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 48, objectFit: "contain" }} />
                   ) : (
-                    <div style={{ height: 48, fontFamily: "'Brush Script MT', cursive", fontSize: 28, color: "#0b2a6b" }}>
+                    <div style={{ height: 48, fontFamily: "'Brush Script MT', cursive", fontSize: 28, color: "#0b2a6b", lineHeight: "48px" }}>
                       Authorised
                     </div>
                   )}
-                  <div style={{ borderTop: "1px solid #0a0a0a", paddingTop: 3, minWidth: 230, fontSize: 13, fontWeight: 700 }}>
+                  <div style={{ borderTop: "1px solid #0a0a0a", paddingTop: 4, marginTop: 2, fontSize: 13, fontWeight: 700, letterSpacing: 0.3 }}>
                     Chairman's Signature
                   </div>
-                  <div style={{ fontSize: 11, color: "#374151", marginTop: 1 }}>
+                  <div style={{ fontSize: 11, color: "#374151", marginTop: 2 }}>
                     Nesan Computer and Technical Institute
                   </div>
                 </div>
