@@ -19,7 +19,6 @@ import {
   CourseTemplate,
 } from "@/lib/courseTemplates";
 import { CertificateTemplate, CertificateData } from "./templates/CertificateTemplate";
-import { MarksheetTemplate, MarksheetData } from "./templates/MarksheetTemplate";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
@@ -62,12 +61,11 @@ const AutoGenerateContent = () => {
   const [marks, setMarks] = useState<Array<{ theoryObtained: number; practicalObtained: number }>>([]);
   const [directorSignUrl, setDirectorSignUrl] = useState<string>("");
 
-  const [previewOpen, setPreviewOpen] = useState<null | "cert" | "marks">(null);
+  const [previewOpen, setPreviewOpen] = useState<null | "cert">(null);
   const [saving, setSaving] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
   const certRef = useRef<HTMLDivElement>(null);
-  const marksRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -162,35 +160,6 @@ const AutoGenerateContent = () => {
     verifyUrl: `${window.location.origin}/verify/${form.certificateNumber}`,
   };
 
-  const marksData: MarksheetData = {
-    studentName: form.studentName,
-    fatherName: form.fatherName,
-    motherName: form.motherName,
-    studentId: form.studentId,
-    rollNumber: form.rollNumber || form.studentId,
-    examinationDate: form.examinationDate,
-    issueDate: form.issueDate,
-    place: form.place,
-    course,
-    marks: course.subjects.map((s, i) => ({
-      subject: s,
-      theoryObtained: Number(marks[i]?.theoryObtained || 0),
-      practicalObtained: Number(marks[i]?.practicalObtained || 0),
-    })),
-    totalMax: totals.totalMax,
-    totalObtained: totals.totalObtained,
-    percentage: totals.percentage,
-    grade: totals.grade,
-    result: totals.result,
-    photoUrl: form.photoUrl,
-    directorSignUrl,
-    sealUrl: "/favicon.png",
-    dob: form.dob,
-    centerCode: form.centerCode,
-    centerName: form.centerName,
-    batch: form.batch,
-  };
-
   const validate = () => {
     if (!form.studentId || !form.studentName) {
       toast.error("Student ID and Name required");
@@ -268,7 +237,7 @@ const AutoGenerateContent = () => {
 
   const handleDownload = async () => {
     if (!validate()) return;
-    if (!certRef.current || !marksRef.current) {
+    if (!certRef.current) {
       toast.error("Templates not ready");
       return;
     }
@@ -277,10 +246,7 @@ const AutoGenerateContent = () => {
       const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1123, 794] });
       const c1 = await renderNodeToCanvas(certRef.current);
       pdf.addImage(c1.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
-      pdf.addPage([1123, 794], "landscape");
-      const c2 = await renderNodeToCanvas(marksRef.current);
-      pdf.addImage(c2.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
-      pdf.save(`${form.studentId || "student"}_${course.code}_Certificate_Marksheet.pdf`);
+      pdf.save(`${form.studentId || "student"}_${course.code}_Certificate.pdf`);
       toast.success("PDF downloaded");
     } catch (e: any) {
       toast.error(e.message || "Download failed");
@@ -481,9 +447,6 @@ const AutoGenerateContent = () => {
           <Button onClick={() => setPreviewOpen("cert")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 rounded-xl px-6 py-3 h-auto font-semibold">
             <Eye className="h-4 w-4 mr-2" /> Preview Certificate
           </Button>
-          <Button onClick={() => setPreviewOpen("marks")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 rounded-xl px-6 py-3 h-auto font-semibold">
-            <Eye className="h-4 w-4 mr-2" /> Preview Marksheet
-          </Button>
           <Button onClick={handleSave} disabled={saving} className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-6 py-3 h-auto font-semibold">
             {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
             Save to Database
@@ -498,7 +461,6 @@ const AutoGenerateContent = () => {
       {/* Hidden render targets for PDF */}
       <div style={{ position: "fixed", left: -10000, top: 0 }}>
         <CertificateTemplate ref={certRef} data={certData} />
-        <MarksheetTemplate ref={marksRef} data={marksData} />
       </div>
 
       {/* Preview modal */}
@@ -506,7 +468,6 @@ const AutoGenerateContent = () => {
         open={previewOpen}
         onClose={() => setPreviewOpen(null)}
         certData={certData}
-        marksData={marksData}
       />
     </div>
   );
@@ -556,12 +517,10 @@ const PreviewModal = ({
   open,
   onClose,
   certData,
-  marksData,
 }: {
-  open: null | "cert" | "marks";
+  open: null | "cert";
   onClose: () => void;
   certData: CertificateData;
-  marksData: MarksheetData;
 }) => {
   const stageRef = useRef<HTMLDivElement>(null);
   const printRef = useRef<HTMLDivElement>(null);
@@ -637,11 +596,7 @@ const PreviewModal = ({
                 transformOrigin: "top left",
               }}
             >
-              {open === "cert" ? (
-                <CertificateTemplate data={certData} />
-              ) : open === "marks" ? (
-                <MarksheetTemplate data={marksData} />
-              ) : null}
+              {open === "cert" ? <CertificateTemplate data={certData} /> : null}
             </div>
           </div>
         </div>
