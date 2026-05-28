@@ -95,7 +95,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   margin: "4px 130px 2px 40px",
                   fontSize: 34,
                   fontWeight: 900,
-                  color: "#0b2a6b",
+                  color: "#b91c1c",
                   letterSpacing: "0.3px",
                   lineHeight: 1.05,
                 }}
@@ -238,12 +238,12 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   alignItems: "flex-end",
                 }}
               >
-                <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-                  <FooterBadge label="NCTI" sub="Education" color="#0b2a6b" />
-                  <FooterBadge label="SSF" sub="Foundation" color="#b91c1c" />
-                  <FooterBadge label="MSME" sub="Govt. of India" color="#15803d" />
-                  <FooterBadge label="ISO" sub="9001:2015" color="#0b2a6b" />
-                  <FooterBadge label="SRA" sub="1860" color="#b91c1c" />
+                <div style={{ display: "flex", gap: 14, alignItems: "flex-end" }}>
+                  <RectBadge title="NCTI" subtitle="Education" titleColor="#0b2a6b" subBg="#b91c1c" />
+                  <ShieldBadge title="SSF" subtitle="CERT LTD" />
+                  <RectBadge title="MSME" subtitle="Govt. of India" titleColor="#0b2a6b" subBg="#0b2a6b" wide />
+                  <SealBadge title="ISO" subtitle="9001:2015" ringColor="#ea580c" />
+                  <SealBadge title="SRA" subtitle="1860" ringColor="#f59e0b" />
                 </div>
                 <div style={{ textAlign: "center" }}>
                   {data.directorSignUrl ? (
@@ -293,39 +293,112 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
 CertificateTemplate.displayName = "CertificateTemplate";
 
 const CornerArc = ({ position }: { position: "tl" | "tr" | "bl" | "br" }) => {
-  const size = 110;
-  const base: React.CSSProperties = {
-    position: "absolute",
-    width: size,
-    height: size,
-    border: "6px solid #f59e0b",
-    borderRadius: "50%",
-    background: "transparent",
-  };
-  const map: Record<string, React.CSSProperties> = {
-    tl: { top: -size / 2, left: -size / 2 },
-    tr: { top: -size / 2, right: -size / 2 },
-    bl: { bottom: -size / 2, left: -size / 2 },
-    br: { bottom: -size / 2, right: -size / 2 },
-  };
-  return <div style={{ ...base, ...map[position] }} />;
-};
-
-const FooterBadge = ({ label, sub, color }: { label: string; sub: string; color: string }) => (
-  <div style={{ textAlign: "center", minWidth: 60 }}>
+  const size = 150;
+  const isTop = position === "tl" || position === "tr";
+  const isLeft = position === "tl" || position === "bl";
+  // Layered colored arcs (orange, teal, blue) matching reference corner art
+  const layers = [
+    { c: "#f59e0b", s: size },
+    { c: "#0ea5a4", s: size - 36 },
+    { c: "#1e40af", s: size - 72 },
+  ];
+  return (
     <div
       style={{
-        background: color,
-        color: "#fff",
-        fontWeight: 800,
-        fontSize: 13,
-        padding: "4px 10px",
-        borderRadius: 4,
-        border: "1.5px solid #0a0a0a",
+        position: "absolute",
+        width: size,
+        height: size,
+        overflow: "hidden",
+        [isTop ? "top" : "bottom"]: 0,
+        [isLeft ? "left" : "right"]: 0,
+        pointerEvents: "none",
       }}
     >
-      {label}
+      {layers.map((l, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            width: l.s,
+            height: l.s,
+            background: l.c,
+            borderRadius: "50%",
+            [isTop ? "top" : "bottom"]: -l.s / 2,
+            [isLeft ? "left" : "right"]: -l.s / 2,
+          }}
+        />
+      ))}
     </div>
-    <div style={{ fontSize: 9, color: "#374151", marginTop: 2, fontWeight: 600 }}>{sub}</div>
+  );
+};
+
+// Rectangular logo badge — title row + small colored sub bar (ITDB / MSME style)
+const RectBadge = ({
+  title, subtitle, titleColor, subBg, wide,
+}: { title: string; subtitle: string; titleColor: string; subBg: string; wide?: boolean }) => (
+  <div
+    style={{
+      border: `2px solid ${titleColor}`,
+      borderRadius: 3,
+      background: "#fff",
+      width: wide ? 78 : 64,
+      textAlign: "center",
+      overflow: "hidden",
+      fontFamily: "Arial, sans-serif",
+      lineHeight: 1.1,
+    }}
+  >
+    <div style={{ color: titleColor, fontWeight: 900, fontSize: 13, padding: "4px 2px 2px" }}>{title}</div>
+    <div style={{ background: subBg, color: "#fff", fontWeight: 700, fontSize: 8, padding: "2px 2px" }}>
+      {subtitle}
+    </div>
+  </div>
+);
+
+// Shield-style badge (London Cert Ltd style)
+const ShieldBadge = ({ title, subtitle }: { title: string; subtitle: string }) => (
+  <div
+    style={{
+      width: 56,
+      height: 56,
+      background: "linear-gradient(180deg, #fde047 0%, #f59e0b 100%)",
+      border: "2px solid #92400e",
+      borderRadius: "6px 6px 22px 22px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      fontFamily: "Arial, sans-serif",
+      lineHeight: 1.05,
+      textAlign: "center",
+      color: "#7c2d12",
+    }}
+  >
+    <div style={{ fontWeight: 900, fontSize: 12 }}>{title}</div>
+    <div style={{ fontWeight: 800, fontSize: 7, marginTop: 2 }}>{subtitle}</div>
+  </div>
+);
+
+// Circular seal (ISO / SMCS style)
+const SealBadge = ({ title, subtitle, ringColor }: { title: string; subtitle: string; ringColor: string }) => (
+  <div
+    style={{
+      width: 54,
+      height: 54,
+      borderRadius: "50%",
+      background: "#fff",
+      border: `3px solid ${ringColor}`,
+      boxShadow: `inset 0 0 0 2px ${ringColor}33`,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+      lineHeight: 1,
+      fontFamily: "Arial, sans-serif",
+    }}
+  >
+    <div style={{ fontWeight: 900, fontSize: 12, color: ringColor }}>{title}</div>
+    <div style={{ fontWeight: 800, fontSize: 8, color: "#0a0a0a", marginTop: 2 }}>{subtitle}</div>
   </div>
 );
