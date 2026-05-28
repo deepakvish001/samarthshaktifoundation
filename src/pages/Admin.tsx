@@ -347,22 +347,21 @@ const Admin = () => {
             <nav className="space-y-2">
               {sidebarItems.map((item, index) => (
                 <div key={index}>
+                  {(() => {
+                    const itemAny = item as any;
+                    const isDashboardActive = itemAny.label === 'Dashboard' && activePath === '/admin/dashboard';
+                    const isParentActive = activeMeta.parentIndex === index;
+                    const isActive = isDashboardActive || isParentActive;
+                    return null;
+                  })()}
                   <div 
-                    className={`${sidebarCollapsed ? 'flex items-center justify-center p-4 relative group' : 'flex items-center space-x-4 p-3'} rounded-xl cursor-pointer transition-all duration-200 ${item.label === 'Dashboard' && currentView === 'dashboard' ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 shadow-lg' : 'hover:bg-gray-700/50 hover:shadow-md'}`}
-                    onClick={() => {
-                      if (item.label === 'Dashboard') {
-                        navigate('/admin/dashboard');
-                      } else if (item.label === 'LogOut') {
-                        handleLogout();
-                      } else if (item.hasSubmenu && !sidebarCollapsed) {
-                        toggleSubmenu(index);
-                      }
-                    }}
+                    className={`${sidebarCollapsed ? 'flex items-center justify-center p-4 relative group' : 'flex items-center space-x-4 p-3'} rounded-xl cursor-pointer transition-all duration-200 ${((item.label === 'Dashboard' && activePath === '/admin/dashboard') || activeMeta.parentIndex === index) ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 shadow-lg' : 'hover:bg-gray-700/50 hover:shadow-md'}`}
+                    onClick={() => handleParentClick(index, item)}
                   >
                     <item.icon className={`${sidebarCollapsed ? 'h-7 w-7' : 'h-5 w-5'} ${item.color || 'text-gray-400'} group-hover:scale-110 transition-transform duration-200 ${sidebarCollapsed ? 'mx-auto' : ''}`} />
                     {!sidebarCollapsed && (
                       <>
-                        <span className={`text-sm font-medium ${item.label === 'Dashboard' && currentView === 'dashboard' ? 'text-white' : 'text-gray-300'} group-hover:text-white transition-colors duration-200`}>
+                        <span className={`text-sm font-medium ${((item.label === 'Dashboard' && activePath === '/admin/dashboard') || activeMeta.parentIndex === index) ? 'text-white' : 'text-gray-300'} group-hover:text-white transition-colors duration-200`}>
                           {item.label}
                         </span>
                         {item.hasSubmenu && (
@@ -383,156 +382,21 @@ const Admin = () => {
                   </div>
                   
                   {/* Submenu Items */}
-                  {item.hasSubmenu && item.submenuItems && !sidebarCollapsed && openSubmenus.has(index) && (
+                  {(item as any).hasSubmenu && (item as any).submenuItems && !sidebarCollapsed && openSubmenus.has(index) && (
                     <div className="ml-8 mt-2 space-y-1 border-l-2 border-gray-600/50 pl-4">
-                      {item.submenuItems.map((subItem, subIndex) => (
-                        <div 
-                          key={subIndex}
-                          className="flex items-center space-x-3 p-2 text-sm text-gray-400 hover:text-white hover:bg-gray-700/30 rounded-lg cursor-pointer transition-all duration-200"
-                          onClick={() => {
-                            if (subItem.label === "Edit My Profile") {
-                              navigate('/admin/edit-profile');
-                            } else if (subItem.label === "Admin Profile Management") {
-                              navigate('/admin/admin-profile-management');
-                            } else if (subItem.label === "Change Login Password") {
-                              navigate('/admin/change-password');
-                            } else if (subItem.label === "Video") {
-                              navigate('/admin/video');
-                            } else if (subItem.label === "Head Office") {
-                              navigate('/admin/head-office');
-                            } else if (subItem.label === "Menu Content") {
-                              navigate('/admin/menu-content');
-                            } else if (subItem.label === "Photo Gallery") {
-                              navigate('/admin/photo-gallery');
-                            } else if (subItem.label === "Add Bank Details") {
-                              navigate('/admin/bank-details');
-                            } else if (subItem.label === "EMP Master") {
-                              navigate('/admin/employee-master');
-                            } else if (subItem.label === "State Master") {
-                              navigate('/admin/state-master');
-                            } else if (subItem.label === "Distt Master") {
-                              navigate('/admin/district-master');
-                            } else if (subItem.label === "Course Master") {
-                              navigate('/admin/course-master');
-                            } else if (subItem.label === "Add News") {
-                              navigate('/admin/add-news');
-                            } else if (subItem.label === "Add Course Category") {
-                              navigate('/admin/add-course-category');
-                            } else if (subItem.label === "Add News & Event") {
-                              navigate('/admin/add-competition-courses');
-                            } else if (subItem.label === "Add Vision") {
-                              navigate('/admin/add-vision');
-                            } else if (subItem.label === "Add Mission") {
-                              navigate('/admin/add-mission');
-                            } else if (subItem.label === "Add Director Message") {
-                              navigate('/admin/add-director-message');
-                            } else if (subItem.label === "Enquiry") {
-                              navigate('/admin/enquiry');
-                            } else if (subItem.label === "Contact Us") {
-                              navigate('/admin/contact-us');
-                            } else if (subItem.label === "Student Registration") {
-                              navigate('/admin/student-registration');
-                            } else if (subItem.label === "Student Approval") {
-                              navigate('/admin/student-approval');
-                            } else if (subItem.label === "Student Management") {
-                              navigate('/admin/student-management');
-                            } else if (subItem.label === "Real-Time Student Management") {
-                              navigate('/admin/student-management-realtime');
-                            } else if (subItem.label === "Search By Student Data") {
-                              navigate('/admin/search-by-student-data');
-                            } else if (subItem.label === "Student Verification") {
-                              navigate('/admin/student-verification');
-                            } else if (subItem.label === "Verification") {
-                              navigate('/admin/verification');
-                            } else if (subItem.label === "Verification Report") {
-                              navigate('/admin/verification-report');
-                            } else if (subItem.label === "Student Data") {
-                              navigate('/admin/student-data');
-                            } else if (subItem.label === "Student Reg. Print") {
-                              navigate('/admin/student-reg-print');
-                            } else if (subItem.label === "Make Student Admit Card") {
-                              navigate('/admin/make-student-admit-card');
-                            } else if (subItem.label === "Student Admit Card Report") {
-                              navigate('/admin/student-admit-card-report');
-                            } else if (subItem.label === "Generate Student Admit Card") {
-                              navigate('/admin/generate-student-admit-card');
-                            } else if (subItem.label === "Upload Student Content") {
-                              navigate('/admin/upload-student-content');
-                            } else if (subItem.label === "Course Subject") {
-                              navigate('/admin/course-subject');
-                            } else if (subItem.label === "Certificate Management") {
-                              navigate('/admin/certificate-management');
-                            } else if (subItem.label === "Auto Generate Certificate") {
-                              navigate('/admin/auto-generate');
-                            } else if (subItem.label === "Marksheet Management") {
-                              navigate('/admin/marksheet-management');
-                            } else if (subItem.label === "Alot Number") {
-                              navigate('/admin/alot-number');
-                            } else if (subItem.label === "Ready Markseet") {
-                              navigate('/admin/ready-marksheet');
-                            } else if (subItem.label === "Report") {
-                              navigate('/admin/report');
-                            } else if (subItem.label === "Edit CRT") {
-                              navigate('/admin/edit-crt');
-                            } else if (subItem.label === "Student Markseet") {
-                              navigate('/admin/student-marksheet');
-                            } else if (subItem.label === "Attendance Management") {
-                              navigate('/admin/attendance-management');
-                            } else if (subItem.label === "Student Attandance") {
-                              navigate('/admin/student-attendance');
-                            } else if (subItem.label === "Student Att. Report") {
-                              navigate('/admin/student-attendance-report');
-                            } else if (subItem.label === "Class Fees") {
-                              navigate('/admin/class-fees');
-                            } else if (subItem.label === "Fees Reports") {
-                              navigate('/admin/fees-reports');
-                            } else if (subItem.label === "Fees Management") {
-                              navigate('/admin/fees-management');
-                            } else if (subItem.label === "Fees Print") {
-                              navigate('/admin/fees-print');
-                            } else if (subItem.label === "Expense Master") {
-                              navigate('/admin/expense-master');
-                            } else if (subItem.label === "Expense Entry") {
-                              navigate('/admin/expense-entry');
-                            } else if (subItem.label === "Day Book") {
-                              navigate('/admin/day-book');
-                            } else if (subItem.label === "Opening Balance") {
-                              navigate('/admin/opening-balance');
-                            } else if (subItem.label === "Balance Sheet") {
-                              navigate('/admin/balance-sheet');
-                            } else if (subItem.label === "Registration") {
-                              navigate('/admin/franchise-registration');
-                            } else if (subItem.label === "Franchise Management") {
-                              navigate('/admin/franchise-management');
-                            } else if (subItem.label === "Approval") {
-                              navigate('/admin/franchise-approval');
-                            } else if (subItem.label === "Franchise Data") {
-                              navigate('/admin/franchise-data');
-                            } else if (subItem.label === "Franchise Reg. Print") {
-                              navigate('/admin/franchise-reg-print');
-                            } else if (subItem.label === "Franchise Upload") {
-                              navigate('/admin/franchise-upload');
-                            } else if (subItem.label === "View Franchise Support") {
-                              navigate('/admin/view-franchise-support');
-                            } else if (subItem.label === "Make Franchise Certificate") {
-                              navigate('/admin/make-franchise-certificate');
-                            } else if (subItem.label === "Generate Franchise Certificate") {
-                              navigate('/admin/generate-franchise-certificate');
-                            } else if (subItem.label === "Payment Mode Management") {
-                              navigate('/admin/payment-mode-management');
-                            } else if (subItem.label === "Payment Section") {
-                              navigate('/admin/payment-section');
-                            } else if (subItem.label === "Reporting") {
-                              navigate('/admin/payment-reporting');
-                            } else if (subItem.label === "Student_Editing") {
-                              navigate('/admin/student-editing');
-                            }
-                          }}
-                        >
-                          <subItem.icon className="h-4 w-4 text-gray-500" />
-                          <span>{subItem.label}</span>
-                        </div>
-                      ))}
+                      {(item as any).submenuItems.map((subItem: any, subIndex: number) => {
+                        const isSubActive = subItem.path === activePath;
+                        return (
+                          <div
+                            key={subIndex}
+                            className={`flex items-center space-x-3 p-2 text-sm rounded-lg cursor-pointer transition-all duration-200 ${isSubActive ? 'bg-blue-600/30 text-white border-l-2 border-blue-400 shadow-md -ml-[2px]' : 'text-gray-400 hover:text-white hover:bg-gray-700/30'}`}
+                            onClick={() => subItem.path && navigate(subItem.path)}
+                          >
+                            <subItem.icon className={`h-4 w-4 ${isSubActive ? 'text-blue-300' : 'text-gray-500'}`} />
+                            <span>{subItem.label}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
