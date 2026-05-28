@@ -1,0 +1,1 @@
+ALTER TABLE public.alot_numbers ADD COLUMN IF NOT EXISTS subjects jsonb DEFAULT '[]'::jsonb;

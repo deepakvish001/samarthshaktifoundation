@@ -84,6 +84,7 @@ export type Database = {
           student_mother_name: string | null
           student_name: string | null
           student_photo_url: string | null
+          subjects: Json | null
           theory_max_marks: string | null
           updated_at: string
         }
@@ -105,6 +106,7 @@ export type Database = {
           student_mother_name?: string | null
           student_name?: string | null
           student_photo_url?: string | null
+          subjects?: Json | null
           theory_max_marks?: string | null
           updated_at?: string
         }
@@ -126,6 +128,7 @@ export type Database = {
           student_mother_name?: string | null
           student_name?: string | null
           student_photo_url?: string | null
+          subjects?: Json | null
           theory_max_marks?: string | null
           updated_at?: string
         }
