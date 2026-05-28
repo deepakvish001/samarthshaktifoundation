@@ -82,6 +82,24 @@ const ResetPassword = () => {
         throw updateError;
       }
 
+      // If this is a student account, stamp password_changed_at on their profile
+      // and clear the plaintext login_password so admins know it's no longer valid.
+      try {
+        const { data: sessionUser } = await supabase.auth.getUser();
+        const email = sessionUser?.user?.email;
+        if (email) {
+          await (supabase as any)
+            .from("student_profiles")
+            .update({
+              password_changed_at: new Date().toISOString(),
+              login_password: null,
+            })
+            .eq("email", email);
+        }
+      } catch (stampErr) {
+        console.error("Failed to stamp password_changed_at:", stampErr);
+      }
+
       toast({
         title: "Password Reset Successful",
         description: "Your password has been updated successfully.",

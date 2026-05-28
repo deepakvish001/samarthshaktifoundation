@@ -4,9 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit, Loader2, Users, BookOpen, GraduationCap, UserCheck, Search, Building, MapPin, Mail, Phone, Trash2, Plus, Download, Printer } from "lucide-react";
+import { Edit, Loader2, Users, BookOpen, GraduationCap, UserCheck, Search, Building, MapPin, Mail, Phone, Trash2, Plus, Download, Printer, KeyRound, ShieldAlert, Copy } from "lucide-react";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 
 interface StudentProfile {
   id: string;
@@ -18,6 +21,9 @@ interface StudentProfile {
   city?: string;
   state?: string;
   enrollment_date?: string;
+  student_id?: string;
+  password_changed_at?: string | null;
+  login_password?: string | null;
 }
 
 const StudentManagementContent = () => {
@@ -43,6 +49,8 @@ const StudentManagementContent = () => {
 
   const [selectedFranchise, setSelectedFranchise] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [reissuing, setReissuing] = useState<string | null>(null);
+  const [newCred, setNewCred] = useState<{ name: string; student_id: string; password: string } | null>(null);
 
   // Filtered students based on search and franchise
   const filteredStudents = studentProfiles.filter(student => {
@@ -71,6 +79,31 @@ const StudentManagementContent = () => {
 
   const handleEdit = (studentId: string) => {
     // Open edit form (no notifications)
+  };
+
+  const handleIssueNewPassword = async (student: StudentProfile) => {
+    if (!student.student_id) {
+      toast.error("This student has no Student ID — cannot issue a new password.");
+      return;
+    }
+    if (!confirm(`Generate a new login password for ${student.full_name}? Their previous password will stop working immediately.`)) return;
+    setReissuing(student.id);
+    try {
+      const { data, error } = await supabase.functions.invoke("provision-student-auth", {
+        body: { student_id: student.student_id, issue_new: true },
+      });
+      if (error) throw error;
+      const password = (data as any)?.password;
+      if (!password) throw new Error("No password returned");
+      setNewCred({ name: student.full_name, student_id: student.student_id, password });
+      await refresh();
+      toast.success("New password issued.");
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message || "Failed to issue new password");
+    } finally {
+      setReissuing(null);
+    }
   };
 
   const handleDelete = async (studentId: string) => {
@@ -244,13 +277,14 @@ const StudentManagementContent = () => {
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Course</TableHead>
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Location</TableHead>
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Status</TableHead>
-                  <TableHead className="text-primary-foreground font-bold text-center py-4">Enrollment Date</TableHead>
+                  <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Enrollment Date</TableHead>
+                  <TableHead className="text-primary-foreground font-bold text-center py-4">Login Password</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredStudents.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                       {searchTerm ? "No students found matching your search." : "No students registered yet."}
                     </TableCell>
                   </TableRow>
@@ -277,6 +311,16 @@ const StudentManagementContent = () => {
                             className="text-destructive hover:text-destructive hover:bg-destructive/10 p-2 rounded-lg transition-colors"
                           >
                             <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleIssueNewPassword(student)}
+                            disabled={reissuing === student.id}
+                            title="Issue a new login password"
+                            className="text-amber-600 hover:text-amber-700 hover:bg-amber-500/10 p-2 rounded-lg transition-colors"
+                          >
+                            {reissuing === student.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <KeyRound className="h-4 w-4" />}
                           </Button>
                         </div>
                       </TableCell>
@@ -321,10 +365,29 @@ const StudentManagementContent = () => {
                           {student.status || 'Pending'}
                         </span>
                       </TableCell>
-                      <TableCell className="text-center p-4">
+                      <TableCell className="text-center p-4 border-r border-border">
                         <span className="text-foreground">
                           {student.enrollment_date ? new Date(student.enrollment_date).toLocaleDateString() : "-"}
                         </span>
+                      </TableCell>
+                      <TableCell className="text-center p-4">
+                        {student.password_changed_at ? (
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
+                              <ShieldAlert className="h-3 w-3" />
+                              Changed by student
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">
+                              on {new Date(student.password_changed_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                        ) : student.login_password ? (
+                          <code className="px-2 py-1 text-xs rounded bg-muted text-foreground font-mono">
+                            {student.login_password}
+                          </code>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))
@@ -334,6 +397,54 @@ const StudentManagementContent = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={!!newCred} onOpenChange={(o) => !o && setNewCred(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>New password issued</DialogTitle>
+            <DialogDescription>
+              Share these credentials with {newCred?.name}. The previous password no longer works.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-2 p-3 rounded-md bg-muted">
+              <div>
+                <div className="text-xs text-muted-foreground">Student ID</div>
+                <div className="font-mono font-semibold">{newCred?.student_id}</div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  if (newCred?.student_id) navigator.clipboard.writeText(newCred.student_id);
+                  toast.success("Student ID copied");
+                }}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex items-center justify-between gap-2 p-3 rounded-md bg-muted">
+              <div>
+                <div className="text-xs text-muted-foreground">New password</div>
+                <div className="font-mono font-semibold">{newCred?.password}</div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  if (newCred?.password) navigator.clipboard.writeText(newCred.password);
+                  toast.success("Password copied");
+                }}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setNewCred(null)}>Done</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

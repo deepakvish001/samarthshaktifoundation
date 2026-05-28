@@ -1670,6 +1670,7 @@ export type Database = {
           id: string
           login_password: string | null
           mother_name: string | null
+          password_changed_at: string | null
           phone: string | null
           photo_url: string | null
           pin_code: string | null
@@ -1702,6 +1703,7 @@ export type Database = {
           id?: string
           login_password?: string | null
           mother_name?: string | null
+          password_changed_at?: string | null
           phone?: string | null
           photo_url?: string | null
           pin_code?: string | null
@@ -1734,6 +1736,7 @@ export type Database = {
           id?: string
           login_password?: string | null
           mother_name?: string | null
+          password_changed_at?: string | null
           phone?: string | null
           photo_url?: string | null
           pin_code?: string | null
