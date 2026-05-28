@@ -150,7 +150,7 @@ const Navigation = () => {
                       {/* Dropdown Menu */}
                       {showProgramsDropdown && (
                         <div 
-                          className="absolute top-full left-0 mt-2 w-64 bg-background/98 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl z-[100] p-2 animate-fade-in"
+                          className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-2xl shadow-2xl z-[100] p-2 animate-fade-in"
                           onMouseEnter={handleDropdownEnter}
                           onMouseLeave={handleDropdownLeave}
                         >
