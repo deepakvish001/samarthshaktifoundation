@@ -147,7 +147,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 }}
               >
                 <img
-                  src="/lovable-uploads/samarth-shakti-logo.png"
+                  src="/lovable-uploads/nesan-logo.png"
                   alt="SSF Logo"
                   crossOrigin="anonymous"
                   style={{ width: "92%", height: "92%", objectFit: "contain" }}
