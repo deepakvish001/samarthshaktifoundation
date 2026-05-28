@@ -21,6 +21,7 @@ import {
 import { CertificateTemplate, CertificateData } from "./templates/CertificateTemplate";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { generateAndUploadReportPdf } from "@/lib/reportPdfGenerator";
 
 interface StudentOption {
   student_id: string;
@@ -276,7 +277,7 @@ const AutoGenerateContent = () => {
         grade: totals.grade,
         certificate_type: "course_completion",
         status: "active",
-      });
+      }).select().single();
       const marksInsert = supabase.from("marksheet_management").insert({
         student_id: form.studentId,
         student_name: form.studentName,
@@ -292,7 +293,15 @@ const AutoGenerateContent = () => {
       const [c, m] = await Promise.all([certInsert, marksInsert]);
       if (c.error) throw c.error;
       if (m.error) throw m.error;
-      toast.success("Saved to database");
+      toast.success("Saved to database. Generating PDF...");
+      const pdfUrl = await generateAndUploadReportPdf(form.studentId);
+      if (pdfUrl && c.data?.id) {
+        await supabase
+          .from("certificate_management")
+          .update({ certificate_url: pdfUrl })
+          .eq("id", (c.data as any).id);
+        toast.success("Certificate PDF stored");
+      }
     } catch (e: any) {
       toast.error(e.message || "Save failed");
     } finally {

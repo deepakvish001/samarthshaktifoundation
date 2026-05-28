@@ -8,7 +8,7 @@ import { FileSearch, Search, Download, Printer, Edit, Trash2, Loader2, BarChart3
 import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
-import { downloadReportPdf, printReportPdf } from "@/lib/reportPdfGenerator";
+import { downloadReportPdf, printReportPdf, downloadSavedPdf, printSavedPdf } from "@/lib/reportPdfGenerator";
 
 interface CertificateMarksheet {
   id: string;
@@ -74,7 +74,12 @@ const ReportContent = () => {
   const handleDownload = async (report: CertificateMarksheet) => {
     const t = toast.loading(`Generating PDF for ${report.student_name}...`);
     try {
-      await downloadReportPdf(report.student_id);
+      if (report.certificate_url) {
+        const safe = (report.student_name || report.student_id).replace(/[^a-z0-9]+/gi, "_");
+        await downloadSavedPdf(report.certificate_url, `${safe}_Certificate.pdf`);
+      } else {
+        await downloadReportPdf(report.student_id);
+      }
       toast.success("PDF downloaded", { id: t });
     } catch (e: any) {
       toast.error(e?.message || "Download failed", { id: t });
@@ -84,7 +89,11 @@ const ReportContent = () => {
   const handlePrint = async (report: CertificateMarksheet) => {
     const t = toast.loading(`Preparing print for ${report.student_name}...`);
     try {
-      await printReportPdf(report.student_id);
+      if (report.certificate_url) {
+        printSavedPdf(report.certificate_url);
+      } else {
+        await printReportPdf(report.student_id);
+      }
       toast.success("Opened print dialog", { id: t });
     } catch (e: any) {
       toast.error(e?.message || "Print failed", { id: t });
