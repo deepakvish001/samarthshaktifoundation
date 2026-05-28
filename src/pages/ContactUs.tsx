@@ -65,15 +65,6 @@ const ContactUs = () => {
       action: "Send Email"
     },
     {
-      title: "Visit Our Website",
-      description: "Explore our complete offerings",
-      icon: Globe,
-      details: ["www.mataphoolpatidss.in"],
-      color: "text-purple-600",
-      bg: "bg-purple-50",
-      action: "Visit Website"
-    },
-    {
       title: "Office Hours",
       description: "Monday - Saturday",
       icon: Clock,
