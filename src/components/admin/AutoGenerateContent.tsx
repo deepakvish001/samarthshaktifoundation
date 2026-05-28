@@ -21,7 +21,7 @@ import {
 import { CertificateTemplate, CertificateData } from "./templates/CertificateTemplate";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { generateAndUploadReportPdf } from "@/lib/reportPdfGenerator";
+// PDF upload helpers
 
 interface StudentOption {
   student_id: string;
@@ -265,6 +265,10 @@ const AutoGenerateContent = () => {
 
   const handleSave = async () => {
     if (!validate()) return;
+    if (!certRef.current) {
+      toast.error("Certificate not ready, please wait a moment");
+      return;
+    }
     setSaving(true);
     try {
       const certInsert = supabase.from("certificate_management").insert({
@@ -289,25 +293,35 @@ const AutoGenerateContent = () => {
         percentage: Number(totals.percentage.toFixed(2)),
         grade: totals.grade,
         result_status: totals.result.toLowerCase(),
-      }).select().single();
+      });
       const [c, m] = await Promise.all([certInsert, marksInsert]);
       if (c.error) throw c.error;
       if (m.error) throw m.error;
-      toast.success("Saved to database. Generating PDF...");
-      const { certificateUrl, marksheetUrl } = await generateAndUploadReportPdf(form.studentId);
-      if (certificateUrl && c.data?.id) {
+      toast.success("Saved. Generating certificate PDF...");
+
+      // Render the exact same on-screen certificate node used by Download
+      const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1123, 794] });
+      const canvas = await renderNodeToCanvas(certRef.current);
+      pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
+      const blob = pdf.output("blob") as Blob;
+
+      const safe = (form.studentName || form.studentId).replace(/[^a-z0-9]+/gi, "_");
+      const { data: u } = await supabase.auth.getUser();
+      const folder = u.user?.id || "shared";
+      const path = `${folder}/certificates/${safe}_${course.code}_Certificate_${Date.now()}.pdf`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, blob, { upsert: true, contentType: "application/pdf" });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+
+      if (c.data?.id) {
         await supabase
           .from("certificate_management")
-          .update({ certificate_url: certificateUrl })
+          .update({ certificate_url: pub.publicUrl })
           .eq("id", (c.data as any).id);
       }
-      if (marksheetUrl && (m.data as any)?.id) {
-        await supabase
-          .from("marksheet_management")
-          .update({ marksheet_url: marksheetUrl })
-          .eq("id", (m.data as any).id);
-      }
-      if (certificateUrl || marksheetUrl) toast.success("Certificate & Marksheet PDFs stored");
+      toast.success("Certificate PDF stored");
     } catch (e: any) {
       toast.error(e.message || "Save failed");
     } finally {
