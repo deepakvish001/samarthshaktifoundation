@@ -78,6 +78,7 @@ import AttendanceManagementContent from "@/components/admin/AttendanceManagement
 import PaymentModeManagementContent from "@/components/admin/PaymentModeManagementContent";
 import AdminProfileManagementContent from "@/components/admin/AdminProfileManagementContent";
 import AdminFooter from "@/components/admin/AdminFooter";
+import AutoGenerateContent from "@/components/admin/AutoGenerateContent";
 
 const Admin = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -263,6 +264,7 @@ const Admin = () => {
     hasSubmenu: true,
     color: "text-yellow-400",
     submenuItems: [
+      { label: "Auto Generate Certificate", icon: Award },
       { label: "Certificate Management", icon: Award },
       { label: "Marksheet Management", icon: FileText },
       { label: "Alot Number", icon: Hash },
@@ -514,6 +516,8 @@ const Admin = () => {
                               navigate('/admin/course-subject');
                             } else if (subItem.label === "Certificate Management") {
                               navigate('/admin/certificate-management');
+                            } else if (subItem.label === "Auto Generate Certificate") {
+                              navigate('/admin/auto-generate');
                             } else if (subItem.label === "Marksheet Management") {
                               navigate('/admin/marksheet-management');
                             } else if (subItem.label === "Alot Number") {
@@ -791,6 +795,7 @@ const Admin = () => {
             <Route path="/attendance-management" element={<AttendanceManagementContent />} />
             <Route path="/payment-mode-management" element={<PaymentModeManagementContent />} />
             <Route path="/admin-profile-management" element={<AdminProfileManagementContent />} />
+            <Route path="/auto-generate" element={<AutoGenerateContent />} />
           </Routes>
         </div>
 
