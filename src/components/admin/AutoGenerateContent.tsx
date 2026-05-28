@@ -237,7 +237,7 @@ const AutoGenerateContent = () => {
 
   const handleDownload = async () => {
     if (!validate()) return;
-    if (!certRef.current || !marksRef.current) {
+    if (!certRef.current) {
       toast.error("Templates not ready");
       return;
     }
@@ -246,10 +246,7 @@ const AutoGenerateContent = () => {
       const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1123, 794] });
       const c1 = await renderNodeToCanvas(certRef.current);
       pdf.addImage(c1.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
-      pdf.addPage([1123, 794], "landscape");
-      const c2 = await renderNodeToCanvas(marksRef.current);
-      pdf.addImage(c2.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 1123, 794);
-      pdf.save(`${form.studentId || "student"}_${course.code}_Certificate_Marksheet.pdf`);
+      pdf.save(`${form.studentId || "student"}_${course.code}_Certificate.pdf`);
       toast.success("PDF downloaded");
     } catch (e: any) {
       toast.error(e.message || "Download failed");
