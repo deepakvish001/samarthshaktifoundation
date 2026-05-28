@@ -868,6 +868,16 @@ const StudentMarksheetContent = () => {
                     </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontStyle: 'italic', marginBottom: 4 }}>Digitally signed by</div>
+                      {selectedStudent?.director_signature_url ? (
+                        <img
+                          src={selectedStudent.director_signature_url}
+                          alt="director signature"
+                          crossOrigin="anonymous"
+                          style={{ height: 50, maxWidth: 180, objectFit: 'contain', display: 'block', margin: '0 auto' }}
+                        />
+                      ) : (
+                        <div style={{ height: 50 }} />
+                      )}
                       <div style={{ borderTop: '1px solid #111', paddingTop: 4, minWidth: 180, fontWeight: 700, letterSpacing: 1 }}>SECRETARY / DIRECTOR</div>
                       <div style={{ fontSize: 10, color: '#6b7280', marginTop: 2 }}>Samarth Shakti Foundation</div>
                     </div>
