@@ -163,6 +163,7 @@ const StudentMarksheetContent = () => {
           father_name: prev.father_name || (alot as any).student_father_name || undefined,
           mother_name: prev.mother_name || (alot as any).student_mother_name || undefined,
           photo_url: prev.photo_url || (alot as any).student_photo_url || undefined,
+          director_signature_url: (alot as any).director_signature_url || undefined,
         }) : prev);
 
         // Derive course subjects from alot if master list is empty
