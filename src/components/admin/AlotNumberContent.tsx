@@ -78,9 +78,33 @@ const AlotNumberContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCourse, setFilterCourse] = useState("all");
   const [subjects, setSubjects] = useState<AlotSubject[]>([]);
+  const [subjectDraft, setSubjectDraft] = useState<AlotSubject>({ name: "", theory: "", practical: "" });
 
-  const addSubject = () =>
-    setSubjects((prev) => [...prev, { name: "", theory: "", practical: "" }]);
+  const SUBJECT_OPTIONS = [
+    "Fundamental",
+    "MS Office",
+    "Internet",
+    "Accounting Tally",
+    "Photoshop",
+    "Page Maker",
+    "Corel Draw",
+    "HTML",
+    "C & C++",
+    "Visual Basic",
+  ];
+
+  const addSubject = () => {
+    if (!subjectDraft.name) {
+      toast.error("Please select a subject first");
+      return;
+    }
+    if (subjects.some((s) => s.name === subjectDraft.name)) {
+      toast.error(`"${subjectDraft.name}" is already added`);
+      return;
+    }
+    setSubjects((prev) => [...prev, subjectDraft]);
+    setSubjectDraft({ name: "", theory: "", practical: "" });
+  };
   const removeSubject = (i: number) =>
     setSubjects((prev) => prev.filter((_, idx) => idx !== i));
   const updateSubject = (i: number, field: keyof AlotSubject, value: string) =>
