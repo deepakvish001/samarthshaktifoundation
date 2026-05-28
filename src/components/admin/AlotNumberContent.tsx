@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import StudentPicker from "@/components/admin/shared/StudentPicker";
+import { validateStudentSelection } from "@/components/admin/shared/validateStudentSelection";
 import { Loader2, Edit, Trash2, Search, Filter, FileText, Users, Award, BarChart3, CheckCircle, Plus, BookOpen, Calendar, Hash, Upload, Image as ImageIcon } from "lucide-react";
 
 interface AlotNumber {
@@ -81,6 +82,15 @@ const AlotNumberContent = () => {
   const handleSubmit = async () => {
     if (!formData.studentsId || !formData.courseName || !formData.studentName) {
       toast.error("Please fill in required fields");
+      return;
+    }
+
+    const check = await validateStudentSelection({
+      studentId: formData.studentsId,
+      expectedCourse: formData.courseName,
+    });
+    if (!check.ok) {
+      toast.error(check.message);
       return;
     }
 

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Search, FileText, Users, GraduationCap, Calendar, Award, Building, MapPin, Phone, Mail, CreditCard, User, Upload, Trash2, Save, Plus } from "lucide-react";
 import StudentPicker from "@/components/admin/shared/StudentPicker";
+import { validateStudentSelection } from "@/components/admin/shared/validateStudentSelection";
 
 const MakeStudentAdmitCardContent = () => {
   const { toast } = useToast();
@@ -80,7 +81,29 @@ const MakeStudentAdmitCardContent = () => {
     setFormData(prev => ({ ...prev, studentPhoto: file }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!formData.studentRollNumber || !formData.studentName || !formData.course) {
+      toast({
+        title: "Missing fields",
+        description: "Please pick a student and ensure Name and Course are filled.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const check = await validateStudentSelection({
+      studentId: formData.studentRollNumber,
+      expectedCourse: formData.course,
+    });
+    if (!check.ok) {
+      toast({
+        title: "Validation failed",
+        description: check.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
     toast({
       title: "Success",
       description: "Student admit card data submitted successfully!",

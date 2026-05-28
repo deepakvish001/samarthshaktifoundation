@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import StudentPicker from "@/components/admin/shared/StudentPicker";
+import { validateStudentSelection } from "@/components/admin/shared/validateStudentSelection";
 import { Loader2, Edit, Trash2, Search, Filter, FileText, Calculator, TrendingUp, Users, Award, BarChart3, CheckCircle, Plus, BookOpen } from "lucide-react";
 
 interface MarksheetManagement {
@@ -78,6 +79,15 @@ const MarksheetManagementContent = () => {
   const handleSubmit = async () => {
     if (!formData.studentId || !formData.studentName || !formData.courseName || !formData.rollNumber || !formData.totalMarks || !formData.obtainedMarks) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    const check = await validateStudentSelection({
+      studentId: formData.studentId,
+      expectedCourse: formData.courseName,
+    });
+    if (!check.ok) {
+      toast.error(check.message);
       return;
     }
 
