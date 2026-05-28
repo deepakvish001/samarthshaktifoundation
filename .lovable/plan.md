@@ -1,85 +1,85 @@
-# MAIN NAVIGATION – Duplicate Audit & Cleanup Plan
+# Student Registration — Dropdown Sources Audit + End-to-End Linkage Plan
 
-I walked every group in the sidebar config (`src/pages/Admin.tsx`) and opened each backing component in `src/components/admin/` to compare scope. None of the components are byte-for-byte duplicates (each is 250–960 lines of distinct UI), but several **navigation entries overlap semantically** and a few are **misplaced**. Here's what I found and what I'd change.
+I read `src/components/admin/StudentRegistrationContent.tsx`, the `student_profiles` schema, and how Fees, Admit Card, Certificate, Marksheet, and Alot Number pages currently look up students. Here's exactly what is wired and what is broken.
 
-## Findings
+## 1. Where each dropdown's data comes from
 
-### A. Student Master — overlapping entries
-
-| Label | Path | Scope |
+| Field | Source | Managed in |
 |---|---|---|
-| Student Management | `/student-management` | Basic list/edit students (340 LOC) |
-| Real-Time Student Management | `/student-management-realtime` | Live list/edit + dialogs + stats (614 LOC) — superset of the basic one |
-| Student Data | `/student-data` | Read-only browse with filters (511 LOC) |
-| Student Verification | `/student-verification` | Full verification workflow (956 LOC) |
-| Verification | `/verification` | Smaller approval list (256 LOC) — subset of Student Verification |
-| Verification Report | `/verification-report` | Reports/exports (395 LOC) — distinct |
-| Make Student Admit Card | `/make-student-admit-card` | Build single admit card (586 LOC) |
-| Generate Student Admit Card | `/generate-student-admit-card` | Batch generate admit cards (666 LOC) |
-| Student Admit Card Report | `/student-admit-card-report` | List/print admit cards (282 LOC) |
+| Course Category | `course_master` → distinct `category` where `status='active'` | Admin → Master → **Course Master** (or **Add Course Category**) |
+| Course Name | `course_master` filtered by selected category | Admin → Master → **Course Master** |
+| Course Fees | Auto-filled from `course_master.fees` of the selected course (no dropdown) | — |
+| Study Center | **HARD-CODED** in the file (Azamgarh / Mau / Baliya) | Not in DB |
+| Mr./Mrs./Ms. (applicant, father, mother) | **HARD-CODED** | Not in DB |
+| Gender | **HARD-CODED** (Male / Female / Other) | Not in DB |
+| Category (caste) | **HARD-CODED** (General / OBC / SC / ST) | Not in DB |
+| Country code | **HARD-CODED** (+91) | Not in DB |
+| State | `state_master` (value stored = UUID `state.id`) | Admin → Master → **State Master** |
+| District | `district_master` filtered by selected state's `city_id` (value stored = UUID) | Admin → Master → **District Master** |
 
-**Recommended:**
-- **Hide "Student Management"** from nav (Real-Time Student Management is the modern superset). Keep route + component intact so old links still work.
-- **Hide "Verification"** from nav (Student Verification covers it). Keep route + component intact.
-- Keep "Student Data", "Verification Report", and all three Admit Card entries — they have genuinely different responsibilities (single create vs batch generate vs report).
+So today, only **Course Category / Course Name / State / District** are admin-driven. The rest are static lists baked into the component. Your DB currently has 0 rows in `course_master`, `state_master`, and `district_master`, so those dropdowns will appear empty until you add entries in the Master pages.
 
-### B. Certificate & Marksheet — overlapping entries
+## 2. What actually gets saved — and what is silently dropped
 
-| Label | Path | Notes |
-|---|---|---|
-| Auto Generate Certificate | `/auto-generate` | All-in-one cert + marksheet generator |
-| Certificate Management | `/certificate-management` | CRUD on certificates |
-| Marksheet Management | `/marksheet-management` | CRUD on marksheets |
-| Ready Markseet | `/ready-marksheet` | Marksheets ready to print (351 LOC) — subset of Marksheet Management |
-| Student Markseet | `/student-marksheet` | Per-student marksheet view (805 LOC) — distinct |
-| Edit CRT | `/edit-crt` | Edit certificate records (380 LOC) — overlaps Certificate Management |
-| Alot Number | `/alot-number` | Allot certificate numbers — distinct |
-| Report | `/report` | Generic "Report" — too vague |
+The form has ~20 fields but `handleSubmit` writes only these to `student_profiles`:
 
-**Recommended:**
-- **Hide "Ready Markseet"** from nav (covered by Marksheet Management with a filter). Keep route.
-- **Hide "Edit CRT"** from nav (Certificate Management covers edit). Keep route.
-- **Rename nav label "Report" → "Certificate Reports"** so it's not confused with other report pages.
-- Fix typos: "Markseet" → "Marksheet", "Alot Number" → "Allot Number" (display only).
+`full_name, email, phone, course_name, status, city, state, enrollment_date`
 
-### C. Payment Mode — misplaced entry
+**Dropped (never stored anywhere):** father name, mother name, gender, date of birth, category, registration date, full address, district, pin code, qualification, year of passing, aadhar number, study center, course category, course fees, displayed Student ID, password, photo upload.
 
-`Student_Editing` (249 LOC, generic student editor) is in the Payment Mode group. It does not belong there.
+Other defects in the save path:
+- `state` is stored as the **UUID from `state_master`**, not the state name — so the listing table shows a UUID instead of "Uttar Pradesh".
+- District is collected but never sent.
+- The "Student ID" shown in the form is a **hard-coded placeholder** `"2002318"` and the password is `"58742318"`. They're read-only, identical for every registration, and not persisted.
+- Photo input has no `onChange` and is not uploaded.
 
-**Recommended:** **Remove "Student_Editing" from nav** (route stays). It's a near-duplicate of editing flows already inside Student Management / Real-Time Student Management.
+## 3. Why the chain to Fees / Admit Card / Certificate / Marksheet is broken
 
-### D. Master group — minor
+`student_profiles` has no `student_id` text column. But every downstream table keys students by a `student_id` TEXT field:
 
-"Contact Us" and "Enquiry" look similar but back distinct public forms — **keep both**.
+- `fees_receipts.student_id` (text)
+- `student_admit_cards.student_id` (text)
+- `certificate_management.student_id` (text)
+- `marksheet_management.student_id` (text)
+- `alot_numbers.student_id` (text)
+- `attendance_management.student_id` (text)
 
-### E. Typo / label cleanups (display only, routes & components untouched)
+And each downstream admin page (Fees Management, Make Student Admit Card, Certificate Management, Marksheet Management, Alot Number) **asks the admin to free-type the Student ID and Student Name** — there is no picker that reads from `student_profiles`. So after registering a student, nothing automatically flows: the admin must remember the ID and retype it everywhere.
 
-- "Distt Master" → "District Master"
-- "EMP Master" → "Employee Master"
-- "Student Attandance" → "Student Attendance"
-- "Student Att. Report" → "Student Attendance Report"
-- "Expense panel" → "Expense Panel"
-- "Ready Markseet" / "Student Markseet" → "Marksheet"
-- "Alot Number" → "Allot Number"
+## 4. Proposed fix — three milestones
 
-## What I will change
+### Milestone A — Make the dropdowns complete & DB-driven (schema)
+Migration:
+- Add `student_id TEXT UNIQUE`, plus the missing profile columns to `student_profiles`: `father_name, mother_name, gender, date_of_birth, category, registration_date, address, district, pin_code, qualification, year_of_passing, aadhar_number, study_center, course_category, course_fees, photo_url, login_password`.
+- (Optional) add small lookup tables `study_centers`, `categories` (caste), `qualifications` so Master pages can drive Study Center / Category / Qualification dropdowns — OR keep them hard-coded for now. **Need your call on this.**
 
-Only `src/pages/Admin.tsx` (nav config + a couple of label strings). **No component files are deleted, no routes are removed** — every page remains reachable by URL, just hidden from the sidebar where it duplicates another entry. This is fully reversible.
+### Milestone B — Fix the Student Registration form
+- Auto-generate `student_id` on save (format: `SSF-YYYY-NNNN`, sequence per year) and display the real generated ID after submit.
+- Persist every form field listed above (not just 8 of them).
+- Resolve `state` UUID → state name before insert; same for district. Store both id and name so the listing reads clean.
+- Wire the photo upload to the existing `avatars` storage bucket and save the URL.
+- Generate a secure random password instead of the constant `"58742318"`.
+- Add light validation (email, phone, aadhar length) via zod.
 
-Concretely:
-1. Mark these submenu entries with `hidden: true` (or simply remove from the array) so they don't render in the sidebar, but leave the matching `<Route>` mounted:
-   - Student Master → "Student Management", "Verification"
-   - Certificate & Marksheet → "Ready Markseet", "Edit CRT"
-   - Payment Mode → "Student_Editing"
-2. Rename "Report" → "Certificate Reports" inside Certificate & Marksheet.
-3. Apply the typo/label fixes in section E.
-4. Sanity-check: every remaining nav item still routes to a mounted component, and the header title still resolves via the existing `activeMeta` lookup.
+### Milestone C — Connect downstream features to the registered students
+Add a reusable **Student Picker** component (search-as-you-type on `student_id`, `full_name`, `phone`) and drop it into:
+- Fees Management (auto-fills `student_id`, `student_name`, `course`, `total_fee`)
+- Make / Generate Student Admit Card (auto-fills ID, name, course, father/mother name, photo)
+- Certificate Management (auto-fills ID, name, course)
+- Marksheet Management (auto-fills ID, name, course)
+- Alot Number (auto-fills ID, name, course, father/mother name, photo)
+- Attendance Management (already keyed by student_id; same picker)
 
-## What I will NOT touch (without your go-ahead)
-- Deleting or merging any component file.
-- Removing any `<Route>` from `Admin.tsx`.
-- Changing the URL of any existing route (would break bookmarks/links).
-- The Profile group ("Edit My Profile" vs "Admin Profile Management" are distinct — self vs admin role management).
+After this, registering a student once lets the admin select them by name everywhere downstream and the right fields fill in automatically.
 
-## Open question
-If you'd rather **fully delete** the hidden pages (component file + route), say the word and I'll do a follow-up pass — that's a bigger change with no rollback.
+## 5. What I will touch
+- One migration (Milestone A).
+- `src/components/admin/StudentRegistrationContent.tsx` (Milestone B).
+- New file `src/components/admin/shared/StudentPicker.tsx` (Milestone C) + the 6 downstream pages above to swap their free-text Student ID inputs for the picker.
+
+## 6. Two decisions I need from you before I start
+
+1. **Hard-coded dropdowns (Study Center, Title, Gender, Caste Category, Qualification):** keep them hard-coded, or make them DB-driven via new Master pages? Hard-coded is faster; DB-driven gives you control without code changes.
+2. **Student ID format:** auto-generate (`SSF-2026-0001` style) or let the admin type/edit it? Auto-generate is safer and prevents duplicates across downstream tables.
+
+Reply with your choices and I'll implement Milestones A → C in that order.
