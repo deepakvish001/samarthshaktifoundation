@@ -10,6 +10,14 @@ import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import { Loader2, UserPlus, Search, Users, Calendar, MapPin, GraduationCap, Mail, Phone, Edit, Trash2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface LookupItem {
+  id: string;
+  name: string;
+  is_active?: boolean;
+  sort_order?: number;
+}
 
 interface StudentProfile {
   id: string;
