@@ -63,18 +63,33 @@ export async function validateStudentSelection(
       message: `Student ID "${parsed.data}" is not registered. Pick a student from the dropdown.`,
     };
   }
-  if (data.status && data.status !== "active") {
-    return { ok: false, message: `Student "${data.full_name}" is not active.` };
+  if (data.status === "inactive") {
+    return { ok: false, message: `Student "${data.full_name}" is inactive.` };
   }
 
   if (opts.expectedCourse !== undefined) {
     const formCourse = (opts.expectedCourse ?? "").trim();
     const dbCourse = (data.course_name ?? "").trim();
-    if (formCourse && dbCourse && formCourse !== dbCourse) {
-      return {
-        ok: false,
-        message: `Course mismatch: form says "${formCourse}" but student is registered for "${dbCourse}". Re-pick the student to refresh.`,
-      };
+    if (formCourse && dbCourse) {
+      const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+      let matches = norm(formCourse) === norm(dbCourse);
+      // Also accept match against course_master.course_sort_name (e.g. "ADCA")
+      if (!matches) {
+        const { data: cm } = await (supabase as any)
+          .from("course_master")
+          .select("course_name, course_sort_name")
+          .eq("course_name", dbCourse)
+          .maybeSingle();
+        if (cm?.course_sort_name && norm(cm.course_sort_name) === norm(formCourse)) {
+          matches = true;
+        }
+      }
+      if (!matches) {
+        return {
+          ok: false,
+          message: `Course mismatch: form says "${formCourse}" but student is registered for "${dbCourse}". Re-pick the student to refresh.`,
+        };
+      }
     }
   }
 
