@@ -6,7 +6,7 @@ const About = () => {
     'NSDC Training Partner with Pan India Presence',
     'Expertise in Apparel, Retail, Electronics, Healthcare',
     'Food Processing and Agriculture Training',
-    'Government Projects: DDUGKY, PMKVY, PMKK',
+    'Government Projects: PMKVY, PMKK',
     'Free Courses with Job Training',
     'Placement Assistance to Trained Candidates'
   ];

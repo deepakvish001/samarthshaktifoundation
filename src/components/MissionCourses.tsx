@@ -41,27 +41,7 @@ const MissionCourses = () => {
               </span>
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* DDU-GKV Course */}
-              <div className="group bg-gradient-to-br from-purple-50 to-purple-100/70 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-purple-200/50 hover:border-purple-300 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-purple-600/10 rounded-full -translate-y-8 translate-x-8"></div>
-                <div className="relative z-10">
-                  <div className="h-40 flex flex-col items-center justify-center mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300">
-                      <span className="text-2xl text-white">🎓</span>
-                    </div>
-                    <div className="text-purple-700 font-bold text-center text-sm leading-relaxed">
-                      <div className="text-base font-black">Deen Dayal Upadhyaya</div>
-                      <div>Grameen Kaushalya Yojana</div>
-                    </div>
-                  </div>
-                  <h3 className="text-2xl font-black text-purple-700 text-center mb-3">DDUGKY</h3>
-                  <p className="text-sm text-purple-600 text-center font-medium">
-                    Empowering India • Powering the World
-                  </p>
-                </div>
-              </div>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {/* PMKVY Course */}
               <div className="group bg-gradient-to-br from-orange-50 to-orange-100/70 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-orange-200/50 hover:border-orange-300 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-400/20 to-orange-600/10 rounded-full -translate-y-8 translate-x-8"></div>
