@@ -150,7 +150,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   src="/lovable-uploads/nesan-logo.png"
                   alt="SSF Logo"
                   crossOrigin="anonymous"
-                  style={{ width: "92%", height: "92%", objectFit: "contain" }}
+                  style={{ width: "92%", height: "92%", objectFit: "contain", imageRendering: "auto" as any }}
                 />
               </div>
               {/* Top-left MSME logo */}
@@ -233,19 +233,19 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  left: 90,
-                  top: 580,
-                  width: 130,
+                  left: 60,
+                  top: 555,
+                  width: 240,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: 6,
+                  gap: 8,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                  <img src="/cert-logos/iso-9001.png" alt="ISO 9001:2015" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain" }} />
-                  <img src="/cert-logos/msme-new.png" alt="MSME" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain" }} />
-                  <img src="/cert-logos/ssf.png" alt="Samarth Shakti Foundation" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain" }} />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14 }}>
+                  <img src="/cert-logos/iso-9001.png" alt="ISO 9001:2015" crossOrigin="anonymous" style={{ height: 70, width: 70, objectFit: "contain" }} />
+                  <img src="/cert-logos/msme-new.png" alt="MSME" crossOrigin="anonymous" style={{ height: 70, width: 70, objectFit: "contain" }} />
+                  <img src="/cert-logos/ssf.png" alt="Samarth Shakti Foundation" crossOrigin="anonymous" style={{ height: 70, width: 70, objectFit: "contain" }} />
                 </div>
               </div>
 
