@@ -826,3 +826,19 @@ const StudentMarksheetContent = () => {
 };
 
 export default StudentMarksheetContent;
+
+const mthCell: React.CSSProperties = {
+  border: '1px solid #111',
+  padding: '6px 6px',
+  fontWeight: 700,
+  textAlign: 'center',
+  fontSize: 12,
+  background: '#fff',
+};
+
+const mtdCell: React.CSSProperties = {
+  border: '1px solid #111',
+  padding: '5px 6px',
+  textAlign: 'center',
+  fontSize: 12,
+};
