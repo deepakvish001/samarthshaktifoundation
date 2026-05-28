@@ -210,6 +210,10 @@ const AlotNumberContent = () => {
       studentPhoto: null,
       directorSignature: null
     });
+    // Scroll to the form so the user can see the edit fields
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 50);
   };
 
   const handleReset = () => {
@@ -236,12 +240,20 @@ const AlotNumberContent = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this alot number?")) return;
-    
+    try {
+      const ok = typeof window !== "undefined" && typeof window.confirm === "function"
+        ? window.confirm("Are you sure you want to delete this alot number?")
+        : true;
+      if (!ok) return;
+    } catch {
+      // confirm blocked in sandbox — proceed
+    }
+
     try {
       await deleteItem(id);
       toast.success("Alot number deleted successfully!");
     } catch (error) {
+      console.error("Delete alot number failed:", error);
       toast.error("Failed to delete alot number");
     }
   };
