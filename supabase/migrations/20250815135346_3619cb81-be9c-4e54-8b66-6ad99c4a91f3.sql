@@ -1,0 +1,27 @@
+-- Enable real-time for new tables
+ALTER TABLE public.menu_content REPLICA IDENTITY FULL;
+ALTER TABLE public.photo_gallery REPLICA IDENTITY FULL;
+ALTER TABLE public.bank_details REPLICA IDENTITY FULL;
+ALTER TABLE public.state_master REPLICA IDENTITY FULL;
+ALTER TABLE public.district_master REPLICA IDENTITY FULL;
+ALTER TABLE public.course_categories REPLICA IDENTITY FULL;
+ALTER TABLE public.news REPLICA IDENTITY FULL;
+ALTER TABLE public.visions REPLICA IDENTITY FULL;
+ALTER TABLE public.missions REPLICA IDENTITY FULL;
+ALTER TABLE public.director_messages REPLICA IDENTITY FULL;
+ALTER TABLE public.contact_us REPLICA IDENTITY FULL;
+ALTER TABLE public.enquiries REPLICA IDENTITY FULL;
+
+-- Add tables to realtime publication
+ALTER PUBLICATION supabase_realtime ADD TABLE public.menu_content;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.photo_gallery;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.bank_details;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.state_master;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.district_master;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.course_categories;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.news;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.visions;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.missions;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.director_messages;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.contact_us;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.enquiries;
