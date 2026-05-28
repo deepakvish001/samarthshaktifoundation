@@ -20,6 +20,10 @@ import RashtriyaGramSwarajAbhiyan from "./pages/RashtriyaGramSwarajAbhiyan";
 import NSQF from "./pages/NSQF";
 import AAIOE from "./pages/AAIOE";
 import EntrepreneurshipDevelopment from "./pages/EntrepreneurshipDevelopment";
+import Profile from "./pages/Profile";
+import MyCourses from "./pages/MyCourses";
+import MyCertificates from "./pages/MyCertificates";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -55,6 +59,12 @@ const AppContent = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         
+        {/* Authenticated user routes */}
+        <Route path="/profile" element={<AuthGuard requireAuth={true}><Profile /></AuthGuard>} />
+        <Route path="/my-courses" element={<AuthGuard requireAuth={true}><MyCourses /></AuthGuard>} />
+        <Route path="/my-certificates" element={<AuthGuard requireAuth={true}><MyCertificates /></AuthGuard>} />
+        <Route path="/settings" element={<AuthGuard requireAuth={true}><Settings /></AuthGuard>} />
+
         {/* Protected routes */}
         <Route 
           path="/admin/*" 
