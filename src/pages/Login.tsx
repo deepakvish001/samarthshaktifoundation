@@ -8,6 +8,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Shield, CheckCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 const Login = () => {
   const { user, signIn, signUp, resetPassword, loading } = useAuth();
@@ -20,7 +22,7 @@ const Login = () => {
   
   // Sign in form
   const [signInForm, setSignInForm] = useState({
-    email: '',
+    identifier: '',
     password: '',
   });
   
@@ -58,13 +60,11 @@ const Login = () => {
 
   const validateSignInForm = () => {
     const newErrors: Record<string, string> = {};
-    
-    if (!signInForm.email) {
-      newErrors.email = 'Email is required';
-    } else if (!validateEmail(signInForm.email)) {
-      newErrors.email = 'Please enter a valid email';
+
+    if (!signInForm.identifier.trim()) {
+      newErrors.identifier = 'Email or Student ID is required';
     }
-    
+
     if (!signInForm.password) {
       newErrors.password = 'Password is required';
     }
@@ -106,10 +106,32 @@ const Login = () => {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateSignInForm()) return;
-    
+
     setIsLoading(true);
-    const { error } = await signIn(signInForm.email, signInForm.password);
-    
+    let emailToUse = signInForm.identifier.trim();
+
+    // If it doesn't look like an email, treat as Student ID and look up email
+    if (!validateEmail(emailToUse)) {
+      const { data, error: lookupError } = await supabase
+        .from('student_profiles')
+        .select('email')
+        .eq('student_id', emailToUse)
+        .maybeSingle();
+
+      if (lookupError || !data?.email) {
+        setIsLoading(false);
+        toast({
+          title: 'Login failed',
+          description: 'No student found with this Student ID.',
+          variant: 'destructive',
+        });
+        return;
+      }
+      emailToUse = data.email;
+    }
+
+    const { error } = await signIn(emailToUse, signInForm.password);
+
     if (!error) {
       navigate('/', { replace: true });
     }
@@ -192,20 +214,20 @@ const Login = () => {
                 <TabsContent value="signin" className="space-y-4">
                   <form onSubmit={handleSignIn} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signin-email" className="text-slate-700">Email</Label>
+                      <Label htmlFor="signin-email" className="text-slate-700">Email or Student ID</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                         <Input
                           id="signin-email"
-                          type="email"
-                          placeholder="Enter your email"
+                          type="text"
+                          placeholder="Enter your email or Student ID"
                           className="pl-10 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
-                          value={signInForm.email}
-                          onChange={(e) => setSignInForm({ ...signInForm, email: e.target.value })}
+                          value={signInForm.identifier}
+                          onChange={(e) => setSignInForm({ ...signInForm, identifier: e.target.value })}
                         />
                       </div>
-                      {errors.email && (
-                        <p className="text-sm text-rose-600">{errors.email}</p>
+                      {errors.identifier && (
+                        <p className="text-sm text-rose-600">{errors.identifier}</p>
                       )}
                     </div>
 
