@@ -23,6 +23,7 @@ interface StudentData {
   photo_url?: string;
   father_name?: string;
   mother_name?: string;
+  director_signature_url?: string;
 }
 
 interface MarksheetData {
@@ -162,6 +163,7 @@ const StudentMarksheetContent = () => {
           father_name: prev.father_name || (alot as any).student_father_name || undefined,
           mother_name: prev.mother_name || (alot as any).student_mother_name || undefined,
           photo_url: prev.photo_url || (alot as any).student_photo_url || undefined,
+          director_signature_url: (alot as any).director_signature_url || undefined,
         }) : prev);
 
         // Derive course subjects from alot if master list is empty
@@ -866,6 +868,16 @@ const StudentMarksheetContent = () => {
                     </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontStyle: 'italic', marginBottom: 4 }}>Digitally signed by</div>
+                      {selectedStudent?.director_signature_url ? (
+                        <img
+                          src={selectedStudent.director_signature_url}
+                          alt="director signature"
+                          crossOrigin="anonymous"
+                          style={{ height: 50, maxWidth: 180, objectFit: 'contain', display: 'block', margin: '0 auto' }}
+                        />
+                      ) : (
+                        <div style={{ height: 50 }} />
+                      )}
                       <div style={{ borderTop: '1px solid #111', paddingTop: 4, minWidth: 180, fontWeight: 700, letterSpacing: 1 }}>SECRETARY / DIRECTOR</div>
                       <div style={{ fontSize: 10, color: '#6b7280', marginTop: 2 }}>Samarth Shakti Foundation</div>
                     </div>
