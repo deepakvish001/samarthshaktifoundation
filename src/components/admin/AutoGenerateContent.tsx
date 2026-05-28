@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Sparkles, Download, Eye, Save, Loader2, FileText, Award } from "lucide-react";
+import { Sparkles, Download, Eye, Save, Loader2, FileText, Award, Printer, X } from "lucide-react";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -460,13 +460,12 @@ const AutoGenerateContent = () => {
       </div>
 
       {/* Preview modal */}
-      <Dialog open={previewOpen !== null} onOpenChange={(o) => !o && setPreviewOpen(null)}>
-        <DialogContent className="max-w-[1180px] p-2 overflow-auto">
-          <div style={{ transform: "scale(0.78)", transformOrigin: "top left", width: 1123 }}>
-            {previewOpen === "cert" ? <CertificateTemplate data={certData} /> : previewOpen === "marks" ? <MarksheetTemplate data={marksData} /> : null}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <PreviewModal
+        open={previewOpen}
+        onClose={() => setPreviewOpen(null)}
+        certData={certData}
+        marksData={marksData}
+      />
     </div>
   );
 };
@@ -486,3 +485,102 @@ const Stat = ({ label, value, accent }: { label: string; value: string; accent?:
 );
 
 export default AutoGenerateContent;
+
+// =================== Preview modal with proper scaling + Print/Cancel ===================
+const PreviewModal = ({
+  open,
+  onClose,
+  certData,
+  marksData,
+}: {
+  open: null | "cert" | "marks";
+  onClose: () => void;
+  certData: CertificateData;
+  marksData: MarksheetData;
+}) => {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const printRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.7);
+
+  // Fit-to-width scaling based on stage size
+  useEffect(() => {
+    if (!open) return;
+    const fit = () => {
+      const el = stageRef.current;
+      if (!el) return;
+      const w = el.clientWidth - 24;
+      const h = el.clientHeight - 24;
+      const s = Math.min(w / 1123, h / 794, 1);
+      setScale(s > 0 ? s : 0.7);
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    const t = setTimeout(fit, 50);
+    return () => {
+      window.removeEventListener("resize", fit);
+      clearTimeout(t);
+    };
+  }, [open]);
+
+  const handlePrint = () => {
+    if (!printRef.current) return;
+    const html = printRef.current.innerHTML;
+    const w = window.open("", "_blank", "width=1200,height=800");
+    if (!w) return;
+    w.document.write(`<!doctype html><html><head><title>Print</title>
+      <meta charset="utf-8" />
+      <script src="https://cdn.tailwindcss.com"></script>
+      <style>
+        @page { size: A4 landscape; margin: 0; }
+        body { margin: 0; padding: 0; background: white; }
+        @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+      </style>
+    </head><body>${html}</body></html>`);
+    w.document.close();
+    w.onload = () => {
+      setTimeout(() => {
+        w.focus();
+        w.print();
+      }, 400);
+    };
+  };
+
+  return (
+    <Dialog open={open !== null} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-[98vw] w-[98vw] h-[95vh] p-0 gap-0 flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
+          <h2 className="font-semibold text-sm">
+            {open === "cert" ? "Certificate Preview" : "Marksheet Preview"}
+          </h2>
+          <div className="flex items-center gap-2">
+            <Button size="sm" onClick={handlePrint}>
+              <Printer className="h-4 w-4 mr-2" /> Print
+            </Button>
+            <Button size="sm" variant="outline" onClick={onClose}>
+              <X className="h-4 w-4 mr-2" /> Cancel
+            </Button>
+          </div>
+        </div>
+        <div ref={stageRef} className="flex-1 overflow-auto bg-muted/20 flex items-start justify-center p-3">
+          <div style={{ width: 1123 * scale, height: 794 * scale }}>
+            <div
+              ref={printRef}
+              style={{
+                width: 1123,
+                height: 794,
+                transform: `scale(${scale})`,
+                transformOrigin: "top left",
+              }}
+            >
+              {open === "cert" ? (
+                <CertificateTemplate data={certData} />
+              ) : open === "marks" ? (
+                <MarksheetTemplate data={marksData} />
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
