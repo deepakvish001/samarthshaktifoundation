@@ -856,15 +856,15 @@ const AlotNumberContent = () => {
                           Course
                         </div>
                       </th>
-                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[80px]">
-                        <div className="flex items-center justify-center gap-2">
-                          <BarChart3 className="h-4 w-4" />
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[90px]">
+                        <div className="flex items-center justify-center gap-1">
+                          <BarChart3 className="h-3.5 w-3.5" />
                           Theory
                         </div>
                       </th>
-                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[80px]">
-                        <div className="flex items-center justify-center gap-2">
-                          <BarChart3 className="h-4 w-4" />
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[95px]">
+                        <div className="flex items-center justify-center gap-1">
+                          <BarChart3 className="h-3.5 w-3.5" />
                           Practical
                         </div>
                       </th>
@@ -932,12 +932,12 @@ const AlotNumberContent = () => {
                               {alot.course_name}
                             </span>
                           </td>
-                          <td className="border-r border-border/20 px-2 py-3 text-center text-foreground">
+                          <td className="border-r border-border/20 px-2 py-3 text-center text-foreground whitespace-nowrap">
                             <span className="text-primary font-medium">
                               {alot.obtain_theory_marks || '0'}/{alot.theory_max_marks || '0'}
                             </span>
                           </td>
-                          <td className="border-r border-border/20 px-2 py-3 text-center text-foreground">
+                          <td className="border-r border-border/20 px-2 py-3 text-center text-foreground whitespace-nowrap">
                             <span className="text-secondary font-medium">
                               {alot.obtain_practical_marks || '0'}/{alot.practical_max_marks || '0'}
                             </span>
