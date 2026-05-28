@@ -526,6 +526,29 @@ const Stat = ({ label, value, accent }: { label: string; value: string; accent?:
   </div>
 );
 
+const DarkField = ({
+  label, value, onChange, type = "text", placeholder, className = "", inputCls, labelCls,
+}: {
+  label: React.ReactNode; value: string; onChange: (v: string) => void;
+  type?: string; placeholder?: string; className?: string; inputCls: string; labelCls: string;
+}) => (
+  <div className={`space-y-2 ${className}`}>
+    <Label className={labelCls}>{label}</Label>
+    <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className={inputCls} />
+  </div>
+);
+
+const DarkStat = ({ label, value, accent, badge }: { label: string; value: string; accent?: string; badge?: boolean }) => (
+  <div className="text-center">
+    <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">{label}</p>
+    {badge ? (
+      <span className={`inline-block mt-2 px-3 py-1 rounded-lg text-sm font-bold ${value === "PASS" ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>{value}</span>
+    ) : (
+      <p className={`text-xl font-bold mt-1 ${accent || "text-white"}`}>{value}</p>
+    )}
+  </div>
+);
+
 export default AutoGenerateContent;
 
 // =================== Preview modal with proper scaling + Print/Cancel ===================
