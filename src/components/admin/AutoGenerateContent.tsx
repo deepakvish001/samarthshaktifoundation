@@ -447,9 +447,6 @@ const AutoGenerateContent = () => {
           <Button onClick={() => setPreviewOpen("cert")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 rounded-xl px-6 py-3 h-auto font-semibold">
             <Eye className="h-4 w-4 mr-2" /> Preview Certificate
           </Button>
-          <Button onClick={() => setPreviewOpen("marks")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 rounded-xl px-6 py-3 h-auto font-semibold">
-            <Eye className="h-4 w-4 mr-2" /> Preview Marksheet
-          </Button>
           <Button onClick={handleSave} disabled={saving} className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-6 py-3 h-auto font-semibold">
             {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
             Save to Database
@@ -464,7 +461,6 @@ const AutoGenerateContent = () => {
       {/* Hidden render targets for PDF */}
       <div style={{ position: "fixed", left: -10000, top: 0 }}>
         <CertificateTemplate ref={certRef} data={certData} />
-        <MarksheetTemplate ref={marksRef} data={marksData} />
       </div>
 
       {/* Preview modal */}
@@ -472,7 +468,6 @@ const AutoGenerateContent = () => {
         open={previewOpen}
         onClose={() => setPreviewOpen(null)}
         certData={certData}
-        marksData={marksData}
       />
     </div>
   );
@@ -522,12 +517,10 @@ const PreviewModal = ({
   open,
   onClose,
   certData,
-  marksData,
 }: {
-  open: null | "cert" | "marks";
+  open: null | "cert";
   onClose: () => void;
   certData: CertificateData;
-  marksData: MarksheetData;
 }) => {
   const stageRef = useRef<HTMLDivElement>(null);
   const printRef = useRef<HTMLDivElement>(null);
