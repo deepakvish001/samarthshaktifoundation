@@ -290,11 +290,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return { error: new Error('No user logged in') };
 
     try {
-      // Using any to bypass type checking temporarily
+      // Upsert so a row is created on first save when no profile exists yet
       const { error } = await (supabase as any)
         .from('profiles')
-        .update(updates)
-        .eq('user_id', user.id);
+        .upsert(
+          { user_id: user.id, ...updates, updated_at: new Date().toISOString() },
+          { onConflict: 'user_id' }
+        );
 
       if (error) {
         toast({
@@ -304,7 +306,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       } else {
         // Refresh profile data
-        fetchUserData(user.id);
+        await fetchUserData(user.id);
         toast({
           title: "Profile Updated",
           description: "Your profile has been successfully updated.",
