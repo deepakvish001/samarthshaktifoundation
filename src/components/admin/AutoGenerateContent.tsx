@@ -289,19 +289,25 @@ const AutoGenerateContent = () => {
         percentage: Number(totals.percentage.toFixed(2)),
         grade: totals.grade,
         result_status: totals.result.toLowerCase(),
-      });
+      }).select().single();
       const [c, m] = await Promise.all([certInsert, marksInsert]);
       if (c.error) throw c.error;
       if (m.error) throw m.error;
       toast.success("Saved to database. Generating PDF...");
-      const pdfUrl = await generateAndUploadReportPdf(form.studentId);
-      if (pdfUrl && c.data?.id) {
+      const { certificateUrl, marksheetUrl } = await generateAndUploadReportPdf(form.studentId);
+      if (certificateUrl && c.data?.id) {
         await supabase
           .from("certificate_management")
-          .update({ certificate_url: pdfUrl })
+          .update({ certificate_url: certificateUrl })
           .eq("id", (c.data as any).id);
-        toast.success("Certificate PDF stored");
       }
+      if (marksheetUrl && (m.data as any)?.id) {
+        await supabase
+          .from("marksheet_management")
+          .update({ marksheet_url: marksheetUrl })
+          .eq("id", (m.data as any).id);
+      }
+      if (certificateUrl || marksheetUrl) toast.success("Certificate & Marksheet PDFs stored");
     } catch (e: any) {
       toast.error(e.message || "Save failed");
     } finally {
