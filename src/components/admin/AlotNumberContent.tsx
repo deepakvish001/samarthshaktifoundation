@@ -29,6 +29,13 @@ interface AlotNumber {
   place?: string;
   student_photo_url?: string;
   director_signature_url?: string;
+  subjects?: AlotSubject[];
+}
+
+interface AlotSubject {
+  name: string;
+  theory: string;
+  practical: string;
 }
 
 const AlotNumberContent = () => {
@@ -70,6 +77,17 @@ const AlotNumberContent = () => {
   const [editingAlot, setEditingAlot] = useState<AlotNumber | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCourse, setFilterCourse] = useState("all");
+  const [subjects, setSubjects] = useState<AlotSubject[]>([]);
+
+  const addSubject = () =>
+    setSubjects((prev) => [...prev, { name: "", theory: "", practical: "" }]);
+  const removeSubject = (i: number) =>
+    setSubjects((prev) => prev.filter((_, idx) => idx !== i));
+  const updateSubject = (i: number, field: keyof AlotSubject, value: string) =>
+    setSubjects((prev) => prev.map((s, idx) => (idx === i ? { ...s, [field]: value } : s)));
+  const subjectTotal = (s: AlotSubject) =>
+    (Number(s.theory) || 0) + (Number(s.practical) || 0);
+  const grandTotal = subjects.reduce((sum, s) => sum + subjectTotal(s), 0);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -112,7 +130,8 @@ const AlotNumberContent = () => {
           issue_date: formData.issueDate,
           place: formData.place,
           student_photo_url: formData.studentPhoto ? formData.studentPhoto.name : undefined,
-          director_signature_url: formData.directorSignature ? formData.directorSignature.name : undefined
+          director_signature_url: formData.directorSignature ? formData.directorSignature.name : undefined,
+          subjects: subjects as any,
         });
         toast.success("Alot number updated successfully!");
       } else {
@@ -132,7 +151,8 @@ const AlotNumberContent = () => {
           issue_date: formData.issueDate,
           place: formData.place,
           student_photo_url: formData.studentPhoto ? formData.studentPhoto.name : null,
-          director_signature_url: formData.directorSignature ? formData.directorSignature.name : null
+          director_signature_url: formData.directorSignature ? formData.directorSignature.name : null,
+          subjects: subjects as any,
         });
         toast.success("Alot number created successfully!");
       }
@@ -145,6 +165,7 @@ const AlotNumberContent = () => {
 
   const handleEdit = (alot: AlotNumber) => {
     setEditingAlot(alot);
+    setSubjects(Array.isArray(alot.subjects) ? alot.subjects : []);
     setFormData({
       studentsId: alot.student_id,
       courseName: alot.course_name,
@@ -167,6 +188,7 @@ const AlotNumberContent = () => {
 
   const handleReset = () => {
     setEditingAlot(null);
+    setSubjects([]);
     setFormData({
       studentsId: "",
       courseName: "",
@@ -430,6 +452,94 @@ const AlotNumberContent = () => {
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Subjects Section */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                    Subjects
+                  </h3>
+                  <Button
+                    type="button"
+                    onClick={addSubject}
+                    variant="outline"
+                    size="sm"
+                    className="border-primary/40 text-primary hover:bg-primary/10"
+                  >
+                    <Plus className="h-4 w-4 mr-2" /> Add Subject
+                  </Button>
+                </div>
+
+                {subjects.length === 0 ? (
+                  <div className="border border-dashed border-border/60 rounded-lg p-6 text-center text-sm text-muted-foreground">
+                    No subjects added. Click "Add Subject" to start.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="hidden md:grid md:grid-cols-12 gap-3 text-xs font-medium text-muted-foreground px-2">
+                      <div className="md:col-span-5">Subject Name</div>
+                      <div className="md:col-span-2">Theory Marks</div>
+                      <div className="md:col-span-2">Practical Marks</div>
+                      <div className="md:col-span-2">Total</div>
+                      <div className="md:col-span-1 text-right">Action</div>
+                    </div>
+                    {subjects.map((s, i) => (
+                      <div
+                        key={i}
+                        className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end p-3 rounded-lg border border-border/40 bg-background"
+                      >
+                        <div className="md:col-span-5">
+                          <Input
+                            value={s.name}
+                            onChange={(e) => updateSubject(i, "name", e.target.value)}
+                            placeholder="Subject name"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Input
+                            type="number"
+                            inputMode="numeric"
+                            value={s.theory}
+                            onChange={(e) => updateSubject(i, "theory", e.target.value)}
+                            placeholder="Theory"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Input
+                            type="number"
+                            inputMode="numeric"
+                            value={s.practical}
+                            onChange={(e) => updateSubject(i, "practical", e.target.value)}
+                            placeholder="Practical"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <div className="h-10 flex items-center px-3 rounded-md bg-primary/5 border border-primary/20 font-semibold text-foreground">
+                            {subjectTotal(s)}
+                          </div>
+                        </div>
+                        <div className="md:col-span-1 flex md:justify-end">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeSubject(i)}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex justify-end">
+                      <div className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-semibold">
+                        Grand Total: {grandTotal}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Student Information */}
