@@ -180,25 +180,25 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               </div>
 
               {/* Certificate of Achievement ribbon */}
-              <div style={{ textAlign: "center", marginTop: 14 }}>
-                <div style={{ fontSize: 12, color: "#b91c1c", letterSpacing: 8, marginBottom: 2 }}>❖ ❖ ❖</div>
+              <div style={{ textAlign: "center", marginTop: 6 }}>
+                <div style={{ fontSize: 12, color: "#b91c1c", letterSpacing: 8, marginBottom: 1 }}>❖ ❖ ❖</div>
                 <div
                   style={{
                     display: "inline-block",
                     fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
-                    fontSize: 44,
+                    fontSize: 40,
                     color: "#b91c1c",
                     padding: "0 70px",
                     borderTop: "2px solid #b91c1c",
                     borderBottom: "2px solid #b91c1c",
                     letterSpacing: "1px",
                     fontWeight: 700,
-                    lineHeight: 1.25,
+                    lineHeight: 1.15,
                   }}
                 >
                   Certificate of Achievement
                 </div>
-                <div style={{ fontSize: 12, color: "#b91c1c", letterSpacing: 8, marginTop: 2 }}>❖ ❖ ❖</div>
+                <div style={{ fontSize: 12, color: "#b91c1c", letterSpacing: 8, marginTop: 1 }}>❖ ❖ ❖</div>
               </div>
 
               {/* QR (left) */}
@@ -207,7 +207,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(data.verifyUrl)}`}
                   alt="verify"
                   crossOrigin="anonymous"
-                  style={{ position: "absolute", top: 372, left: 46, width: 96, height: 96, border: "1px solid #0b2a6b", padding: 3, background: "#fff" }}
+                  style={{ position: "absolute", top: 330, left: 46, width: 96, height: 96, border: "1px solid #0b2a6b", padding: 3, background: "#fff" }}
                 />
               )}
 
@@ -219,7 +219,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   crossOrigin="anonymous"
                   style={{
                     position: "absolute",
-                    top: 362,
+                    top: 320,
                     right: 46,
                     width: 110,
                     height: 130,
@@ -234,7 +234,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 style={{
                   position: "absolute",
                   left: 60,
-                  top: 555,
+                  top: 500,
                   width: 240,
                   display: "flex",
                   flexDirection: "column",
@@ -252,15 +252,15 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               {/* Body */}
               <div
                 style={{
-                  marginTop: 18,
+                  marginTop: 8,
                   padding: "0 90px",
                   fontSize: 15,
-                  lineHeight: 1.7,
+                  lineHeight: 1.55,
                   color: "#0a0a0a",
                   textAlign: "center",
                 }}
               >
-                <div style={{ fontSize: 14, color: "#374151", marginBottom: 4, letterSpacing: 0.5 }}>
+                <div style={{ fontSize: 14, color: "#374151", marginBottom: 2, letterSpacing: 0.5 }}>
                   This is to certify that
                 </div>
                 <div
@@ -270,7 +270,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                     color: "#0b2a6b",
                     fontWeight: 700,
                     lineHeight: 1.1,
-                    margin: "2px auto 8px",
+                    margin: "2px auto 4px",
                     borderBottom: "1.5px solid #0b2a6b",
                     paddingBottom: 4,
                     maxWidth: 560,
@@ -278,7 +278,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 >
                   {data.studentName}
                 </div>
-                <div style={{ textAlign: "justify", textAlignLast: "center", fontSize: 15, lineHeight: 1.85 }}>
+                <div style={{ textAlign: "justify", textAlignLast: "center", fontSize: 15, lineHeight: 1.65 }}>
                   {data.fatherName ? <>Son/Daughter of <b>{data.fatherName}</b></> : null}
                   {data.motherName ? <> and <b>{data.motherName}</b></> : null}
                   {(data.fatherName || data.motherName) ? ", " : ""}
@@ -296,7 +296,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  bottom: 70,
+                  bottom: 64,
                   left: 90,
                   right: 90,
                   display: "flex",
@@ -309,7 +309,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   style={{
                     fontSize: 14,
                     color: "#0a0a0a",
-                    lineHeight: 2,
+                    lineHeight: 1.6,
                     paddingBottom: 6,
                     minWidth: 230,
                   }}
