@@ -478,13 +478,13 @@ const AutoGenerateContent = () => {
 
         {/* Action Bar */}
         <div className="flex flex-wrap items-center justify-end gap-3 pb-4">
-          <Button onClick={() => setPreviewOpen("cert")} variant="outline" className="bg-transparent border-[#1e1e5a] text-slate-300 hover:bg-[#1e1e5a] hover:text-white rounded-xl px-6 py-3 h-auto font-semibold">
+          <Button onClick={() => setPreviewOpen("cert")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 rounded-xl px-6 py-3 h-auto font-semibold">
             <Eye className="h-4 w-4 mr-2" /> Preview Certificate
           </Button>
-          <Button onClick={() => setPreviewOpen("marks")} variant="outline" className="bg-transparent border-[#1e1e5a] text-slate-300 hover:bg-[#1e1e5a] hover:text-white rounded-xl px-6 py-3 h-auto font-semibold">
+          <Button onClick={() => setPreviewOpen("marks")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 rounded-xl px-6 py-3 h-auto font-semibold">
             <Eye className="h-4 w-4 mr-2" /> Preview Marksheet
           </Button>
-          <Button onClick={handleSave} disabled={saving} className="bg-slate-800 hover:bg-slate-700 text-white rounded-xl px-6 py-3 h-auto font-semibold">
+          <Button onClick={handleSave} disabled={saving} className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-6 py-3 h-auto font-semibold">
             {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
             Save to Database
           </Button>
@@ -542,9 +542,9 @@ const DarkStat = ({ label, value, accent, badge }: { label: string; value: strin
   <div className="text-center">
     <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">{label}</p>
     {badge ? (
-      <span className={`inline-block mt-2 px-3 py-1 rounded-lg text-sm font-bold ${value === "PASS" ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>{value}</span>
+      <span className={`inline-block mt-2 px-3 py-1 rounded-lg text-sm font-bold ${value === "PASS" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>{value}</span>
     ) : (
-      <p className={`text-xl font-bold mt-1 ${accent || "text-white"}`}>{value}</p>
+      <p className={`text-xl font-bold mt-1 ${accent || "text-slate-900"}`}>{value}</p>
     )}
   </div>
 );
