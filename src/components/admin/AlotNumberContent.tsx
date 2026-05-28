@@ -384,7 +384,7 @@ const AlotNumberContent = () => {
             </CardTitle>
           </CardHeader>
           
-          <CardContent className="p-8">
+          <CardContent className="p-3 sm:p-4">
             <div className="space-y-8">
               <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
                 <label className="text-sm font-medium text-foreground mb-2 block">
