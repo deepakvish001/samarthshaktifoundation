@@ -11,6 +11,7 @@ import jsPDF from "jspdf";
 
 interface StudentData {
   id: string;
+  student_id: string;
   full_name: string;
   email: string;
   phone?: string;
@@ -110,29 +111,96 @@ const StudentMarksheetContent = () => {
     setShowResults(false);
     setSearchValue(student.full_name);
 
-    // Fetch marksheet data for this student
+    // Reset previous data
+    setMarksheetData(null);
+    setCourseSubjects([]);
+
     try {
+      // 1) Try existing marksheet_management row (search by SSF-style student_id text)
       const { data: marksheet } = await supabase
         .from('marksheet_management')
         .select('*')
-        .eq('student_id', student.id)
-        .single();
+        .eq('student_id', student.student_id)
+        .maybeSingle();
 
       if (marksheet) {
-        setMarksheetData(marksheet);
+        setMarksheetData(marksheet as any);
       }
 
-      // Fetch course subjects
+      // 2) Try course_subjects (master list)
+      let subjectsList: CourseSubject[] = [];
       if (student.course_name) {
         const { data: subjects } = await supabase
           .from('course_subjects')
           .select('*')
           .eq('course_name', student.course_name);
-
-        if (subjects) {
-          setCourseSubjects(subjects);
+        if (subjects && subjects.length > 0) {
+          subjectsList = subjects as CourseSubject[];
         }
       }
+
+      // 3) Fall back to alot_numbers (latest row for this student)
+      const { data: alotRows } = await supabase
+        .from('alot_numbers')
+        .select('*')
+        .eq('student_id', student.student_id)
+        .order('created_at', { ascending: false })
+        .limit(1);
+      const alot = alotRows && alotRows.length > 0 ? alotRows[0] : null;
+
+      if (alot) {
+        const alotSubjects: any[] = Array.isArray((alot as any).subjects)
+          ? (alot as any).subjects
+          : [];
+
+        // Derive course subjects from alot if master list is empty
+        if (subjectsList.length === 0 && alotSubjects.length > 0) {
+          subjectsList = alotSubjects.map((s: any, idx: number) => ({
+            id: `${alot.id}-${idx}`,
+            course_name: alot.course_name || student.course_name || "",
+            subject: s.name || "",
+            theory_marks: String(s.theoryMax || ""),
+            practical_marks: String(s.practicalMax || ""),
+            semester_year: "",
+          }));
+        }
+
+        // Derive marksheet data if missing
+        if (!marksheet) {
+          const totalMax = alotSubjects.reduce(
+            (sum, s: any) => sum + (Number(s.theoryMax) || 0) + (Number(s.practicalMax) || 0),
+            0
+          );
+          const totalObt = alotSubjects.reduce(
+            (sum, s: any) => sum + (Number(s.theory) || 0) + (Number(s.practical) || 0),
+            0
+          );
+          const percentage = totalMax > 0 ? (totalObt / totalMax) * 100 : 0;
+          const grade =
+            percentage >= 80 ? "A+" :
+            percentage >= 70 ? "A" :
+            percentage >= 60 ? "B" :
+            percentage >= 50 ? "C" :
+            percentage >= 40 ? "D" : "F";
+          const resultStatus = percentage >= 40 ? "pass" : "fail";
+
+          setMarksheetData({
+            id: alot.id,
+            student_id: alot.student_id,
+            student_name: alot.student_name || student.full_name,
+            course_name: alot.course_name || student.course_name || "",
+            roll_number: alot.student_id,
+            examination_date: alot.course_examination_date || alot.issue_date || "",
+            total_marks: totalMax,
+            obtained_marks: totalObt,
+            percentage: Math.round(percentage * 100) / 100,
+            grade,
+            result_status: resultStatus,
+          } as MarksheetData);
+        }
+      }
+
+      setCourseSubjects(subjectsList);
     } catch (error) {
       console.error('Error fetching student data:', error);
     }
