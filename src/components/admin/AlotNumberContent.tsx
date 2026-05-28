@@ -78,9 +78,33 @@ const AlotNumberContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCourse, setFilterCourse] = useState("all");
   const [subjects, setSubjects] = useState<AlotSubject[]>([]);
+  const [subjectDraft, setSubjectDraft] = useState<AlotSubject>({ name: "", theory: "", practical: "" });
 
-  const addSubject = () =>
-    setSubjects((prev) => [...prev, { name: "", theory: "", practical: "" }]);
+  const SUBJECT_OPTIONS = [
+    "Fundamental",
+    "MS Office",
+    "Internet",
+    "Accounting Tally",
+    "Photoshop",
+    "Page Maker",
+    "Corel Draw",
+    "HTML",
+    "C & C++",
+    "Visual Basic",
+  ];
+
+  const addSubject = () => {
+    if (!subjectDraft.name) {
+      toast.error("Please select a subject first");
+      return;
+    }
+    if (subjects.some((s) => s.name === subjectDraft.name)) {
+      toast.error(`"${subjectDraft.name}" is already added`);
+      return;
+    }
+    setSubjects((prev) => [...prev, subjectDraft]);
+    setSubjectDraft({ name: "", theory: "", practical: "" });
+  };
   const removeSubject = (i: number) =>
     setSubjects((prev) => prev.filter((_, idx) => idx !== i));
   const updateSubject = (i: number, field: keyof AlotSubject, value: string) =>
@@ -456,25 +480,72 @@ const AlotNumberContent = () => {
 
               {/* Subjects Section */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                    <BookOpen className="h-5 w-5 text-primary" />
-                    Subjects
-                  </h3>
-                  <Button
-                    type="button"
-                    onClick={addSubject}
-                    variant="outline"
-                    size="sm"
-                    className="border-primary/40 text-primary hover:bg-primary/10"
-                  >
-                    <Plus className="h-4 w-4 mr-2" /> Add Subject
-                  </Button>
+                <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-primary" />
+                  Subjects
+                </h3>
+
+                {/* Picker row */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end p-4 rounded-lg border border-primary/30 bg-primary/5">
+                  <div className="md:col-span-5">
+                    <label className="text-xs font-medium text-foreground mb-1 block">Subject</label>
+                    <Select
+                      value={subjectDraft.name}
+                      onValueChange={(v) => setSubjectDraft((d) => ({ ...d, name: v }))}
+                    >
+                      <SelectTrigger className="bg-background">
+                        <SelectValue placeholder="Select Subject" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-card">
+                        {SUBJECT_OPTIONS.map((opt) => (
+                          <SelectItem
+                            key={opt}
+                            value={opt}
+                            disabled={subjects.some((s) => s.name === opt)}
+                          >
+                            {opt}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="md:col-span-3">
+                    <label className="text-xs font-medium text-foreground mb-1 block">Theory Marks</label>
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      value={subjectDraft.theory}
+                      onChange={(e) => setSubjectDraft((d) => ({ ...d, theory: e.target.value }))}
+                      placeholder="Theory"
+                      className="bg-background"
+                    />
+                  </div>
+                  <div className="md:col-span-3">
+                    <label className="text-xs font-medium text-foreground mb-1 block">Practical Marks</label>
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      value={subjectDraft.practical}
+                      onChange={(e) => setSubjectDraft((d) => ({ ...d, practical: e.target.value }))}
+                      placeholder="Practical"
+                      className="bg-background"
+                    />
+                  </div>
+                  <div className="md:col-span-1">
+                    <Button
+                      type="button"
+                      onClick={addSubject}
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                      title="Add subject"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
 
                 {subjects.length === 0 ? (
                   <div className="border border-dashed border-border/60 rounded-lg p-6 text-center text-sm text-muted-foreground">
-                    No subjects added. Click "Add Subject" to start.
+                    No subjects added. Pick a subject above, fill marks, then click the + button.
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -491,11 +562,9 @@ const AlotNumberContent = () => {
                         className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end p-3 rounded-lg border border-border/40 bg-background"
                       >
                         <div className="md:col-span-5">
-                          <Input
-                            value={s.name}
-                            onChange={(e) => updateSubject(i, "name", e.target.value)}
-                            placeholder="Subject name"
-                          />
+                          <div className="h-10 flex items-center px-3 rounded-md bg-muted/50 border border-border/40 font-medium text-foreground">
+                            {s.name}
+                          </div>
                         </div>
                         <div className="md:col-span-2">
                           <Input
