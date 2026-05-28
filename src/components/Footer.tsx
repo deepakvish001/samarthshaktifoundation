@@ -87,10 +87,6 @@ const Footer = () => {
                     <span className="text-muted-foreground">PAN No:</span>
                     <span className="font-medium text-foreground">AAXAM0981E</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Website:</span>
-                    <span className="font-medium text-primary">www.mataphoolpatidss.in</span>
-                  </div>
                 </div>
               </div>
             </div>
