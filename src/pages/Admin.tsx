@@ -73,6 +73,11 @@ import PaymentReportingContent from "@/components/admin/PaymentReportingContent"
 import StudentEditingContent from "@/components/admin/StudentEditingContent";
 import StudentManagementRealTime from "@/components/admin/StudentManagementRealTime";
 import CertificateManagementContent from "@/components/admin/CertificateManagementContent";
+import StudyCenterMasterContent from "@/components/admin/StudyCenterMasterContent";
+import TitleMasterContent from "@/components/admin/TitleMasterContent";
+import GenderMasterContent from "@/components/admin/GenderMasterContent";
+import CasteCategoryMasterContent from "@/components/admin/CasteCategoryMasterContent";
+import QualificationMasterContent from "@/components/admin/QualificationMasterContent";
 import MarksheetManagementContent from "@/components/admin/MarksheetManagementContent";
 import AttendanceManagementContent from "@/components/admin/AttendanceManagementContent";
 import PaymentModeManagementContent from "@/components/admin/PaymentModeManagementContent";
