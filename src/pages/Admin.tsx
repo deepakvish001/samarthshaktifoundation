@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -100,81 +100,6 @@ const Admin = () => {
   const handleBackToHome = () => {
     navigate('/');
   };
-  
-  const getCurrentView = () => {
-    const path = location.pathname;
-    if (path === '/admin/dashboard') return 'dashboard';
-    if (path === '/admin/edit-profile') return 'edit-profile';
-    if (path === '/admin/change-password') return 'change-password';
-    if (path === '/admin/video') return 'video';
-    if (path === '/admin/head-office') return 'head-office';
-    if (path === '/admin/menu-content') return 'menu-content';
-    if (path === '/admin/photo-gallery') return 'photo-gallery';
-    if (path === '/admin/bank-details') return 'bank-details';
-    if (path === '/admin/employee-master') return 'employee-master';
-    if (path === '/admin/state-master') return 'state-master';
-    if (path === '/admin/district-master') return 'district-master';
-    if (path === '/admin/course-master') return 'course-master';
-    if (path === '/admin/add-news') return 'add-news';
-    if (path === '/admin/add-course-category') return 'add-course-category';
-    if (path === '/admin/add-competition-courses') return 'add-competition-courses';
-    if (path === '/admin/add-vision') return 'add-vision';
-    if (path === '/admin/add-mission') return 'add-mission';
-    if (path === '/admin/add-director-message') return 'add-director-message';
-    if (path === '/admin/enquiry') return 'enquiry';
-    if (path === '/admin/contact-us') return 'contact-us';
-    if (path === '/admin/student-registration') return 'student-registration';
-    if (path === '/admin/student-approval') return 'student-approval';
-    if (path === '/admin/student-management') return 'student-management';
-    if (path === '/admin/student-management-realtime') return 'student-management-realtime';
-    if (path === '/admin/search-by-student-data') return 'search-by-student-data';
-    if (path === '/admin/student-verification') return 'student-verification';
-    if (path === '/admin/verification') return 'verification';
-    if (path === '/admin/verification-report') return 'verification-report';
-    if (path === '/admin/student-data') return 'student-data';
-    if (path === '/admin/student-reg-print') return 'student-reg-print';
-    if (path === '/admin/make-student-admit-card') return 'make-student-admit-card';
-    if (path === '/admin/student-admit-card-report') return 'student-admit-card-report';
-    if (path === '/admin/generate-student-admit-card') return 'generate-student-admit-card';
-    if (path === '/admin/upload-student-content') return 'upload-student-content';
-    if (path === '/admin/course-subject') return 'course-subject';
-    if (path === '/admin/alot-number') return 'alot-number';
-    if (path === '/admin/ready-marksheet') return 'ready-marksheet';
-    if (path === '/admin/report') return 'report';
-    if (path === '/admin/edit-crt') return 'edit-crt';
-    if (path === '/admin/student-marksheet') return 'student-marksheet';
-    if (path === '/admin/student-attendance') return 'student-attendance';
-    if (path === '/admin/student-attendance-report') return 'student-attendance-report';
-    if (path === '/admin/class-fees') return 'class-fees';
-    if (path === '/admin/fees-reports') return 'fees-reports';
-    if (path === '/admin/fees-management') return 'fees-management';
-    if (path === '/admin/fees-print') return 'fees-print';
-    if (path === '/admin/expense-master') return 'expense-master';
-    if (path === '/admin/expense-entry') return 'expense-entry';
-    if (path === '/admin/day-book') return 'day-book';
-    if (path === '/admin/opening-balance') return 'opening-balance';
-    if (path === '/admin/balance-sheet') return 'balance-sheet';
-    if (path === '/admin/franchise-registration') return 'franchise-registration';
-    if (path === '/admin/franchise-management') return 'franchise-management';
-    if (path === '/admin/franchise-approval') return 'franchise-approval';
-    if (path === '/admin/franchise-data') return 'franchise-data';
-    if (path === '/admin/franchise-reg-print') return 'franchise-reg-print';
-    if (path === '/admin/franchise-upload') return 'franchise-upload';
-    if (path === '/admin/view-franchise-support') return 'view-franchise-support';
-    if (path === '/admin/make-franchise-certificate') return 'make-franchise-certificate';
-    if (path === '/admin/generate-franchise-certificate') return 'generate-franchise-certificate';
-    if (path === '/admin/payment-section') return 'payment-section';
-    if (path === '/admin/payment-reporting') return 'payment-reporting';
-    if (path === '/admin/student-editing') return 'student-editing';
-    if (path === '/admin/certificate-management') return 'certificate-management';
-    if (path === '/admin/marksheet-management') return 'marksheet-management';
-    if (path === '/admin/attendance-management') return 'attendance-management';
-    if (path === '/admin/payment-mode-management') return 'payment-mode-management';
-    if (path === '/admin/admin-profile-management') return 'admin-profile-management';
-    return 'dashboard';
-  };
-
-  const currentView = getCurrentView();
 
   const toggleSubmenu = (index: number) => {
     const newOpenSubmenus = new Set(openSubmenus);
@@ -191,160 +116,181 @@ const Admin = () => {
     setOpenSubmenus(newOpenSubmenus);
   };
 
-  const sidebarItems = [{
-    icon: Home,
-    label: "Dashboard",
-    active: true,
-    color: "text-blue-400"
-  }, {
-    icon: User,
-    label: "Profile",
-    color: "text-green-400",
-    hasSubmenu: true,
-    submenuItems: [
-      { label: "Edit My Profile", icon: User },
-      { label: "Admin Profile Management", icon: Shield },
-      { label: "Change Login Password", icon: Key },
-      { label: "Video", icon: Video }
-    ]
-  }, {
-    icon: Building,
-    label: "My Offices",
-    hasSubmenu: true,
-    color: "text-purple-400",
-    submenuItems: [
-      { label: "Head Office", icon: Building2 }
-    ]
-  }, {
-    icon: GraduationCap,
-    label: "Master",
-    hasSubmenu: true,
-    color: "text-pink-400",
-    submenuItems: [
-      { label: "Menu Content", icon: Menu },
-      { label: "Photo Gallery", icon: Image },
-      { label: "Add Bank Details", icon: CreditCard },
-      { label: "EMP Master", icon: Users },
-      { label: "State Master", icon: MapPin },
-      { label: "Distt Master", icon: Map },
-      { label: "Course Master", icon: BookOpen },
-      { label: "Add News", icon: Newspaper },
-      { label: "Add Course Category", icon: FolderPlus },
-      { label: "Add News & Event", icon: Calendar },
-      { label: "Add Vision", icon: Eye },
-      { label: "Add Mission", icon: Target },
-      { label: "Add Director Message", icon: MessageSquare },
-      { label: "Contact Us", icon: Phone },
-      { label: "Enquiry", icon: HelpCircle }
-    ]
-  }, {
-    icon: Users,
-    label: "Student Master",
-    hasSubmenu: true,
-    color: "text-cyan-400",
-    submenuItems: [
-      { label: "Student Registration", icon: UserPlus },
-      { label: "Student Approval", icon: UserCheck },
-      { label: "Student Management", icon: Users },
-      { label: "Real-Time Student Management", icon: Database },
-      { label: "Search By Student Data", icon: Search },
-      { label: "Student Verification", icon: Shield },
-      { label: "Verification", icon: CheckCircle },
-      { label: "Verification Report", icon: FileText },
-      { label: "Student Data", icon: Database },
-      { label: "Student Reg. Print", icon: Printer },
-      { label: "Make Student Admit Card", icon: CreditCard },
-      { label: "Student Admit Card Report", icon: FileText },
-      { label: "Generate Student Admit Card", icon: FileOutput },
-      { label: "Upload Student Content", icon: Upload }
-    ]
-  }, {
-    icon: Award,
-    label: "Certificate & Marksheet",
-    hasSubmenu: true,
-    color: "text-yellow-400",
-    submenuItems: [
-      { label: "Auto Generate Certificate", icon: Award },
-      { label: "Certificate Management", icon: Award },
-      { label: "Marksheet Management", icon: FileText },
-      { label: "Alot Number", icon: Hash },
-      { label: "Ready Markseet", icon: FileCheck },
-      { label: "Report", icon: FileText },
-      { label: "Edit CRT", icon: Edit },
-      { label: "Student Markseet", icon: Award }
-    ]
-  }, {
-    icon: Clock,
-    label: "Attendance Master",
-    hasSubmenu: true,
-    color: "text-red-400",
-    submenuItems: [
-      { label: "Attendance Management", icon: Clock },
-      { label: "Student Attandance", icon: Clock },
-      { label: "Student Att. Report", icon: BarChart }
-    ]
-  }, {
-    icon: DollarSign,
-    label: "Fees Master",
-    hasSubmenu: true,
-    color: "text-green-400",
-    submenuItems: [
-      { label: "Class Fees", icon: DollarSign },
-      { label: "Fees Reports", icon: Receipt },
-      { label: "Fees Management", icon: Wallet },
-      { label: "Fees Print", icon: Printer }
-    ]
-  }, {
-    icon: Building,
-    label: "Expense panel",
-    hasSubmenu: true,
-    color: "text-indigo-400",
-    submenuItems: [
-      { label: "Expense Master", icon: Receipt },
-      { label: "Expense Entry", icon: PlusCircle },
-      { label: "Day Book", icon: Book },
-      { label: "Opening Balance", icon: Scale },
-      { label: "Balance Sheet", icon: Calculator }
-    ]
-  }, {
-    icon: Crown,
-    label: "Franchise Master",
-    hasSubmenu: true,
-    color: "text-amber-400",
-    submenuItems: [
-      { label: "Registration", icon: UserPlus },
-      { label: "Franchise Management", icon: Building },
-      { label: "Approval", icon: CheckCircle },
-      { label: "Franchise Data", icon: Database },
-      { label: "Franchise Reg. Print", icon: Printer },
-      { label: "Franchise Upload", icon: Upload },
-      { label: "View Franchise Support", icon: HelpCircle }
-    ]
-  }, {
-    icon: FileText,
-    label: "Franchise Certificate",
-    hasSubmenu: true,
-    color: "text-teal-400",
-    submenuItems: [
-      { label: "Make Franchise Certificate", icon: Award },
-      { label: "Generate Franchise Certificate", icon: FileOutput }
-    ]
-  }, {
-    icon: CreditCard,
-    label: "Payment Mode",
-    hasSubmenu: true,
-    color: "text-rose-400",
-    submenuItems: [
-      { label: "Payment Mode Management", icon: Settings },
-      { label: "Payment Section", icon: CreditCard },
-      { label: "Reporting", icon: BarChart },
-      { label: "Student_Editing", icon: Edit }
-    ]
-  }, {
-    icon: LogOut,
-    label: "LogOut",
-    color: "text-gray-400"
-  }];
+  // Single source of truth for sidebar items, routes, and header titles.
+  const sidebarItems = useMemo(() => ([
+    { icon: Home, label: "Dashboard", color: "text-blue-400", path: "/admin/dashboard", title: "Dashboard", subtitle: "Control panel" },
+    {
+      icon: User, label: "Profile", color: "text-green-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Edit My Profile", icon: User, path: "/admin/edit-profile", title: "Admin Profile", subtitle: "Edit your profile information" },
+        { label: "Admin Profile Management", icon: Shield, path: "/admin/admin-profile-management", title: "Admin Profile Management", subtitle: "Manage admin profiles" },
+        { label: "Change Login Password", icon: Key, path: "/admin/change-password", title: "Change Password", subtitle: "Update your login password" },
+        { label: "Video", icon: Video, path: "/admin/video", title: "Add Videos", subtitle: "Upload and manage videos" },
+      ],
+    },
+    {
+      icon: Building, label: "My Offices", color: "text-purple-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Head Office", icon: Building2, path: "/admin/head-office", title: "Head Office Details", subtitle: "Manage head office information" },
+      ],
+    },
+    {
+      icon: GraduationCap, label: "Master", color: "text-pink-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Menu Content", icon: Menu, path: "/admin/menu-content", title: "Add Menu Content", subtitle: "Upload and manage menu content" },
+        { label: "Photo Gallery", icon: Image, path: "/admin/photo-gallery", title: "Add Photo To Gallery", subtitle: "Upload and manage gallery photos" },
+        { label: "Add Bank Details", icon: CreditCard, path: "/admin/bank-details", title: "Add Bank Details", subtitle: "Manage bank account details" },
+        { label: "EMP Master", icon: Users, path: "/admin/employee-master", title: "Employee Master", subtitle: "Manage employee information" },
+        { label: "State Master", icon: MapPin, path: "/admin/state-master", title: "State Master", subtitle: "Manage state information" },
+        { label: "Distt Master", icon: Map, path: "/admin/district-master", title: "District Master", subtitle: "Manage district information" },
+        { label: "Course Master", icon: BookOpen, path: "/admin/course-master", title: "Course Master", subtitle: "Manage course information" },
+        { label: "Add News", icon: Newspaper, path: "/admin/add-news", title: "Add News", subtitle: "Manage news and announcements" },
+        { label: "Add Course Category", icon: FolderPlus, path: "/admin/add-course-category", title: "Add Course Category", subtitle: "Manage course categories" },
+        { label: "Add News & Event", icon: Calendar, path: "/admin/add-competition-courses", title: "Add Competition Courses", subtitle: "Manage competition courses and events" },
+        { label: "Add Vision", icon: Eye, path: "/admin/add-vision", title: "Add Our Vision", subtitle: "Manage organization vision" },
+        { label: "Add Mission", icon: Target, path: "/admin/add-mission", title: "Add Our Mission", subtitle: "Manage organization mission" },
+        { label: "Add Director Message", icon: MessageSquare, path: "/admin/add-director-message", title: "Add Director Message", subtitle: "Manage director messages" },
+        { label: "Contact Us", icon: Phone, path: "/admin/contact-us", title: "My All Contacts", subtitle: "View and manage contacts" },
+        { label: "Enquiry", icon: HelpCircle, path: "/admin/enquiry", title: "My All Enquiry", subtitle: "View and manage enquiries" },
+      ],
+    },
+    {
+      icon: Users, label: "Student Master", color: "text-cyan-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Student Registration", icon: UserPlus, path: "/admin/student-registration", title: "Student Registration", subtitle: "Register new students" },
+        { label: "Student Approval", icon: UserCheck, path: "/admin/student-approval", title: "Student Approval", subtitle: "Review and approve students" },
+        { label: "Student Management", icon: Users, path: "/admin/student-management", title: "Student Management", subtitle: "Manage student records" },
+        { label: "Real-Time Student Management", icon: Database, path: "/admin/student-management-realtime", title: "Real-Time Student Management", subtitle: "Live student updates" },
+        { label: "Search By Student Data", icon: Search, path: "/admin/search-by-student-data", title: "Search By Student Data", subtitle: "Search student records" },
+        { label: "Student Verification", icon: Shield, path: "/admin/student-verification", title: "Student Verification", subtitle: "Verify student details" },
+        { label: "Verification", icon: CheckCircle, path: "/admin/verification", title: "Verification", subtitle: "Approve verifications" },
+        { label: "Verification Report", icon: FileText, path: "/admin/verification-report", title: "Verification Report", subtitle: "Verification analytics" },
+        { label: "Student Data", icon: Database, path: "/admin/student-data", title: "Student Data", subtitle: "Browse all student data" },
+        { label: "Student Reg. Print", icon: Printer, path: "/admin/student-reg-print", title: "Student Registration Print", subtitle: "Print registration forms" },
+        { label: "Course Subject", icon: BookOpen, path: "/admin/course-subject", title: "Course Subject", subtitle: "Manage course subjects" },
+        { label: "Make Student Admit Card", icon: CreditCard, path: "/admin/make-student-admit-card", title: "Make Student Admit Card", subtitle: "Create admit cards" },
+        { label: "Student Admit Card Report", icon: FileText, path: "/admin/student-admit-card-report", title: "Student Admit Card Report", subtitle: "Admit card analytics" },
+        { label: "Generate Student Admit Card", icon: FileOutput, path: "/admin/generate-student-admit-card", title: "Generate Student Admit Card", subtitle: "Generate admit cards" },
+        { label: "Upload Student Content", icon: Upload, path: "/admin/upload-student-content", title: "Upload Student Content", subtitle: "Upload student documents" },
+      ],
+    },
+    {
+      icon: Award, label: "Certificate & Marksheet", color: "text-yellow-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Auto Generate Certificate", icon: Award, path: "/admin/auto-generate", title: "Auto Generate Certificate", subtitle: "Generate certificates & marksheets" },
+        { label: "Certificate Management", icon: Award, path: "/admin/certificate-management", title: "Certificate Management", subtitle: "Manage certificates" },
+        { label: "Marksheet Management", icon: FileText, path: "/admin/marksheet-management", title: "Marksheet Management", subtitle: "Manage marksheets" },
+        { label: "Alot Number", icon: Hash, path: "/admin/alot-number", title: "Allot Number", subtitle: "Allot certificate numbers" },
+        { label: "Ready Markseet", icon: FileCheck, path: "/admin/ready-marksheet", title: "Ready Marksheet", subtitle: "Marksheets ready to issue" },
+        { label: "Report", icon: FileText, path: "/admin/report", title: "Report", subtitle: "Certificate & marksheet reports" },
+        { label: "Edit CRT", icon: Edit, path: "/admin/edit-crt", title: "Edit CRT", subtitle: "Edit certificate records" },
+        { label: "Student Markseet", icon: Award, path: "/admin/student-marksheet", title: "Student Marksheet", subtitle: "View student marksheets" },
+      ],
+    },
+    {
+      icon: Clock, label: "Attendance Master", color: "text-red-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Attendance Management", icon: Clock, path: "/admin/attendance-management", title: "Attendance Management", subtitle: "Manage attendance" },
+        { label: "Student Attandance", icon: Clock, path: "/admin/student-attendance", title: "Student Attendance", subtitle: "Mark student attendance" },
+        { label: "Student Att. Report", icon: BarChart, path: "/admin/student-attendance-report", title: "Student Attendance Report", subtitle: "Attendance analytics" },
+      ],
+    },
+    {
+      icon: DollarSign, label: "Fees Master", color: "text-green-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Class Fees", icon: DollarSign, path: "/admin/class-fees", title: "Class Fees", subtitle: "Manage class fees" },
+        { label: "Fees Reports", icon: Receipt, path: "/admin/fees-reports", title: "Fees Reports", subtitle: "Fee collection reports" },
+        { label: "Fees Management", icon: Wallet, path: "/admin/fees-management", title: "Fees Management", subtitle: "Manage student fees" },
+        { label: "Fees Print", icon: Printer, path: "/admin/fees-print", title: "Fees Print", subtitle: "Print fee receipts" },
+      ],
+    },
+    {
+      icon: Building, label: "Expense panel", color: "text-indigo-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Expense Master", icon: Receipt, path: "/admin/expense-master", title: "Expense Master", subtitle: "Manage expense categories" },
+        { label: "Expense Entry", icon: PlusCircle, path: "/admin/expense-entry", title: "Expense Entry", subtitle: "Record expenses" },
+        { label: "Day Book", icon: Book, path: "/admin/day-book", title: "Day Book", subtitle: "Daily transactions" },
+        { label: "Opening Balance", icon: Scale, path: "/admin/opening-balance", title: "Opening Balance", subtitle: "Set opening balances" },
+        { label: "Balance Sheet", icon: Calculator, path: "/admin/balance-sheet", title: "Balance Sheet", subtitle: "View balance sheet" },
+      ],
+    },
+    {
+      icon: Crown, label: "Franchise Master", color: "text-amber-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Registration", icon: UserPlus, path: "/admin/franchise-registration", title: "Franchise Registration", subtitle: "Register new franchises" },
+        { label: "Franchise Management", icon: Building, path: "/admin/franchise-management", title: "Franchise Management", subtitle: "Manage franchises" },
+        { label: "Approval", icon: CheckCircle, path: "/admin/franchise-approval", title: "Franchise Approval", subtitle: "Approve franchise requests" },
+        { label: "Franchise Data", icon: Database, path: "/admin/franchise-data", title: "Franchise Data", subtitle: "Browse franchise data" },
+        { label: "Franchise Reg. Print", icon: Printer, path: "/admin/franchise-reg-print", title: "Franchise Registration Print", subtitle: "Print franchise forms" },
+        { label: "Franchise Upload", icon: Upload, path: "/admin/franchise-upload", title: "Franchise Upload", subtitle: "Upload franchise documents" },
+        { label: "View Franchise Support", icon: HelpCircle, path: "/admin/view-franchise-support", title: "Franchise Support", subtitle: "Franchise support tickets" },
+      ],
+    },
+    {
+      icon: FileText, label: "Franchise Certificate", color: "text-teal-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Make Franchise Certificate", icon: Award, path: "/admin/make-franchise-certificate", title: "Make Franchise Certificate", subtitle: "Create franchise certificates" },
+        { label: "Generate Franchise Certificate", icon: FileOutput, path: "/admin/generate-franchise-certificate", title: "Generate Franchise Certificate", subtitle: "Generate franchise certificates" },
+      ],
+    },
+    {
+      icon: CreditCard, label: "Payment Mode", color: "text-rose-400", hasSubmenu: true,
+      submenuItems: [
+        { label: "Payment Mode Management", icon: Settings, path: "/admin/payment-mode-management", title: "Payment Mode Management", subtitle: "Configure payment modes" },
+        { label: "Payment Section", icon: CreditCard, path: "/admin/payment-section", title: "Payment Section", subtitle: "Manage payments" },
+        { label: "Reporting", icon: BarChart, path: "/admin/payment-reporting", title: "Payment Reporting", subtitle: "Payment analytics" },
+        { label: "Student_Editing", icon: Edit, path: "/admin/student-editing", title: "Student Editing", subtitle: "Edit student payments" },
+      ],
+    },
+    { icon: LogOut, label: "LogOut", color: "text-gray-400" },
+  ]), []);
+
+  // Find which page corresponds to the current URL
+  const activePath = location.pathname;
+  const activeMeta = useMemo(() => {
+    for (const item of sidebarItems) {
+      if ((item as any).path === activePath) return { parentIndex: -1, title: item.title, subtitle: (item as any).subtitle };
+      const subs = (item as any).submenuItems as Array<any> | undefined;
+      if (subs) {
+        const idx = sidebarItems.indexOf(item);
+        const sub = subs.find((s) => s.path === activePath);
+        if (sub) return { parentIndex: idx, title: sub.title, subtitle: sub.subtitle };
+      }
+    }
+    return { parentIndex: -1, title: "Dashboard", subtitle: "Control panel" };
+  }, [sidebarItems, activePath]);
+
+  // Auto-open the parent group containing the active route
+  useEffect(() => {
+    if (activeMeta.parentIndex >= 0) {
+      setOpenSubmenus((prev) => {
+        if (prev.has(activeMeta.parentIndex)) return prev;
+        const next = new Set<number>();
+        next.add(activeMeta.parentIndex);
+        return next;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeMeta.parentIndex]);
+
+  const handleParentClick = (index: number, item: any) => {
+    if (item.label === 'Dashboard') {
+      navigate('/admin/dashboard');
+      return;
+    }
+    if (item.label === 'LogOut') {
+      handleLogout();
+      return;
+    }
+    if (item.hasSubmenu) {
+      if (sidebarCollapsed) {
+        setSidebarCollapsed(false);
+        setOpenSubmenus(new Set([index]));
+      } else {
+        toggleSubmenu(index);
+      }
+    }
+  };
 
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -402,21 +348,13 @@ const Admin = () => {
               {sidebarItems.map((item, index) => (
                 <div key={index}>
                   <div 
-                    className={`${sidebarCollapsed ? 'flex items-center justify-center p-4 relative group' : 'flex items-center space-x-4 p-3'} rounded-xl cursor-pointer transition-all duration-200 ${item.label === 'Dashboard' && currentView === 'dashboard' ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 shadow-lg' : 'hover:bg-gray-700/50 hover:shadow-md'}`}
-                    onClick={() => {
-                      if (item.label === 'Dashboard') {
-                        navigate('/admin/dashboard');
-                      } else if (item.label === 'LogOut') {
-                        handleLogout();
-                      } else if (item.hasSubmenu && !sidebarCollapsed) {
-                        toggleSubmenu(index);
-                      }
-                    }}
+                    className={`${sidebarCollapsed ? 'flex items-center justify-center p-4 relative group' : 'flex items-center space-x-4 p-3'} rounded-xl cursor-pointer transition-all duration-200 ${((item.label === 'Dashboard' && activePath === '/admin/dashboard') || activeMeta.parentIndex === index) ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 shadow-lg' : 'hover:bg-gray-700/50 hover:shadow-md'}`}
+                    onClick={() => handleParentClick(index, item)}
                   >
                     <item.icon className={`${sidebarCollapsed ? 'h-7 w-7' : 'h-5 w-5'} ${item.color || 'text-gray-400'} group-hover:scale-110 transition-transform duration-200 ${sidebarCollapsed ? 'mx-auto' : ''}`} />
                     {!sidebarCollapsed && (
                       <>
-                        <span className={`text-sm font-medium ${item.label === 'Dashboard' && currentView === 'dashboard' ? 'text-white' : 'text-gray-300'} group-hover:text-white transition-colors duration-200`}>
+                        <span className={`text-sm font-medium ${((item.label === 'Dashboard' && activePath === '/admin/dashboard') || activeMeta.parentIndex === index) ? 'text-white' : 'text-gray-300'} group-hover:text-white transition-colors duration-200`}>
                           {item.label}
                         </span>
                         {item.hasSubmenu && (
@@ -437,156 +375,21 @@ const Admin = () => {
                   </div>
                   
                   {/* Submenu Items */}
-                  {item.hasSubmenu && item.submenuItems && !sidebarCollapsed && openSubmenus.has(index) && (
+                  {(item as any).hasSubmenu && (item as any).submenuItems && !sidebarCollapsed && openSubmenus.has(index) && (
                     <div className="ml-8 mt-2 space-y-1 border-l-2 border-gray-600/50 pl-4">
-                      {item.submenuItems.map((subItem, subIndex) => (
-                        <div 
-                          key={subIndex}
-                          className="flex items-center space-x-3 p-2 text-sm text-gray-400 hover:text-white hover:bg-gray-700/30 rounded-lg cursor-pointer transition-all duration-200"
-                          onClick={() => {
-                            if (subItem.label === "Edit My Profile") {
-                              navigate('/admin/edit-profile');
-                            } else if (subItem.label === "Admin Profile Management") {
-                              navigate('/admin/admin-profile-management');
-                            } else if (subItem.label === "Change Login Password") {
-                              navigate('/admin/change-password');
-                            } else if (subItem.label === "Video") {
-                              navigate('/admin/video');
-                            } else if (subItem.label === "Head Office") {
-                              navigate('/admin/head-office');
-                            } else if (subItem.label === "Menu Content") {
-                              navigate('/admin/menu-content');
-                            } else if (subItem.label === "Photo Gallery") {
-                              navigate('/admin/photo-gallery');
-                            } else if (subItem.label === "Add Bank Details") {
-                              navigate('/admin/bank-details');
-                            } else if (subItem.label === "EMP Master") {
-                              navigate('/admin/employee-master');
-                            } else if (subItem.label === "State Master") {
-                              navigate('/admin/state-master');
-                            } else if (subItem.label === "Distt Master") {
-                              navigate('/admin/district-master');
-                            } else if (subItem.label === "Course Master") {
-                              navigate('/admin/course-master');
-                            } else if (subItem.label === "Add News") {
-                              navigate('/admin/add-news');
-                            } else if (subItem.label === "Add Course Category") {
-                              navigate('/admin/add-course-category');
-                            } else if (subItem.label === "Add News & Event") {
-                              navigate('/admin/add-competition-courses');
-                            } else if (subItem.label === "Add Vision") {
-                              navigate('/admin/add-vision');
-                            } else if (subItem.label === "Add Mission") {
-                              navigate('/admin/add-mission');
-                            } else if (subItem.label === "Add Director Message") {
-                              navigate('/admin/add-director-message');
-                            } else if (subItem.label === "Enquiry") {
-                              navigate('/admin/enquiry');
-                            } else if (subItem.label === "Contact Us") {
-                              navigate('/admin/contact-us');
-                            } else if (subItem.label === "Student Registration") {
-                              navigate('/admin/student-registration');
-                            } else if (subItem.label === "Student Approval") {
-                              navigate('/admin/student-approval');
-                            } else if (subItem.label === "Student Management") {
-                              navigate('/admin/student-management');
-                            } else if (subItem.label === "Real-Time Student Management") {
-                              navigate('/admin/student-management-realtime');
-                            } else if (subItem.label === "Search By Student Data") {
-                              navigate('/admin/search-by-student-data');
-                            } else if (subItem.label === "Student Verification") {
-                              navigate('/admin/student-verification');
-                            } else if (subItem.label === "Verification") {
-                              navigate('/admin/verification');
-                            } else if (subItem.label === "Verification Report") {
-                              navigate('/admin/verification-report');
-                            } else if (subItem.label === "Student Data") {
-                              navigate('/admin/student-data');
-                            } else if (subItem.label === "Student Reg. Print") {
-                              navigate('/admin/student-reg-print');
-                            } else if (subItem.label === "Make Student Admit Card") {
-                              navigate('/admin/make-student-admit-card');
-                            } else if (subItem.label === "Student Admit Card Report") {
-                              navigate('/admin/student-admit-card-report');
-                            } else if (subItem.label === "Generate Student Admit Card") {
-                              navigate('/admin/generate-student-admit-card');
-                            } else if (subItem.label === "Upload Student Content") {
-                              navigate('/admin/upload-student-content');
-                            } else if (subItem.label === "Course Subject") {
-                              navigate('/admin/course-subject');
-                            } else if (subItem.label === "Certificate Management") {
-                              navigate('/admin/certificate-management');
-                            } else if (subItem.label === "Auto Generate Certificate") {
-                              navigate('/admin/auto-generate');
-                            } else if (subItem.label === "Marksheet Management") {
-                              navigate('/admin/marksheet-management');
-                            } else if (subItem.label === "Alot Number") {
-                              navigate('/admin/alot-number');
-                            } else if (subItem.label === "Ready Markseet") {
-                              navigate('/admin/ready-marksheet');
-                            } else if (subItem.label === "Report") {
-                              navigate('/admin/report');
-                            } else if (subItem.label === "Edit CRT") {
-                              navigate('/admin/edit-crt');
-                            } else if (subItem.label === "Student Markseet") {
-                              navigate('/admin/student-marksheet');
-                            } else if (subItem.label === "Attendance Management") {
-                              navigate('/admin/attendance-management');
-                            } else if (subItem.label === "Student Attandance") {
-                              navigate('/admin/student-attendance');
-                            } else if (subItem.label === "Student Att. Report") {
-                              navigate('/admin/student-attendance-report');
-                            } else if (subItem.label === "Class Fees") {
-                              navigate('/admin/class-fees');
-                            } else if (subItem.label === "Fees Reports") {
-                              navigate('/admin/fees-reports');
-                            } else if (subItem.label === "Fees Management") {
-                              navigate('/admin/fees-management');
-                            } else if (subItem.label === "Fees Print") {
-                              navigate('/admin/fees-print');
-                            } else if (subItem.label === "Expense Master") {
-                              navigate('/admin/expense-master');
-                            } else if (subItem.label === "Expense Entry") {
-                              navigate('/admin/expense-entry');
-                            } else if (subItem.label === "Day Book") {
-                              navigate('/admin/day-book');
-                            } else if (subItem.label === "Opening Balance") {
-                              navigate('/admin/opening-balance');
-                            } else if (subItem.label === "Balance Sheet") {
-                              navigate('/admin/balance-sheet');
-                            } else if (subItem.label === "Registration") {
-                              navigate('/admin/franchise-registration');
-                            } else if (subItem.label === "Franchise Management") {
-                              navigate('/admin/franchise-management');
-                            } else if (subItem.label === "Approval") {
-                              navigate('/admin/franchise-approval');
-                            } else if (subItem.label === "Franchise Data") {
-                              navigate('/admin/franchise-data');
-                            } else if (subItem.label === "Franchise Reg. Print") {
-                              navigate('/admin/franchise-reg-print');
-                            } else if (subItem.label === "Franchise Upload") {
-                              navigate('/admin/franchise-upload');
-                            } else if (subItem.label === "View Franchise Support") {
-                              navigate('/admin/view-franchise-support');
-                            } else if (subItem.label === "Make Franchise Certificate") {
-                              navigate('/admin/make-franchise-certificate');
-                            } else if (subItem.label === "Generate Franchise Certificate") {
-                              navigate('/admin/generate-franchise-certificate');
-                            } else if (subItem.label === "Payment Mode Management") {
-                              navigate('/admin/payment-mode-management');
-                            } else if (subItem.label === "Payment Section") {
-                              navigate('/admin/payment-section');
-                            } else if (subItem.label === "Reporting") {
-                              navigate('/admin/payment-reporting');
-                            } else if (subItem.label === "Student_Editing") {
-                              navigate('/admin/student-editing');
-                            }
-                          }}
-                        >
-                          <subItem.icon className="h-4 w-4 text-gray-500" />
-                          <span>{subItem.label}</span>
-                        </div>
-                      ))}
+                      {(item as any).submenuItems.map((subItem: any, subIndex: number) => {
+                        const isSubActive = subItem.path === activePath;
+                        return (
+                          <div
+                            key={subIndex}
+                            className={`flex items-center space-x-3 p-2 text-sm rounded-lg cursor-pointer transition-all duration-200 ${isSubActive ? 'bg-blue-600/30 text-white border-l-2 border-blue-400 shadow-md -ml-[2px]' : 'text-gray-400 hover:text-white hover:bg-gray-700/30'}`}
+                            onClick={() => subItem.path && navigate(subItem.path)}
+                          >
+                            <subItem.icon className={`h-4 w-4 ${isSubActive ? 'text-blue-300' : 'text-gray-500'}`} />
+                            <span>{subItem.label}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -638,57 +441,10 @@ const Admin = () => {
         }}>
           <div>
             <h1 className="text-3xl font-bold text-gray-800 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-              {currentView === 'dashboard' ? 'Dashboard' : 
-               currentView === 'edit-profile' ? 'Admin Profile' : 
-               currentView === 'change-password' ? 'Change Password' : 
-               currentView === 'video' ? 'Add Videos' : 
-               currentView === 'head-office' ? 'Head Office Details' : 
-               currentView === 'menu-content' ? 'Add Menu Content' : 
-               currentView === 'photo-gallery' ? 'Add Photo To Gallery' : 
-               currentView === 'bank-details' ? 'Add Bank Details' : 
-               currentView === 'employee-master' ? 'Employee Master' : 
-                currentView === 'state-master' ? 'State Master' : 
-                currentView === 'district-master' ? 'District Master' : 
-                currentView === 'course-master' ? 'Course Master' : 
-                currentView === 'add-news' ? 'Add News' : 
-                currentView === 'add-course-category' ? 'Add Course Category' : 
-                currentView === 'add-competition-courses' ? 'Add Competition Courses' : 
-                currentView === 'add-vision' ? 'Add Our Vision' : 
-                currentView === 'add-mission' ? 'Add Our Mission' : 
-                currentView === 'add-director-message' ? 'Add Director Message' : 
-                currentView === 'enquiry' ? 'My All Enquiry' : 
-                currentView === 'contact-us' ? 'My All Contacts' : 
-                currentView === 'student-registration' ? 'Student Registration' : 
-               currentView === 'student-approval' ? 'Student Approval' : 
-               currentView === 'student-management' ? 'Student Management' : 
-               currentView === 'search-by-student-data' ? 'Search By Student Data' : 
-               currentView === 'student-verification' ? 'Student Verification' : 
-               currentView === 'verification' ? 'Verification' : 
-               currentView === 'verification-report' ? 'Verification Report' : 
-               currentView === 'student-data' ? 'Student Data' : 'Dashboard'}
+              {activeMeta.title}
             </h1>
             <p className="text-gray-600 font-medium mt-1">
-              {currentView === 'dashboard' ? 'Control panel' : 
-               currentView === 'edit-profile' ? 'Edit your profile information' : 
-               currentView === 'change-password' ? 'Update your login password' : 
-               currentView === 'video' ? 'Upload and manage videos' : 
-               currentView === 'head-office' ? 'Manage head office information' : 
-               currentView === 'menu-content' ? 'Upload and manage menu content' : 
-               currentView === 'photo-gallery' ? 'Upload and manage gallery photos' : 
-               currentView === 'bank-details' ? 'Manage bank account details' : 
-               currentView === 'employee-master' ? 'Manage employee information' : 
-                currentView === 'state-master' ? 'Manage state information' : 
-                currentView === 'district-master' ? 'Manage district information' : 
-                currentView === 'course-master' ? 'Manage course information' : 
-                currentView === 'add-news' ? 'Manage news and announcements' : 
-                currentView === 'add-course-category' ? 'Manage course categories' : 
-                currentView === 'add-competition-courses' ? 'Manage competition courses and events' : 
-                currentView === 'add-vision' ? 'Manage organization vision' : 
-                currentView === 'add-mission' ? 'Manage organization mission' : 
-                currentView === 'add-director-message' ? 'Manage director messages' : 
-                currentView === 'enquiry' ? 'View and manage enquiries' : 
-                currentView === 'contact-us' ? 'View and manage contacts' : 
-               currentView === 'student-registration' ? 'Register new students' : 'Control panel'}
+              {activeMeta.subtitle}
             </p>
           </div>
           <div className="flex items-center space-x-6">
