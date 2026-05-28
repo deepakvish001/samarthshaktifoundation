@@ -2016,6 +2016,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_enrollment_number: { Args: { _year: number }; Returns: string }
       generate_student_id: { Args: never; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
