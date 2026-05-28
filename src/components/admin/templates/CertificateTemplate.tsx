@@ -245,7 +245,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <img src="/cert-logos/iso-9001.png" alt="ISO 9001:2015" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain" }} />
                   <img src="/cert-logos/msme-new.png" alt="MSME" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain" }} />
-                  <img src="/lovable-uploads/nesan-logo.png" alt="SSF" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain", borderRadius: "50%" }} />
+                  <img src="/cert-logos/ssf.png" alt="Samarth Shakti Foundation" crossOrigin="anonymous" style={{ height: 44, width: 44, objectFit: "contain" }} />
                 </div>
               </div>
 
