@@ -77,6 +77,17 @@ const AlotNumberContent = () => {
   const [editingAlot, setEditingAlot] = useState<AlotNumber | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCourse, setFilterCourse] = useState("all");
+  const [subjects, setSubjects] = useState<AlotSubject[]>([]);
+
+  const addSubject = () =>
+    setSubjects((prev) => [...prev, { name: "", theory: "", practical: "" }]);
+  const removeSubject = (i: number) =>
+    setSubjects((prev) => prev.filter((_, idx) => idx !== i));
+  const updateSubject = (i: number, field: keyof AlotSubject, value: string) =>
+    setSubjects((prev) => prev.map((s, idx) => (idx === i ? { ...s, [field]: value } : s)));
+  const subjectTotal = (s: AlotSubject) =>
+    (Number(s.theory) || 0) + (Number(s.practical) || 0);
+  const grandTotal = subjects.reduce((sum, s) => sum + subjectTotal(s), 0);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
