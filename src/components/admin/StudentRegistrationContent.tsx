@@ -221,62 +221,144 @@ const StudentRegistrationContent = () => {
     });
   };
 
+  const initialFormState = {
+    courseCategory: "",
+    courseName: "",
+    courseFees: "",
+    studyCenter: "",
+    titleApplicant: "",
+    titleFather: "",
+    titleMother: "",
+    applicantName: "",
+    fatherName: "",
+    motherName: "",
+    gender: "",
+    dateOfBirth: "",
+    category: "",
+    registrationDate: "",
+    mobile: "",
+    email: "",
+    fullAddress: "",
+    cityName: "",
+    state: "",
+    district: "",
+    pinCode: "",
+    qualification: "",
+    yearOfPassing: "",
+    aadharNumber: "",
+    studentId: "",
+    password: "",
+    declaration: false,
+  };
+
+  const parseDOB = (s: string): string | null => {
+    if (!s) return null;
+    // Accept dd/MM/yyyy or yyyy-MM-dd
+    const slash = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (slash) return `${slash[3]}-${slash[2]}-${slash[1]}`;
+    const iso = s.match(/^\d{4}-\d{2}-\d{2}$/);
+    if (iso) return s;
+    return null;
+  };
+
+  const generatePassword = () => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let p = "";
+    for (let i = 0; i < 8; i++) p += chars[Math.floor(Math.random() * chars.length)];
+    return p;
+  };
+
   const handleSubmit = async () => {
+    if (submitting) return;
     if (!formData.declaration) {
       toast.error("Please accept the declaration to proceed");
       return;
     }
-
     if (!formData.applicantName || !formData.email || !formData.mobile) {
-      toast.error("Please fill in all required fields");
+      toast.error("Please fill in Applicant Name, Email and Mobile");
       return;
     }
 
-    const studentData = {
-      full_name: formData.applicantName,
-      email: formData.email,
-      phone: formData.mobile,
-      course_name: formData.courseName,
-      status: 'active',
-      city: formData.cityName,
-      state: formData.state,
-      enrollment_date: new Date().toISOString()
-    };
-
+    setSubmitting(true);
     try {
+      // 1. Resolve State/District UUIDs -> names so downstream pages show readable text
+      const stateName =
+        states.find((s) => s.id === formData.state)?.city_name || formData.state;
+      const districtName =
+        districts.find((d) => d.id === formData.district)?.site_name || formData.district;
+
+      // 2. Student ID — auto-generate if admin left it blank
+      let studentId = formData.studentId.trim();
+      if (!studentId) {
+        const { data: gen, error: genErr } = await (supabase as any).rpc("generate_student_id");
+        if (genErr || !gen) {
+          // Fallback if RPC fails
+          studentId = `SSF-${new Date().getFullYear()}-${Math.floor(Math.random() * 9000 + 1000)}`;
+        } else {
+          studentId = gen as string;
+        }
+      }
+
+      // 3. Upload photo (optional)
+      let photoUrl: string | null = null;
+      if (photoFile) {
+        const ext = photoFile.name.split(".").pop() || "jpg";
+        const path = `students/${studentId}-${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("avatars")
+          .upload(path, photoFile, { upsert: true, contentType: photoFile.type });
+        if (upErr) {
+          toast.error(`Photo upload failed: ${upErr.message}`);
+        } else {
+          const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+          photoUrl = pub.publicUrl;
+        }
+      }
+
+      // 4. Password — auto-generate if blank
+      const password = formData.password.trim() || generatePassword();
+
+      // 5. Build full payload — every form field is persisted
+      const studentData: any = {
+        student_id: studentId,
+        full_name: formData.applicantName,
+        email: formData.email,
+        phone: formData.mobile,
+        title: formData.titleApplicant || null,
+        father_name: formData.fatherName || null,
+        mother_name: formData.motherName || null,
+        gender: formData.gender || null,
+        date_of_birth: parseDOB(formData.dateOfBirth),
+        caste_category: formData.category || null,
+        registration_date: parseDOB(formData.registrationDate) || new Date().toISOString().slice(0, 10),
+        address: formData.fullAddress || null,
+        city: formData.cityName || null,
+        state: stateName || null,
+        district: districtName || null,
+        pin_code: formData.pinCode || null,
+        qualification: formData.qualification || null,
+        year_of_passing: formData.yearOfPassing || null,
+        aadhar_number: formData.aadharNumber || null,
+        study_center: formData.studyCenter || null,
+        course_category: formData.courseCategory || null,
+        course_name: formData.courseName || null,
+        course_fees: formData.courseFees || null,
+        photo_url: photoUrl,
+        login_password: password,
+        status: "active",
+        enrollment_date: new Date().toISOString(),
+      };
+
       await create(studentData);
-      
-      // Reset form
-      setFormData({
-        courseCategory: "",
-        courseName: "",
-        courseFees: "",
-        studyCenter: "",
-        applicantName: "",
-        fatherName: "",
-        motherName: "",
-        gender: "",
-        dateOfBirth: "",
-        category: "",
-        registrationDate: "",
-        mobile: "",
-        email: "",
-        fullAddress: "",
-        cityName: "",
-        state: "",
-        district: "",
-        pinCode: "",
-        qualification: "",
-        yearOfPassing: "",
-        aadharNumber: "",
-        studentId: "2002318",
-        password: "58742318",
-        declaration: false
-      });
-      
-      toast.success("Student registration submitted successfully!");
-    } catch (error) {
-      toast.error("Failed to register student");
+
+      toast.success(`Student registered! ID: ${studentId}`, { duration: 6000 });
+      setFormData(initialFormState);
+      setPhotoFile(null);
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      toast.error(`Failed to register student: ${error?.message || "Unknown error"}`);
+    } finally {
+      setSubmitting(false);
     }
   };
 
