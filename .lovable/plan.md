@@ -1,67 +1,60 @@
-# Auto Certificate & Marksheet Generator (ADCA / DCA / Typing)
+# Admin Main Navigation – Audit & Fix Plan
 
-Build a single dynamic admin tool where selecting **Course** + **Student** auto-fills everything (personal details, subjects, max marks, photo, signatures, dates), admin only enters obtained marks, and a print-ready **Certificate + Marksheet PDF** is generated with one click.
+## Audit findings (`src/pages/Admin.tsx`)
 
-## 1. Course templates (hard-coded, central config)
+Scanned every sidebar item, its click handler, the `<Routes>` map, and the top-bar `currentView` title block.
 
-New file `src/lib/courseTemplates.ts` exposing a registry:
+**Working:** All 13 top-level groups expand/collapse; almost every submenu label has a matching `navigate(...)` and a matching `<Route>` and its content component exists in `src/components/admin/`.
 
-```text
-ADCA  → 1 Year   → 8 subjects (theory+practical), total 800
-DCA   → 6 Months → 5 subjects (theory+practical), total 500
-Typing → 3 Months → English Typing (100), Hindi Typing (100), Theory (50), Practical (50) — total 300
+**Broken / out-of-sync items found:**
+
+1. **Top bar shows wrong title on most pages.** The `currentView` title and subtitle blocks (lines ~640–691) only cover ~28 of the 60+ routes. Pages like Auto Generate, Certificate Management, Marksheet Management, Alot Number, Ready Marksheet, Report, Edit CRT, Student Marksheet, Attendance Management, Student Attendance, Class Fees, all Fees pages, all Expense pages, all Franchise pages, Payment pages, Student Editing, Course Subject, Real-Time Student Management, Student Reg. Print, Admit Card pages, Upload Student Content all fall back to **"Dashboard"** in the header — looks broken.
+2. **No active highlighting for submenu items.** Only the Dashboard pill gets the active style. Submenu rows never show which page you're on.
+3. **Parent group doesn't auto-open for the current route.** If you refresh on `/admin/fees-management`, the Fees Master group is collapsed and the user can't see where they are.
+4. **Collapsed sidebar can't reach submenus.** When `sidebarCollapsed` is true, clicking a parent with `hasSubmenu` does nothing (the handler is gated on `!sidebarCollapsed`). User is stuck unless they expand first.
+5. **"Course Subject" is orphaned.** Route + click handler exist, but the label is missing from every submenu list — unreachable from the nav.
+6. **Fragile giant `if/else` chains.** Three places (`getCurrentView`, submenu `onClick`, title block) all duplicate the same label↔path↔title mapping. Easy to drift; that's how (1)/(2)/(5) happened.
+
+All sidebar labels otherwise route to components that exist and render.
+
+## Fix plan
+
+### 1. Single source of truth: route map
+Introduce one config in `src/pages/Admin.tsx` (or a sibling `adminNav.ts`) that, for each menu item, declares:
+```ts
+{ label, icon, path, title, subtitle }
 ```
+Build `sidebarItems` from it, and drive `getCurrentView`, the submenu `onClick`, and the top-bar title/subtitle from the same map. Removes the three-way duplication and prevents future drift.
 
-Each entry stores: `code, fullName, duration, subjects[{name, theoryMax, practicalMax}], totalMax, certificateTitle`. Adding a new course later = one entry in this file.
+### 2. Wire every route into the top bar
+Replace the long ternary in the header with a lookup against the map so the title & subtitle update correctly for **every** admin route, including Auto Generate, Certificate/Marksheet Management, Fees, Expense, Franchise, Payment, etc.
 
-## 2. Student auto-fill source
+### 3. Active highlighting on submenu items
+Compare `location.pathname` to each `subItem.path` and apply the indigo/blue active style (matching the existing Dashboard active treatment) to the current row. Also highlight the parent group row when any of its children is active.
 
-Reuse existing `student_profiles` table (full_name, email, phone, course_name) plus pull father/mother/DOB/photo from `alot_numbers` when a matching `student_id` exists. A `Student` combobox (searchable) on the form returns one record and fills: Student ID, Name, Father Name, Mother Name, DOB, Photo, Center.
+### 4. Auto-open the parent group for the current route
+On mount and on route change, compute which parent contains the active path and add its index to `openSubmenus` so users always see context after a refresh or deep link.
 
-If student not found in DB, admin can switch to **Manual mode** toggle and type the personal fields.
+### 5. Make collapsed sidebar usable
+When the sidebar is collapsed and the user clicks a parent with a submenu, expand the sidebar (`setSidebarCollapsed(false)`) and open that group, instead of silently doing nothing.
 
-## 3. New admin page: `Auto Certificate & Marksheet`
+### 6. Add "Course Subject" to the nav
+Add it under **Student Master** (matches the existing route `/admin/course-subject` and `CourseSubjectContent`). Now reachable.
 
-Route: `/admin/auto-generate` (new sidebar entry under Certificates section).
-Component: `src/components/admin/AutoGenerateContent.tsx`.
+### 7. Light sanity sweep
+- Confirm Dashboard, Logout, Back-to-Home buttons still work.
+- Confirm every `<Route>` still resolves (no imports removed).
+- Confirm `/admin` with no sub-path still lands on Dashboard.
 
-### Form layout (top → bottom)
-1. **Course** dropdown → ADCA / DCA / Typing → on change, subjects table renders auto.
-2. **Student** searchable combobox (or Manual toggle) → personal fields auto-fill.
-3. **Subjects marks table** (auto-generated rows): each row shows `Subject | Theory Max | Theory Obtained | Practical Max | Practical Obtained`. Admin only types obtained values.
-4. **Auto-calculated**: total obtained, total max, percentage, grade (A+/A/B+/B/C/F), result (pass/fail with per-subject min check).
-5. **Other fields** auto-defaulted, editable: Certificate Number (auto `SSF/<COURSE>/<YYYY>/<seq>`), Issue Date (today), Place, Examination Date.
-6. **Director signature + Foundation seal**: pulled from `director_messages.photo` and a static `/public/seal.png`. Editable upload override.
-7. Buttons: `Save to Database`, `Preview Certificate`, `Preview Marksheet`, `Download Both PDF`.
+## Out of scope
+- No visual redesign of the sidebar or top bar (only active-state + title text driven by data).
+- No renames of typo'd labels ("Markseet", "Student Attandance", "Distt Master") unless you ask.
+- No changes to the individual page components — only the navigation layer in `Admin.tsx`.
 
-## 4. PDF generation
+## File(s) touched
+- `src/pages/Admin.tsx` (refactor nav config, header lookup, active state, auto-open, collapsed-click behavior, add Course Subject entry).
 
-Use `jspdf` + `html2canvas` (already a typical pattern; will add via `bun add jspdf html2canvas`).
-
-- Two printable templates as hidden React components: `CertificateTemplate.tsx` and `MarksheetTemplate.tsx` styled with Tailwind, A4 size, gold borders, Samarth Shakti Foundation logo (from `public/favicon.png`), student photo, signatures, seal.
-- `Download Both PDF` renders both templates off-screen, captures each with html2canvas, builds a 2-page PDF, triggers download named `<StudentID>_<Course>_Certificate.pdf`.
-- `Preview` opens a modal with the same template.
-
-## 5. Database persistence
-
-On `Save to Database` the same submission writes to existing tables (no schema change needed):
-- `certificate_management` (one row) — student_id, student_name, course_name, certificate_number, issue_date, completion_date, grade, status='active'.
-- `marksheet_management` (one row) — same student, roll_number = student_id, total_marks, obtained_marks, percentage, grade, result_status.
-
-CRUD continues to flow through existing `useOptimisticCrud` so Reports and existing list views update in real-time automatically.
-
-## 6. Wiring
-
-- Add menu item in admin sidebar (`src/pages/Admin.tsx` / sidebar config) → "Auto Generate Certificate".
-- Cross-link from existing `CertificateManagementContent` and `MarksheetManagementContent` headers: an "Auto Generate" button that opens the new page.
-
-## 7. Technical notes (for reviewers)
-
-- No DB migration required — uses existing `certificate_management`, `marksheet_management`, `student_profiles`, `alot_numbers`, `director_messages`.
-- New deps: `jspdf`, `html2canvas`.
-- New files: `src/lib/courseTemplates.ts`, `src/components/admin/AutoGenerateContent.tsx`, `src/components/admin/templates/CertificateTemplate.tsx`, `src/components/admin/templates/MarksheetTemplate.tsx`.
-- Edited: admin router + sidebar registration; small "Auto Generate" link on existing Certificate/Marksheet pages.
-- Grade rules centralized in `courseTemplates.ts` so per-course rules can differ (Typing pass = 40%, ADCA/DCA pass = 33% theory + 50% practical).
-- All colors use existing semantic tokens; no hard-coded hex.
-
-Approve karein toh main implement kar dunga.
+## Verification
+- Click through each parent group and each submenu item; confirm route changes, page renders, header title updates, and active highlight follows.
+- Refresh on a deep route (e.g. `/admin/balance-sheet`) and confirm the Expense Panel group is auto-opened and Balance Sheet row is highlighted.
+- Collapse the sidebar, click a group icon → sidebar expands and that group opens.
