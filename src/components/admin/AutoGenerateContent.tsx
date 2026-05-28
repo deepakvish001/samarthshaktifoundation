@@ -289,39 +289,67 @@ const AutoGenerateContent = () => {
     }
   };
 
+  const sectionCard = "bg-[#141432] rounded-3xl border border-[#1e1e5a] overflow-hidden shadow-2xl";
+  const sectionHeader = "px-8 py-5 bg-[#1e1e5a]/30 border-b border-[#1e1e5a] flex items-center justify-between";
+  const inputCls = "w-full bg-[#0a0a1a] border border-[#1e1e5a] text-white placeholder:text-slate-600 rounded-xl px-4 py-3 focus-visible:ring-2 focus-visible:ring-[#4f46e5]/50 focus-visible:ring-offset-0 focus-visible:border-[#4f46e5]/60 h-auto";
+  const selectTriggerCls = "w-full bg-[#0a0a1a] border-[#1e1e5a] text-white rounded-xl px-4 py-3 h-auto focus:ring-2 focus:ring-[#4f46e5]/50";
+  const labelCls = "text-xs font-bold text-slate-500 uppercase tracking-wider";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-primary/10 rounded-full"><Sparkles className="h-8 w-8 text-primary" /></div>
+    <div className="dark min-h-screen bg-[#0a0a1a] text-slate-300 font-['DM_Sans',sans-serif] p-6 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* Title */}
+        <div className="flex items-start gap-5">
+          <div className="w-14 h-14 rounded-2xl bg-[#4f46e5]/10 border border-[#4f46e5]/20 flex items-center justify-center shrink-0">
+            <Sparkles className="w-7 h-7 text-[#4f46e5]" />
+          </div>
           <div>
-            <h1 className="text-3xl font-bold">Auto Certificate &amp; Marksheet Generator</h1>
-            <p className="text-muted-foreground">ADCA · DCA · Typing — dynamic auto-fill</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight font-['Space_Grotesk',sans-serif]">
+              Auto Certificate &amp; Marksheet Generator
+            </h1>
+            <p className="text-slate-400 text-sm mt-1">
+              ADCA · DCA · Typing — Professional document issuance engine
+            </p>
           </div>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Award className="h-5 w-5 text-primary" /> Course &amp; Student</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-1">
-                <Label>Course *</Label>
+        {/* Course & Student card */}
+        <div className={sectionCard}>
+          <div className={sectionHeader}>
+            <div className="flex items-center gap-3">
+              <Award className="w-5 h-5 text-[#4f46e5]" />
+              <span className="font-semibold text-white">Course &amp; Student Details</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Label htmlFor="manual" className="text-xs text-slate-400 uppercase tracking-wider">Manual Entry Mode</Label>
+              <Switch checked={manualMode} onCheckedChange={setManualMode} id="manual" />
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-5">
+              <div className="md:col-span-6 space-y-2">
+                <Label className={labelCls}>Course <span className="text-red-500">*</span></Label>
                 <Select value={courseCode} onValueChange={setCourseCode}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger className={selectTriggerCls}><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {COURSE_LIST.map((c) => (
                       <SelectItem key={c.code} value={c.code}>{c.code} — {c.fullName}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-muted-foreground">Duration: {course.duration} · Total max: {courseTotalMax(course)}</p>
+                <div className="flex gap-4 text-xs text-slate-500 px-1">
+                  <span>Duration: {course.duration}</span>
+                  <span>Total Max: {courseTotalMax(course)}</span>
+                </div>
               </div>
-              <div className="space-y-1">
-                <Label>Student (auto-fill)</Label>
+
+              <div className="md:col-span-6 space-y-2">
+                <Label className={labelCls}>Student <span className="text-slate-400 normal-case">(Auto-fill)</span></Label>
                 <Select value={selectedStudentKey} onValueChange={onPickStudent} disabled={manualMode}>
-                  <SelectTrigger><SelectValue placeholder={manualMode ? "Manual mode" : "Select student"} /></SelectTrigger>
+                  <SelectTrigger className={selectTriggerCls}>
+                    <SelectValue placeholder={manualMode ? "Manual mode" : "Select student"} />
+                  </SelectTrigger>
                   <SelectContent>
                     {students.length === 0 && <div className="px-3 py-2 text-sm text-muted-foreground">No students found</div>}
                     {students.slice(0, 200).map((s) => (
@@ -332,123 +360,137 @@ const AutoGenerateContent = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-end gap-2">
-                <Switch checked={manualMode} onCheckedChange={setManualMode} id="manual" />
-                <Label htmlFor="manual">Manual entry mode</Label>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Field label="Student ID *" value={form.studentId} onChange={(v) => setForm({ ...form, studentId: v })} />
-              <Field label="Student Name *" value={form.studentName} onChange={(v) => setForm({ ...form, studentName: v })} />
-              <Field label="Roll Number" value={form.rollNumber} onChange={(v) => setForm({ ...form, rollNumber: v })} />
-              <Field label="Father's Name" value={form.fatherName} onChange={(v) => setForm({ ...form, fatherName: v })} />
-              <Field label="Mother's Name" value={form.motherName} onChange={(v) => setForm({ ...form, motherName: v })} />
-              <div className="space-y-1">
-                <Label>Student Photo</Label>
+              <DarkField className="md:col-span-4" label={<>Student ID <span className="text-red-500">*</span></>} value={form.studentId} onChange={(v) => setForm({ ...form, studentId: v })} inputCls={inputCls} labelCls={labelCls} />
+              <DarkField className="md:col-span-4" label={<>Student Name <span className="text-red-500">*</span></>} value={form.studentName} onChange={(v) => setForm({ ...form, studentName: v })} inputCls={inputCls} labelCls={labelCls} />
+              <DarkField className="md:col-span-4" label="Roll Number" value={form.rollNumber} onChange={(v) => setForm({ ...form, rollNumber: v })} inputCls={inputCls} labelCls={labelCls} />
+
+              <DarkField className="md:col-span-4" label="Father's Name" value={form.fatherName} onChange={(v) => setForm({ ...form, fatherName: v })} inputCls={inputCls} labelCls={labelCls} />
+              <DarkField className="md:col-span-4" label="Mother's Name" value={form.motherName} onChange={(v) => setForm({ ...form, motherName: v })} inputCls={inputCls} labelCls={labelCls} />
+
+              <div className="md:col-span-4 space-y-2">
+                <Label className={labelCls}>Student Photo</Label>
                 <div className="flex items-center gap-2">
-                  <Input value={form.photoUrl} onChange={(e) => setForm({ ...form, photoUrl: e.target.value })} placeholder="URL or upload →" />
+                  <Input value={form.photoUrl} onChange={(e) => setForm({ ...form, photoUrl: e.target.value })} placeholder="URL or upload →" className={inputCls} />
                   <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={handlePhotoUpload} />
-                  <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                  <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-[#0a0a1a] border-[#1e1e5a] text-slate-300 hover:bg-[#1e1e5a] hover:text-white shrink-0 h-12 w-12 rounded-xl">
                     {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                   </Button>
                 </div>
-                {form.photoUrl && <img src={form.photoUrl} alt="" className="h-16 w-12 object-cover rounded border mt-1" />}
+                {form.photoUrl && <img src={form.photoUrl} alt="" className="h-16 w-12 object-cover rounded-lg border border-[#1e1e5a] mt-1" />}
               </div>
-              <Field label="Date of Birth" type="date" value={form.dob} onChange={(v) => setForm({ ...form, dob: v })} />
-              <Field label="Batch" value={form.batch} onChange={(v) => setForm({ ...form, batch: v })} placeholder="e.g. 2025-A" />
-              <Field label="Center Name" value={form.centerName} onChange={(v) => setForm({ ...form, centerName: v })} />
-              <Field label="Center Code" value={form.centerCode} onChange={(v) => setForm({ ...form, centerCode: v })} />
-              <Field label="Certificate Number" value={form.certificateNumber} onChange={(v) => setForm({ ...form, certificateNumber: v })} />
-              <Field label="Issue Date" type="date" value={form.issueDate} onChange={(v) => setForm({ ...form, issueDate: v })} />
-              <Field label="Examination Date" type="date" value={form.examinationDate} onChange={(v) => setForm({ ...form, examinationDate: v })} />
-              <Field label="Place" value={form.place} onChange={(v) => setForm({ ...form, place: v })} />
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5 text-primary" /> Marks — {course.code}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>#</TableHead>
-                  <TableHead>Subject</TableHead>
-                  <TableHead className="text-center">Theory Max</TableHead>
-                  <TableHead className="text-center">Theory Obt.</TableHead>
-                  <TableHead className="text-center">Practical Max</TableHead>
-                  <TableHead className="text-center">Practical Obt.</TableHead>
-                  <TableHead className="text-center">Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+              <DarkField className="md:col-span-4" label="Date of Birth" type="date" value={form.dob} onChange={(v) => setForm({ ...form, dob: v })} inputCls={inputCls} labelCls={labelCls} />
+              <DarkField className="md:col-span-4" label="Batch" value={form.batch} onChange={(v) => setForm({ ...form, batch: v })} placeholder="e.g. 2025-A" inputCls={inputCls} labelCls={labelCls} />
+              <DarkField className="md:col-span-4" label="Center Name" value={form.centerName} onChange={(v) => setForm({ ...form, centerName: v })} inputCls={inputCls} labelCls={labelCls} />
+              <DarkField className="md:col-span-4" label="Center Code" value={form.centerCode} onChange={(v) => setForm({ ...form, centerCode: v })} inputCls={inputCls} labelCls={labelCls} />
+
+              <div className="md:col-span-4 space-y-2">
+                <Label className={labelCls}>Certificate Number</Label>
+                <div className="bg-[#0a0a1a]/50 border border-[#1e1e5a] rounded-xl px-4 py-3 text-[#4f46e5] font-mono text-sm truncate">
+                  {form.certificateNumber}
+                </div>
+              </div>
+              <DarkField className="md:col-span-4" label="Issue Date" type="date" value={form.issueDate} onChange={(v) => setForm({ ...form, issueDate: v })} inputCls={inputCls} labelCls={labelCls} />
+              <DarkField className="md:col-span-4" label="Examination Date" type="date" value={form.examinationDate} onChange={(v) => setForm({ ...form, examinationDate: v })} inputCls={inputCls} labelCls={labelCls} />
+              <DarkField className="md:col-span-4" label="Place" value={form.place} onChange={(v) => setForm({ ...form, place: v })} inputCls={inputCls} labelCls={labelCls} />
+            </div>
+          </div>
+        </div>
+
+        {/* Marks card */}
+        <div className={sectionCard}>
+          <div className={sectionHeader}>
+            <div className="flex items-center gap-3">
+              <FileText className="w-5 h-5 text-[#4f46e5]" />
+              <span className="font-semibold text-white">Examination Scores — {course.code}</span>
+            </div>
+            <span className="text-xs text-slate-500 uppercase tracking-wider">{course.subjects.length} Subjects</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-[#0a0a1a]">
+                <tr>
+                  <th className="text-left py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">#</th>
+                  <th className="text-left py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Subject</th>
+                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Theory Max</th>
+                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Theory Obt.</th>
+                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Practical Max</th>
+                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Practical Obt.</th>
+                  <th className="text-center py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1e1e5a]">
                 {course.subjects.map((s, i) => {
                   const m = marks[i] || { theoryObtained: 0, practicalObtained: 0 };
                   return (
-                    <TableRow key={i}>
-                      <TableCell>{i + 1}</TableCell>
-                      <TableCell className="font-medium">{s.name}</TableCell>
-                      <TableCell className="text-center">{s.theoryMax || "—"}</TableCell>
-                      <TableCell className="text-center">
+                    <tr key={i} className="hover:bg-[#1e1e5a]/20 transition-colors">
+                      <td className="py-3 px-6 font-mono text-slate-500">{String(i + 1).padStart(2, "0")}</td>
+                      <td className="py-3 px-6 text-white font-medium">{s.name}</td>
+                      <td className="py-3 px-4 text-center text-slate-400">{s.theoryMax || "—"}</td>
+                      <td className="py-3 px-4 text-center">
                         {s.theoryMax > 0 ? (
                           <Input
-                            type="number"
-                            min={0}
-                            max={s.theoryMax}
+                            type="number" min={0} max={s.theoryMax}
                             value={m.theoryObtained}
                             onChange={(e) => {
                               const v = Math.min(Number(e.target.value || 0), s.theoryMax);
                               setMarks((prev) => prev.map((p, idx) => (idx === i ? { ...p, theoryObtained: v } : p)));
                             }}
-                            className="h-8 w-20 mx-auto text-center"
+                            className="h-9 w-20 mx-auto text-center bg-[#0a0a1a] border-[#1e1e5a] text-white rounded-lg focus-visible:ring-1 focus-visible:ring-[#4f46e5]"
                           />
-                        ) : "—"}
-                      </TableCell>
-                      <TableCell className="text-center">{s.practicalMax || "—"}</TableCell>
-                      <TableCell className="text-center">
+                        ) : <span className="text-slate-600">—</span>}
+                      </td>
+                      <td className="py-3 px-4 text-center text-slate-400">{s.practicalMax || "—"}</td>
+                      <td className="py-3 px-4 text-center">
                         {s.practicalMax > 0 ? (
                           <Input
-                            type="number"
-                            min={0}
-                            max={s.practicalMax}
+                            type="number" min={0} max={s.practicalMax}
                             value={m.practicalObtained}
                             onChange={(e) => {
                               const v = Math.min(Number(e.target.value || 0), s.practicalMax);
                               setMarks((prev) => prev.map((p, idx) => (idx === i ? { ...p, practicalObtained: v } : p)));
                             }}
-                            className="h-8 w-20 mx-auto text-center"
+                            className="h-9 w-20 mx-auto text-center bg-[#0a0a1a] border-[#1e1e5a] text-white rounded-lg focus-visible:ring-1 focus-visible:ring-[#4f46e5]"
                           />
-                        ) : "—"}
-                      </TableCell>
-                      <TableCell className="text-center font-semibold">{Number(m.theoryObtained || 0) + Number(m.practicalObtained || 0)}</TableCell>
-                    </TableRow>
+                        ) : <span className="text-slate-600">—</span>}
+                      </td>
+                      <td className="py-3 px-6 text-center font-bold text-white">{Number(m.theoryObtained || 0) + Number(m.practicalObtained || 0)}</td>
+                    </tr>
                   );
                 })}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
+          </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 p-4 bg-muted/40 rounded-lg">
-              <Stat label="Total Obtained" value={`${totals.totalObtained} / ${totals.totalMax}`} />
-              <Stat label="Percentage" value={`${totals.percentage.toFixed(2)}%`} />
-              <Stat label="Grade" value={totals.grade} />
-              <Stat label="Result" value={totals.result} accent={totals.result === "PASS" ? "text-green-600" : "text-red-600"} />
-            </div>
-          </CardContent>
-        </Card>
+          <div className="p-6 bg-[#0a0a1a]/50 border-t border-[#1e1e5a] grid grid-cols-2 md:grid-cols-4 gap-4">
+            <DarkStat label="Total Obtained" value={`${totals.totalObtained} / ${totals.totalMax}`} />
+            <DarkStat label="Percentage" value={`${totals.percentage.toFixed(2)}%`} accent="text-[#4f46e5]" />
+            <DarkStat label="Grade" value={totals.grade} accent="text-white" />
+            <DarkStat
+              label="Result"
+              value={totals.result}
+              accent={totals.result === "PASS" ? "text-emerald-400" : "text-red-400"}
+              badge
+            />
+          </div>
+        </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Button onClick={() => setPreviewOpen("cert")} variant="outline"><Eye className="h-4 w-4 mr-2" /> Preview Certificate</Button>
-          <Button onClick={() => setPreviewOpen("marks")} variant="outline"><Eye className="h-4 w-4 mr-2" /> Preview Marksheet</Button>
-          <Button onClick={handleSave} disabled={saving}>
+        {/* Action Bar */}
+        <div className="flex flex-wrap items-center justify-end gap-3 pb-4">
+          <Button onClick={() => setPreviewOpen("cert")} variant="outline" className="bg-transparent border-[#1e1e5a] text-slate-300 hover:bg-[#1e1e5a] hover:text-white rounded-xl px-6 py-3 h-auto font-semibold">
+            <Eye className="h-4 w-4 mr-2" /> Preview Certificate
+          </Button>
+          <Button onClick={() => setPreviewOpen("marks")} variant="outline" className="bg-transparent border-[#1e1e5a] text-slate-300 hover:bg-[#1e1e5a] hover:text-white rounded-xl px-6 py-3 h-auto font-semibold">
+            <Eye className="h-4 w-4 mr-2" /> Preview Marksheet
+          </Button>
+          <Button onClick={handleSave} disabled={saving} className="bg-slate-800 hover:bg-slate-700 text-white rounded-xl px-6 py-3 h-auto font-semibold">
             {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
             Save to Database
           </Button>
-          <Button onClick={handleDownload} disabled={downloading} className="bg-gradient-to-r from-primary to-primary/80">
+          <Button onClick={handleDownload} disabled={downloading} className="bg-[#4f46e5] hover:bg-[#4f46e5]/90 text-white rounded-xl px-8 py-3 h-auto font-bold shadow-lg shadow-[#4f46e5]/30 hover:scale-[1.02] active:scale-95 transition-all">
             {downloading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
-            Download Both as PDF
+            Generate &amp; Download
           </Button>
         </div>
       </div>
@@ -481,6 +523,29 @@ const Stat = ({ label, value, accent }: { label: string; value: string; accent?:
   <div className="text-center">
     <p className="text-xs text-muted-foreground">{label}</p>
     <p className={`text-xl font-bold ${accent || ""}`}>{value}</p>
+  </div>
+);
+
+const DarkField = ({
+  label, value, onChange, type = "text", placeholder, className = "", inputCls, labelCls,
+}: {
+  label: React.ReactNode; value: string; onChange: (v: string) => void;
+  type?: string; placeholder?: string; className?: string; inputCls: string; labelCls: string;
+}) => (
+  <div className={`space-y-2 ${className}`}>
+    <Label className={labelCls}>{label}</Label>
+    <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className={inputCls} />
+  </div>
+);
+
+const DarkStat = ({ label, value, accent, badge }: { label: string; value: string; accent?: string; badge?: boolean }) => (
+  <div className="text-center">
+    <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">{label}</p>
+    {badge ? (
+      <span className={`inline-block mt-2 px-3 py-1 rounded-lg text-sm font-bold ${value === "PASS" ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>{value}</span>
+    ) : (
+      <p className={`text-xl font-bold mt-1 ${accent || "text-white"}`}>{value}</p>
+    )}
   </div>
 );
 
