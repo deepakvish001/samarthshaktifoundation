@@ -19,7 +19,6 @@ import {
   CourseTemplate,
 } from "@/lib/courseTemplates";
 import { CertificateTemplate, CertificateData } from "./templates/CertificateTemplate";
-import { MarksheetTemplate, MarksheetData } from "./templates/MarksheetTemplate";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
@@ -62,12 +61,11 @@ const AutoGenerateContent = () => {
   const [marks, setMarks] = useState<Array<{ theoryObtained: number; practicalObtained: number }>>([]);
   const [directorSignUrl, setDirectorSignUrl] = useState<string>("");
 
-  const [previewOpen, setPreviewOpen] = useState<null | "cert" | "marks">(null);
+  const [previewOpen, setPreviewOpen] = useState<null | "cert">(null);
   const [saving, setSaving] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
   const certRef = useRef<HTMLDivElement>(null);
-  const marksRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
