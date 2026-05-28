@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import { AdminPresenceIndicator } from "@/components/admin/AdminPresenceIndicator";
+import StudentPicker from "@/components/admin/shared/StudentPicker";
 
 interface CertificateManagement {
   id: string;
