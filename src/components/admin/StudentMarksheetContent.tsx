@@ -11,6 +11,7 @@ import jsPDF from "jspdf";
 
 interface StudentData {
   id: string;
+  student_id: string;
   full_name: string;
   email: string;
   phone?: string;
