@@ -946,12 +946,28 @@ const AlotNumberContent = () => {
                           </td>
                           <td className="border-r border-border/20 px-2 py-3 text-center text-foreground">
                             <span className="text-primary font-medium">
-                              {alot.obtain_theory_marks || '0'}/{alot.theory_max_marks || '0'}
+                              {(() => {
+                                const subs = Array.isArray(alot.subjects) ? alot.subjects : [];
+                                if (subs.length === 0) {
+                                  return `${alot.obtain_theory_marks || '0'}/${alot.theory_max_marks || '0'}`;
+                                }
+                                const obt = subs.reduce((sum, s) => sum + (Number(s.theory) || 0), 0);
+                                const max = subs.reduce((sum, s) => sum + (Number(s.theoryMax) || 0), 0);
+                                return `${obt}/${max}`;
+                              })()}
                             </span>
                           </td>
                           <td className="border-r border-border/20 px-2 py-3 text-center text-foreground">
                             <span className="text-foreground font-semibold">
-                              {alot.obtain_practical_marks || '0'}/{alot.practical_max_marks || '0'}
+                              {(() => {
+                                const subs = Array.isArray(alot.subjects) ? alot.subjects : [];
+                                if (subs.length === 0) {
+                                  return `${alot.obtain_practical_marks || '0'}/${alot.practical_max_marks || '0'}`;
+                                }
+                                const obt = subs.reduce((sum, s) => sum + (Number(s.practical) || 0), 0);
+                                const max = subs.reduce((sum, s) => sum + (Number(s.practicalMax) || 0), 0);
+                                return `${obt}/${max}`;
+                              })()}
                             </span>
                           </td>
                           <td className="border-r border-border/20 px-2 py-3 text-center text-foreground truncate">
