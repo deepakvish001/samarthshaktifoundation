@@ -11,7 +11,7 @@ const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [showProgramsDropdown, setShowProgramsDropdown] = useState(false);
-  const [dropdownTimeoutId, setDropdownTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [dropdownTimeoutId, setDropdownTimeoutId] = useState<ReturnType<typeof setTimeout> | null>(null);
   const { user, loading } = useAuth();
 
   const navItems = [
