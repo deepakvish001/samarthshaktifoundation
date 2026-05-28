@@ -932,8 +932,12 @@ const StudentRegistrationContent = () => {
                 <input
                   type="file"
                   accept="image/*"
+                  onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
                   className="text-xs border-2 border-gray-400 bg-white p-1 rounded"
                 />
+                {photoFile && (
+                  <span className="ml-3 text-xs text-green-700">{photoFile.name}</span>
+                )}
               </div>
             </div>
           </div>
@@ -946,15 +950,17 @@ const StudentRegistrationContent = () => {
               <div className="col-span-4 px-3 py-2 border-r-2 border-gray-600 flex items-center bg-white">
                 <Input
                   value={formData.studentId}
-                  readOnly
-                  className="h-8 text-xs border-2 border-gray-400 bg-gray-100"
+                  onChange={(e) => handleInputChange('studentId', e.target.value)}
+                  placeholder="Auto-generated (SSF-YYYY-NNNN) — leave blank or override"
+                  className="h-8 text-xs border-2 border-gray-400"
                 />
               </div>
               <div className="col-span-5 px-3 py-2 flex items-center bg-white">
                 <Input
                   value={formData.password}
-                  readOnly
-                  className="h-8 text-xs border-2 border-gray-400 bg-gray-100"
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  placeholder="Auto-generated — leave blank or override"
+                  className="h-8 text-xs border-2 border-gray-400"
                 />
               </div>
             </div>
@@ -979,9 +985,17 @@ const StudentRegistrationContent = () => {
             </div>
             <Button
               onClick={handleSubmit}
+              disabled={submitting}
               className="bg-black hover:bg-gray-800 text-white font-semibold px-8 py-2 text-sm border-2 border-black"
             >
-              Submit Now
+              {submitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Submit Now"
+              )}
             </Button>
           </div>
         </div>
