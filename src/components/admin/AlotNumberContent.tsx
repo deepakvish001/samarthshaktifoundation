@@ -828,53 +828,53 @@ const AlotNumberContent = () => {
           
           <CardContent className="p-8">
             <div className="border border-border/40 rounded-lg bg-background/50 overflow-hidden shadow-inner">
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
+              <div className="w-full">
+                <table className="w-full border-collapse table-fixed text-sm">
                   <thead>
                     <tr className="bg-gradient-to-r from-primary via-primary/95 to-primary/90 text-primary-foreground">
-                      <th className="border-r border-primary/30 px-6 py-4 text-sm font-bold text-center min-w-[120px]">
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[90px]">
                         <div className="flex items-center justify-center gap-2">
                           <Edit className="h-4 w-4" />
                           Actions
                         </div>
                       </th>
-                      <th className="border-r border-primary/30 px-6 py-4 text-sm font-bold text-left min-w-[120px]">
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-left w-[90px]">
                         <div className="flex items-center gap-2">
                           <Users className="h-4 w-4" />
                           Student ID
                         </div>
                       </th>
-                      <th className="border-r border-primary/30 px-6 py-4 text-sm font-bold text-left min-w-[200px]">
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-left">
                         <div className="flex items-center gap-2">
                           <Users className="h-4 w-4" />
                           Student Name
                         </div>
                       </th>
-                      <th className="border-r border-primary/30 px-6 py-4 text-sm font-bold text-center min-w-[120px]">
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[100px]">
                         <div className="flex items-center justify-center gap-2">
                           <BookOpen className="h-4 w-4" />
                           Course
                         </div>
                       </th>
-                      <th className="border-r border-primary/30 px-6 py-4 text-sm font-bold text-center min-w-[100px]">
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[80px]">
                         <div className="flex items-center justify-center gap-2">
                           <BarChart3 className="h-4 w-4" />
                           Theory
                         </div>
                       </th>
-                      <th className="border-r border-primary/30 px-6 py-4 text-sm font-bold text-center min-w-[100px]">
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[80px]">
                         <div className="flex items-center justify-center gap-2">
                           <BarChart3 className="h-4 w-4" />
                           Practical
                         </div>
                       </th>
-                      <th className="border-r border-primary/30 px-6 py-4 text-sm font-bold text-center min-w-[150px]">
+                      <th className="border-r border-primary/30 px-2 py-3 text-xs font-bold text-center w-[110px]">
                         <div className="flex items-center justify-center gap-2">
                           <FileText className="h-4 w-4" />
                           Center
                         </div>
                       </th>
-                      <th className="px-6 py-4 text-sm font-bold text-center min-w-[100px]">
+                      <th className="px-2 py-3 text-xs font-bold text-center w-[100px]">
                         <div className="flex items-center justify-center gap-2">
                           <Calendar className="h-4 w-4" />
                           Issue Date
@@ -901,7 +901,7 @@ const AlotNumberContent = () => {
                             index % 2 === 0 ? "bg-background" : "bg-accent/5"
                           }`}
                         >
-                          <td className="border-r border-border/20 px-6 py-4 text-center">
+                          <td className="border-r border-border/20 px-2 py-3 text-center">
                             <div className="flex justify-center space-x-2">
                               <Button
                                 variant="ghost"
@@ -921,31 +921,31 @@ const AlotNumberContent = () => {
                               </Button>
                             </div>
                           </td>
-                          <td className="border-r border-border/20 px-6 py-4 text-foreground font-medium">
+                          <td className="border-r border-border/20 px-2 py-3 text-foreground font-medium truncate">
                             {alot.student_id}
                           </td>
-                          <td className="border-r border-border/20 px-6 py-4 text-foreground font-medium">
+                          <td className="border-r border-border/20 px-2 py-3 text-foreground font-medium truncate">
                             {alot.student_name || 'N/A'}
                           </td>
-                          <td className="border-r border-border/20 px-6 py-4 text-center">
-                            <span className="px-2 py-1 bg-secondary/20 text-secondary-foreground rounded-md text-sm font-medium">
+                          <td className="border-r border-border/20 px-2 py-3 text-center">
+                            <span className="px-2 py-1 bg-secondary/20 text-secondary-foreground rounded-md text-xs font-medium">
                               {alot.course_name}
                             </span>
                           </td>
-                          <td className="border-r border-border/20 px-6 py-4 text-center text-foreground">
+                          <td className="border-r border-border/20 px-2 py-3 text-center text-foreground">
                             <span className="text-primary font-medium">
                               {alot.obtain_theory_marks || '0'}/{alot.theory_max_marks || '0'}
                             </span>
                           </td>
-                          <td className="border-r border-border/20 px-6 py-4 text-center text-foreground">
+                          <td className="border-r border-border/20 px-2 py-3 text-center text-foreground">
                             <span className="text-secondary font-medium">
                               {alot.obtain_practical_marks || '0'}/{alot.practical_max_marks || '0'}
                             </span>
                           </td>
-                          <td className="border-r border-border/20 px-6 py-4 text-center text-foreground">
+                          <td className="border-r border-border/20 px-2 py-3 text-center text-foreground truncate">
                             {alot.center_name || 'N/A'}
                           </td>
-                          <td className="px-6 py-4 text-center text-foreground">
+                          <td className="px-2 py-3 text-center text-foreground truncate">
                             {alot.issue_date || 'N/A'}
                           </td>
                         </tr>
