@@ -20,6 +20,9 @@ interface StudentData {
   city?: string;
   state?: string;
   enrollment_date?: string;
+  photo_url?: string;
+  father_name?: string;
+  mother_name?: string;
 }
 
 interface MarksheetData {
@@ -680,8 +683,17 @@ const StudentMarksheetContent = () => {
 
                   {/* Photo on the right + certify body */}
                   <div style={{ position: 'relative', minHeight: 130 }}>
-                    <div style={{ position: 'absolute', right: 0, top: -120, width: 110, height: 130, border: '1px solid #333', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#6b7280' }}>
-                      STUDENT PHOTO
+                    <div style={{ position: 'absolute', right: 0, top: -120, width: 110, height: 130, border: '1px solid #333', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#6b7280', overflow: 'hidden' }}>
+                      {selectedStudent?.photo_url ? (
+                        <img
+                          src={selectedStudent.photo_url}
+                          alt="student"
+                          crossOrigin="anonymous"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <span>STUDENT PHOTO</span>
+                      )}
                     </div>
 
                     <div style={{ fontSize: 14, lineHeight: 1.9, paddingRight: 130 }}>
