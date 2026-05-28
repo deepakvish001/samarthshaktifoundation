@@ -29,6 +29,13 @@ interface AlotNumber {
   place?: string;
   student_photo_url?: string;
   director_signature_url?: string;
+  subjects?: AlotSubject[];
+}
+
+interface AlotSubject {
+  name: string;
+  theory: string;
+  practical: string;
 }
 
 const AlotNumberContent = () => {
