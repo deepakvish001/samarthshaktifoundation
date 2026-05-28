@@ -140,7 +140,7 @@ const StudentsCornerSection = () => {
                 <form onSubmit={verifyCertificate} className="flex flex-col sm:flex-row gap-3">
                   <div className="flex-1">
                     <Label htmlFor="home-certNo" className="sr-only">Certificate Number</Label>
-                    <Input id="home-certNo" placeholder="Enter Certificate Number" value={certNo} onChange={(e) => setCertNo(e.target.value)} />
+                    <Input id="home-certNo" placeholder="Enter Certificate Number or Student ID" value={certNo} onChange={(e) => setCertNo(e.target.value)} />
                   </div>
                   <Button type="submit" disabled={certLoading} className="gap-2">
                     {certLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />} Verify
