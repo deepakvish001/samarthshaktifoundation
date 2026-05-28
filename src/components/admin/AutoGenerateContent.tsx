@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Sparkles, Download, Eye, Save, Loader2, FileText, Award } from "lucide-react";
+import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -52,6 +53,10 @@ const AutoGenerateContent = () => {
     issueDate: todayStr(),
     examinationDate: todayStr(),
     place: "Delhi",
+    dob: "",
+    centerCode: "",
+    centerName: "",
+    batch: "",
   });
 
   const [marks, setMarks] = useState<Array<{ theoryObtained: number; practicalObtained: number }>>([]);
@@ -63,6 +68,8 @@ const AutoGenerateContent = () => {
 
   const certRef = useRef<HTMLDivElement>(null);
   const marksRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
 
   // Load students + director sign once
   useEffect(() => {
@@ -148,6 +155,11 @@ const AutoGenerateContent = () => {
     photoUrl: form.photoUrl,
     directorSignUrl,
     sealUrl: "/favicon.png",
+    dob: form.dob,
+    centerCode: form.centerCode,
+    centerName: form.centerName,
+    batch: form.batch,
+    verifyUrl: `${window.location.origin}/verify/${form.certificateNumber}`,
   };
 
   const marksData: MarksheetData = {
@@ -173,6 +185,10 @@ const AutoGenerateContent = () => {
     photoUrl: form.photoUrl,
     directorSignUrl,
     sealUrl: "/favicon.png",
+    dob: form.dob,
+    centerCode: form.centerCode,
+    centerName: form.centerName,
+    batch: form.batch,
   };
 
   const validate = () => {
@@ -181,6 +197,31 @@ const AutoGenerateContent = () => {
       return false;
     }
     return true;
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      toast.error("Only JPG/PNG allowed"); return;
+    }
+    if (file.size > 5 * 1024 * 1024) { toast.error("Max 5MB"); return; }
+    setUploading(true);
+    try {
+      const { data: u } = await supabase.auth.getUser();
+      const folder = u.user?.id || "shared";
+      const path = `${folder}/cert-${Date.now()}-${file.name}`;
+      const { error } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      setForm((f) => ({ ...f, photoUrl: data.publicUrl }));
+      toast.success("Photo uploaded");
+    } catch (e: any) {
+      toast.error(e.message || "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const handleSave = async () => {
@@ -303,7 +344,21 @@ const AutoGenerateContent = () => {
               <Field label="Roll Number" value={form.rollNumber} onChange={(v) => setForm({ ...form, rollNumber: v })} />
               <Field label="Father's Name" value={form.fatherName} onChange={(v) => setForm({ ...form, fatherName: v })} />
               <Field label="Mother's Name" value={form.motherName} onChange={(v) => setForm({ ...form, motherName: v })} />
-              <Field label="Photo URL" value={form.photoUrl} onChange={(v) => setForm({ ...form, photoUrl: v })} placeholder="https://…" />
+              <div className="space-y-1">
+                <Label>Student Photo</Label>
+                <div className="flex items-center gap-2">
+                  <Input value={form.photoUrl} onChange={(e) => setForm({ ...form, photoUrl: e.target.value })} placeholder="URL or upload →" />
+                  <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={handlePhotoUpload} />
+                  <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  </Button>
+                </div>
+                {form.photoUrl && <img src={form.photoUrl} alt="" className="h-16 w-12 object-cover rounded border mt-1" />}
+              </div>
+              <Field label="Date of Birth" type="date" value={form.dob} onChange={(v) => setForm({ ...form, dob: v })} />
+              <Field label="Batch" value={form.batch} onChange={(v) => setForm({ ...form, batch: v })} placeholder="e.g. 2025-A" />
+              <Field label="Center Name" value={form.centerName} onChange={(v) => setForm({ ...form, centerName: v })} />
+              <Field label="Center Code" value={form.centerCode} onChange={(v) => setForm({ ...form, centerCode: v })} />
               <Field label="Certificate Number" value={form.certificateNumber} onChange={(v) => setForm({ ...form, certificateNumber: v })} />
               <Field label="Issue Date" type="date" value={form.issueDate} onChange={(v) => setForm({ ...form, issueDate: v })} />
               <Field label="Examination Date" type="date" value={form.examinationDate} onChange={(v) => setForm({ ...form, examinationDate: v })} />

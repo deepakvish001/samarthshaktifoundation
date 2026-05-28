@@ -20,6 +20,10 @@ export interface MarksheetData {
   photoUrl?: string;
   directorSignUrl?: string;
   sealUrl?: string;
+  dob?: string;
+  centerCode?: string;
+  centerName?: string;
+  batch?: string;
 }
 
 export const MarksheetTemplate = forwardRef<HTMLDivElement, { data: MarksheetData }>(
@@ -70,6 +74,13 @@ export const MarksheetTemplate = forwardRef<HTMLDivElement, { data: MarksheetDat
                 <td colSpan={2} style={{ padding: "3px 6px" }}><b>Course:</b> {data.course.certificateTitle}</td>
                 <td style={{ padding: "3px 6px" }}><b>Duration:</b> {data.course.duration}</td>
               </tr>
+              {(data.dob || data.batch || data.centerName) && (
+                <tr>
+                  {data.dob && <td style={{ padding: "3px 6px" }}><b>DOB:</b> {data.dob}</td>}
+                  {data.batch && <td style={{ padding: "3px 6px" }}><b>Batch:</b> {data.batch}</td>}
+                  {(data.centerName || data.centerCode) && <td style={{ padding: "3px 6px" }}><b>Center:</b> {data.centerName} {data.centerCode ? `(${data.centerCode})` : ""}</td>}
+                </tr>
+              )}
             </tbody>
           </table>
 
