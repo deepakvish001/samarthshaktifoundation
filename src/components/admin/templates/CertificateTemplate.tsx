@@ -272,26 +272,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 </div>
               </div>
 
-              {/* Meta row: Date of Issue · Place */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: 170,
-                  right: 170,
-                  bottom: 170,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: 13,
-                  color: "#0a0a0a",
-                  borderTop: "1px dashed #cbd5e1",
-                  paddingTop: 6,
-                }}
-              >
-                <span>Date of Issue:&nbsp;<b>{awardedOn}</b></span>
-                <span>Place:&nbsp;<b>{data.place || "—"}</b></span>
-              </div>
-
-              {/* Footer: logos row + signature */}
+              {/* Footer: meta (left) + Chairman signature (right) */}
               <div
                 style={{
                   position: "absolute",
@@ -299,10 +280,14 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   left: 50,
                   right: 46,
                   display: "flex",
-                  justifyContent: "flex-end",
+                  justifyContent: "space-between",
                   alignItems: "flex-end",
                 }}
               >
+                <div style={{ fontSize: 14, color: "#0a0a0a", lineHeight: 1.8 }}>
+                  <div>Date of Issue:&nbsp;<b>{awardedOn}</b></div>
+                  <div>Place:&nbsp;<b>{data.place || "—"}</b></div>
+                </div>
                 <div style={{ textAlign: "center" }}>
                   {data.directorSignUrl ? (
                     <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 48, objectFit: "contain" }} />
