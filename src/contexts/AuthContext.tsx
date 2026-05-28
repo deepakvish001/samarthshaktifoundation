@@ -140,6 +140,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  // Realtime subscription: refresh profile when it changes in DB
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`profile-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'profiles', filter: `user_id=eq.${user.id}` },
+        () => fetchUserData(user.id)
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id]);
+
   const signUp = async (email: string, password: string, fullName?: string) => {
     try {
       const redirectUrl = `${window.location.origin}/`;

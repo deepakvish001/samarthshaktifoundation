@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,29 +20,37 @@ const MyCertificates = () => {
   const [loading, setLoading] = useState(true);
   const [certs, setCerts] = useState<Certificate[]>([]);
 
-  useEffect(() => {
+  const load = useCallback(async () => {
     if (!user) return;
-    (async () => {
-      const { data } = await (supabase as any)
-        .from('certificates')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('issued_date', { ascending: false });
+    const { data } = await (supabase as any)
+      .from('certificates')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('issued_date', { ascending: false });
 
-      const list: Certificate[] = data || [];
-      if (list.length) {
-        const ids = list.map((c) => c.course_id);
-        const { data: courses } = await (supabase as any)
-          .from('courses')
-          .select('id, title')
-          .in('id', ids);
-        const map = new Map<string, any>((courses || []).map((c: any) => [c.id, c.title]));
-        list.forEach((c) => (c.course_title = (map.get(c.course_id) as string) || null));
-      }
-      setCerts(list);
-      setLoading(false);
-    })();
+    const list: Certificate[] = data || [];
+    if (list.length) {
+      const ids = list.map((c) => c.course_id);
+      const { data: courses } = await (supabase as any)
+        .from('courses')
+        .select('id, title')
+        .in('id', ids);
+      const map = new Map<string, any>((courses || []).map((c: any) => [c.id, c.title]));
+      list.forEach((c) => (c.course_title = (map.get(c.course_id) as string) || null));
+    }
+    setCerts(list);
+    setLoading(false);
   }, [user]);
+
+  useEffect(() => {
+    load();
+    if (!user) return;
+    const channel = supabase
+      .channel(`certificates-${user.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'certificates', filter: `user_id=eq.${user.id}` }, () => load())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user?.id, load]);
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-12 px-4">

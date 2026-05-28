@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -27,29 +27,37 @@ const MyCourses = () => {
   const [loading, setLoading] = useState(true);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
 
-  useEffect(() => {
+  const load = useCallback(async () => {
     if (!user) return;
-    (async () => {
-      const { data: enrolls } = await (supabase as any)
-        .from('user_courses')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('enrolled_at', { ascending: false });
+    const { data: enrolls } = await (supabase as any)
+      .from('user_courses')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('enrolled_at', { ascending: false });
 
-      const list: Enrollment[] = enrolls || [];
-      if (list.length) {
-        const ids = list.map((e) => e.course_id);
-        const { data: courses } = await (supabase as any)
-          .from('courses')
-          .select('id, title, description, instructor, duration_weeks, total_lessons')
-          .in('id', ids);
-        const map = new Map<string, any>((courses || []).map((c: any) => [c.id, c]));
-        list.forEach((e) => (e.course = (map.get(e.course_id) as Enrollment['course']) || null));
-      }
-      setEnrollments(list);
-      setLoading(false);
-    })();
+    const list: Enrollment[] = enrolls || [];
+    if (list.length) {
+      const ids = list.map((e) => e.course_id);
+      const { data: courses } = await (supabase as any)
+        .from('courses')
+        .select('id, title, description, instructor, duration_weeks, total_lessons')
+        .in('id', ids);
+      const map = new Map<string, any>((courses || []).map((c: any) => [c.id, c]));
+      list.forEach((e) => (e.course = (map.get(e.course_id) as Enrollment['course']) || null));
+    }
+    setEnrollments(list);
+    setLoading(false);
   }, [user]);
+
+  useEffect(() => {
+    load();
+    if (!user) return;
+    const channel = supabase
+      .channel(`user_courses-${user.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_courses', filter: `user_id=eq.${user.id}` }, () => load())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user?.id, load]);
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-12 px-4">
