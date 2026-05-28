@@ -76,7 +76,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
             <CornerArc position="bl" />
             <CornerArc position="br" />
 
-            <div style={{ position: "relative", padding: "22px 160px 18px 160px", boxSizing: "border-box", height: "100%" }}>
+            <div style={{ position: "relative", padding: "22px 150px 18px 150px", boxSizing: "border-box", height: "100%" }}>
               {/* Top row: Sl No. / Reg No. */}
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0a0a0a", fontWeight: 600 }}>
                 <span>Sl No.&nbsp;<b>{slNo}</b></span>
@@ -207,7 +207,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(data.verifyUrl)}`}
                   alt="verify"
                   crossOrigin="anonymous"
-                  style={{ position: "absolute", top: 372, left: 46, width: 96, height: 96, border: "1px solid #0b2a6b", padding: 3, background: "#fff" }}
+                  style={{ position: "absolute", top: 372, left: 36, width: 96, height: 96, border: "1px solid #0b2a6b", padding: 3, background: "#fff" }}
                 />
               )}
 
@@ -220,7 +220,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   style={{
                     position: "absolute",
                     top: 362,
-                    right: 46,
+                    right: 36,
                     width: 110,
                     height: 130,
                     objectFit: "cover",
@@ -229,24 +229,22 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 />
               )}
 
-              {/* Accreditation logos: ISO, MSME, SSF — placed below QR, above Date of Issue */}
+              {/* Accreditation logos: ISO, MSME, SSF — centered between footer columns */}
               <div
                 style={{
                   position: "absolute",
-                  left: 60,
-                  top: 620,
-                  width: 240,
+                  bottom: 80,
+                  left: "50%",
+                  transform: "translateX(-50%)",
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
-                  gap: 8,
+                  justifyContent: "center",
+                  gap: 18,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}>
-                  <img src="/cert-logos/iso-9001.png" alt="ISO 9001:2015" crossOrigin="anonymous" style={{ height: 78, width: 78, objectFit: "contain" }} />
-                  <img src="/cert-logos/msme-new.png" alt="MSME" crossOrigin="anonymous" style={{ height: 78, width: 78, objectFit: "contain" }} />
-                  <img src="/cert-logos/ssf.png" alt="Samarth Shakti Foundation" crossOrigin="anonymous" style={{ height: 78, width: 78, objectFit: "contain" }} />
-                </div>
+                <img src="/cert-logos/iso-9001.png" alt="ISO 9001:2015" crossOrigin="anonymous" style={{ height: 64, width: 64, objectFit: "contain" }} />
+                <img src="/cert-logos/msme-new.png" alt="MSME" crossOrigin="anonymous" style={{ height: 64, width: 64, objectFit: "contain" }} />
+                <img src="/cert-logos/ssf.png" alt="Samarth Shakti Foundation" crossOrigin="anonymous" style={{ height: 64, width: 64, objectFit: "contain" }} />
               </div>
 
               {/* Body */}
@@ -297,8 +295,8 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 style={{
                   position: "absolute",
                   bottom: 60,
-                  left: 90,
-                  right: 90,
+                  left: 70,
+                  right: 70,
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-end",
