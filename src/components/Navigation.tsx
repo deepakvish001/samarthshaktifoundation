@@ -21,9 +21,7 @@ const Navigation = () => {
     { name: 'Donate', href: '/donation', icon: Heart },
     { name: 'Contact', href: '/contact', icon: MessageSquare },
   ];
-  const navItems = user
-    ? [...baseNavItems, { name: 'Students Corner', href: '/students-corner', icon: GraduationCap }]
-    : baseNavItems;
+  const navItems = baseNavItems;
 
   const programsDropdownItems = [
     { name: 'Rashtiya Gram Swaraj Abhiyan', href: '/rashtiya-gram-swaraj-abhiyan' },
