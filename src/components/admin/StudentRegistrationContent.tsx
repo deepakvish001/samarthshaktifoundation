@@ -370,7 +370,7 @@ const StudentRegistrationContent = () => {
         course_fees: formData.courseFees || null,
         photo_url: photoUrl,
         login_password: password,
-        status: "active",
+        status: "pending",
         enrollment_date: new Date().toISOString(),
       };
 
