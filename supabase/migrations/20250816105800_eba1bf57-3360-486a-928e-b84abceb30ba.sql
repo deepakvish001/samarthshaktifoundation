@@ -1,0 +1,28 @@
+-- Add sample photo gallery data
+INSERT INTO photo_gallery (title, image_url) VALUES
+('Company Annual Event 2024', '/lovable-uploads/042e6682-f2c9-4cba-8a89-b44a979f9e80.png'),
+('Training Workshop Session', '/lovable-uploads/160b7eaa-6ad6-488a-af88-fa7b24d69478.png'),
+('Team Building Activities', '/lovable-uploads/174d07a9-4227-4e6b-b307-3a6fdca4d15a.png'),
+('Product Launch Event', '/lovable-uploads/216f993d-6433-4e0a-8d58-3df60c2f8d0f.png'),
+('Office Infrastructure', '/lovable-uploads/29670075-707b-4bae-b43a-36977d2d2d01.png'),
+('Student Graduation Ceremony', '/lovable-uploads/3340c4fb-dbb4-4a5c-b260-87e4d5a4ad3b.png'),
+('Campus Facilities Tour', '/lovable-uploads/393bdd79-f1d0-430f-8c0d-c10eb0d72005.png'),
+('Industry Partnership Meet', '/lovable-uploads/3c20df4a-02aa-4e0a-a200-f29bb19ed853.png'),
+('Educational Technology Fair', '/lovable-uploads/4017cb0a-c1ac-49f8-ad3b-05a00260ede7.png'),
+('Faculty Development Program', '/lovable-uploads/45142334-a490-400f-ab80-26d923651a59.png'),
+('Student Project Exhibition', '/lovable-uploads/54cc2f49-d382-49fe-b8b0-de377bceff95.png'),
+('International Conference 2024', '/lovable-uploads/5a244998-078a-4cde-80ac-dda3328ff9d9.png'),
+('Research Laboratory Setup', '/lovable-uploads/60184028-b491-4b63-88e5-0249f7aae2b7.png'),
+('Cultural Festival Highlights', '/lovable-uploads/628467af-7c3c-422a-bca3-db6d45fdc8df.png'),
+('Sports Championship 2024', '/lovable-uploads/65fbe569-1bb8-4005-93c9-b80a386cc5df.png'),
+('Alumni Networking Event', '/lovable-uploads/66872840-a0ff-4360-93db-0a6e70fc67ab.png'),
+('Innovation Showcase Day', '/lovable-uploads/6746fd07-acd4-48f9-81ce-043af17c8b3d.png'),
+('Community Outreach Program', '/lovable-uploads/6c6e5574-a79c-4491-9b27-f19a22d00a2c.png'),
+('Digital Transformation Summit', '/lovable-uploads/6cc4a1b9-3a9c-4f0a-a095-52b78971fbd1.png'),
+('Startup Incubation Event', '/lovable-uploads/6f00f730-31c1-4ed6-bfa9-736f409f052d.png'),
+('Technology Workshop Series', '/lovable-uploads/70be4d5c-e30d-404e-8355-5e5bbc2f1bbf.png'),
+('Leadership Summit 2024', '/lovable-uploads/7b9fa7e6-dfa9-47f2-b837-4922cb830428.png'),
+('Awards Ceremony Night', '/lovable-uploads/81c7d7d9-1177-4997-8787-bdef38a0eda3.png'),
+('Green Campus Initiative', '/lovable-uploads/8461fa07-3ddd-4930-84ae-d9d3aa24b773.png'),
+('Library Renovation Project', '/lovable-uploads/8c4ef4ee-1b4a-4e1d-bde6-36b4ddf3cf29.png')
+ON CONFLICT (id) DO NOTHING;
