@@ -317,7 +317,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                     Chairman's Signature
                   </div>
                   <div style={{ fontSize: 11, color: "#374151", marginTop: 2 }}>
-                    Nesan Computer and Technical Institute
+                    Samarth Shakti Foundation
                   </div>
                 </div>
               </div>
