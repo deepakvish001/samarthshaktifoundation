@@ -344,7 +344,21 @@ const AutoGenerateContent = () => {
               <Field label="Roll Number" value={form.rollNumber} onChange={(v) => setForm({ ...form, rollNumber: v })} />
               <Field label="Father's Name" value={form.fatherName} onChange={(v) => setForm({ ...form, fatherName: v })} />
               <Field label="Mother's Name" value={form.motherName} onChange={(v) => setForm({ ...form, motherName: v })} />
-              <Field label="Photo URL" value={form.photoUrl} onChange={(v) => setForm({ ...form, photoUrl: v })} placeholder="https://…" />
+              <div className="space-y-1">
+                <Label>Student Photo</Label>
+                <div className="flex items-center gap-2">
+                  <Input value={form.photoUrl} onChange={(e) => setForm({ ...form, photoUrl: e.target.value })} placeholder="URL or upload →" />
+                  <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={handlePhotoUpload} />
+                  <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  </Button>
+                </div>
+                {form.photoUrl && <img src={form.photoUrl} alt="" className="h-16 w-12 object-cover rounded border mt-1" />}
+              </div>
+              <Field label="Date of Birth" type="date" value={form.dob} onChange={(v) => setForm({ ...form, dob: v })} />
+              <Field label="Batch" value={form.batch} onChange={(v) => setForm({ ...form, batch: v })} placeholder="e.g. 2025-A" />
+              <Field label="Center Name" value={form.centerName} onChange={(v) => setForm({ ...form, centerName: v })} />
+              <Field label="Center Code" value={form.centerCode} onChange={(v) => setForm({ ...form, centerCode: v })} />
               <Field label="Certificate Number" value={form.certificateNumber} onChange={(v) => setForm({ ...form, certificateNumber: v })} />
               <Field label="Issue Date" type="date" value={form.issueDate} onChange={(v) => setForm({ ...form, issueDate: v })} />
               <Field label="Examination Date" type="date" value={form.examinationDate} onChange={(v) => setForm({ ...form, examinationDate: v })} />
