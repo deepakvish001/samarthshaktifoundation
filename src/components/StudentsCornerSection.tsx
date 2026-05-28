@@ -75,7 +75,7 @@ const StudentsCornerSection = () => {
       const { data, error } = await supabase
         .from("certificate_management")
         .select("*")
-        .eq("certificate_number", q)
+        .or(`certificate_number.eq.${q},student_id.eq.${q}`)
         .order("issue_date", { ascending: false })
         .limit(1);
       if (error) throw error;
