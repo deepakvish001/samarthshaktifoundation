@@ -340,7 +340,7 @@ const AutoGenerateContent = () => {
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight font-['Space_Grotesk',sans-serif]">
-              Auto Certificate &amp; Marksheet Generator
+              Auto Certificate Generator
             </h1>
             <p className="text-slate-500 text-sm mt-1">
               ADCA · DCA · Typing — Professional document issuance engine
