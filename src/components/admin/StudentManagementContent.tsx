@@ -4,9 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit, Loader2, Users, BookOpen, GraduationCap, UserCheck, Search, Building, MapPin, Mail, Phone, Trash2, Plus, Download, Printer } from "lucide-react";
+import { Edit, Loader2, Users, BookOpen, GraduationCap, UserCheck, Search, Building, MapPin, Mail, Phone, Trash2, Plus, Download, Printer, KeyRound, ShieldAlert, Copy } from "lucide-react";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 
 interface StudentProfile {
   id: string;
@@ -18,6 +21,9 @@ interface StudentProfile {
   city?: string;
   state?: string;
   enrollment_date?: string;
+  student_id?: string;
+  password_changed_at?: string | null;
+  login_password?: string | null;
 }
 
 const StudentManagementContent = () => {
@@ -43,6 +49,8 @@ const StudentManagementContent = () => {
 
   const [selectedFranchise, setSelectedFranchise] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [reissuing, setReissuing] = useState<string | null>(null);
+  const [newCred, setNewCred] = useState<{ name: string; student_id: string; password: string } | null>(null);
 
   // Filtered students based on search and franchise
   const filteredStudents = studentProfiles.filter(student => {
