@@ -128,29 +128,30 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                 Corporate Identification No.: {corpId}
               </div>
 
-              {/* Top-right ISO badge */}
+              {/* Top-right SSF logo */}
               <div
                 style={{
                   position: "absolute",
-                  top: 20,
-                  right: 60,
-                  width: 96,
-                  height: 96,
+                  top: 18,
+                  right: 50,
+                  width: 110,
+                  height: 110,
                   borderRadius: "50%",
-                  background: "radial-gradient(circle, #fff 55%, #0b2a6b 56%)",
+                  background: "#fff",
                   border: "3px solid #b91c1c",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  textAlign: "center",
-                  fontSize: 12,
-                  fontWeight: 800,
-                  color: "#0b2a6b",
-                  lineHeight: 1.1,
+                  overflow: "hidden",
                   boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
                 }}
               >
-                NCTI<br/>ISO 9001<br/>:2015
+                <img
+                  src="/lovable-uploads/samarth-shakti-logo.png"
+                  alt="SSF Logo"
+                  crossOrigin="anonymous"
+                  style={{ width: "92%", height: "92%", objectFit: "contain" }}
+                />
               </div>
 
               {/* Certificate of Achievement ribbon */}
