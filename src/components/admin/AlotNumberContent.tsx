@@ -454,6 +454,94 @@ const AlotNumberContent = () => {
                 </div>
               </div>
 
+              {/* Subjects Section */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                    Subjects
+                  </h3>
+                  <Button
+                    type="button"
+                    onClick={addSubject}
+                    variant="outline"
+                    size="sm"
+                    className="border-primary/40 text-primary hover:bg-primary/10"
+                  >
+                    <Plus className="h-4 w-4 mr-2" /> Add Subject
+                  </Button>
+                </div>
+
+                {subjects.length === 0 ? (
+                  <div className="border border-dashed border-border/60 rounded-lg p-6 text-center text-sm text-muted-foreground">
+                    No subjects added. Click "Add Subject" to start.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="hidden md:grid md:grid-cols-12 gap-3 text-xs font-medium text-muted-foreground px-2">
+                      <div className="md:col-span-5">Subject Name</div>
+                      <div className="md:col-span-2">Theory Marks</div>
+                      <div className="md:col-span-2">Practical Marks</div>
+                      <div className="md:col-span-2">Total</div>
+                      <div className="md:col-span-1 text-right">Action</div>
+                    </div>
+                    {subjects.map((s, i) => (
+                      <div
+                        key={i}
+                        className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end p-3 rounded-lg border border-border/40 bg-background"
+                      >
+                        <div className="md:col-span-5">
+                          <Input
+                            value={s.name}
+                            onChange={(e) => updateSubject(i, "name", e.target.value)}
+                            placeholder="Subject name"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Input
+                            type="number"
+                            inputMode="numeric"
+                            value={s.theory}
+                            onChange={(e) => updateSubject(i, "theory", e.target.value)}
+                            placeholder="Theory"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Input
+                            type="number"
+                            inputMode="numeric"
+                            value={s.practical}
+                            onChange={(e) => updateSubject(i, "practical", e.target.value)}
+                            placeholder="Practical"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <div className="h-10 flex items-center px-3 rounded-md bg-primary/5 border border-primary/20 font-semibold text-foreground">
+                            {subjectTotal(s)}
+                          </div>
+                        </div>
+                        <div className="md:col-span-1 flex md:justify-end">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeSubject(i)}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex justify-end">
+                      <div className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-semibold">
+                        Grand Total: {grandTotal}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Student Information */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-foreground">Student Information</h3>
