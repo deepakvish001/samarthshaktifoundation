@@ -233,7 +233,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   marginTop: 18,
-                  padding: "0 170px",
+                  padding: "0 90px",
                   fontSize: 15,
                   lineHeight: 1.7,
                   color: "#0a0a0a",
