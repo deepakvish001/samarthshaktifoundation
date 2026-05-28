@@ -81,6 +81,31 @@ const StudentManagementContent = () => {
     // Open edit form (no notifications)
   };
 
+  const handleIssueNewPassword = async (student: StudentProfile) => {
+    if (!student.student_id) {
+      toast.error("This student has no Student ID — cannot issue a new password.");
+      return;
+    }
+    if (!confirm(`Generate a new login password for ${student.full_name}? Their previous password will stop working immediately.`)) return;
+    setReissuing(student.id);
+    try {
+      const { data, error } = await supabase.functions.invoke("provision-student-auth", {
+        body: { student_id: student.student_id, issue_new: true },
+      });
+      if (error) throw error;
+      const password = (data as any)?.password;
+      if (!password) throw new Error("No password returned");
+      setNewCred({ name: student.full_name, student_id: student.student_id, password });
+      await refresh();
+      toast.success("New password issued.");
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message || "Failed to issue new password");
+    } finally {
+      setReissuing(null);
+    }
+  };
+
   const handleDelete = async (studentId: string) => {
     try {
       await deleteItem(studentId);
