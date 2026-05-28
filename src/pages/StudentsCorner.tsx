@@ -55,7 +55,27 @@ const fetchStudent = async (studentId: string): Promise<StudentDetails | null> =
     .select("full_name,student_id,course_name,father_name,mother_name,date_of_birth,photo_url,study_center")
     .eq("student_id", studentId)
     .limit(1);
-  return (data?.[0] as StudentDetails) || null;
+  const student = (data?.[0] as StudentDetails) || null;
+  if (student && !student.photo_url) {
+    const { data: alot } = await supabase
+      .from("alot_numbers")
+      .select("student_photo_url")
+      .eq("student_id", studentId)
+      .not("student_photo_url", "is", null)
+      .limit(1);
+    let photo = alot?.[0]?.student_photo_url as string | undefined;
+    if (!photo) {
+      const { data: admit } = await supabase
+        .from("student_admit_cards")
+        .select("student_photo_url")
+        .eq("student_id", studentId)
+        .not("student_photo_url", "is", null)
+        .limit(1);
+      photo = admit?.[0]?.student_photo_url as string | undefined;
+    }
+    if (photo) student.photo_url = photo;
+  }
+  return student;
 };
 
 const StudentInfo = ({ s }: { s: StudentDetails | null | undefined }) => {
