@@ -130,7 +130,8 @@ const AlotNumberContent = () => {
           issue_date: formData.issueDate,
           place: formData.place,
           student_photo_url: formData.studentPhoto ? formData.studentPhoto.name : undefined,
-          director_signature_url: formData.directorSignature ? formData.directorSignature.name : undefined
+          director_signature_url: formData.directorSignature ? formData.directorSignature.name : undefined,
+          subjects: subjects as any,
         });
         toast.success("Alot number updated successfully!");
       } else {
@@ -150,7 +151,8 @@ const AlotNumberContent = () => {
           issue_date: formData.issueDate,
           place: formData.place,
           student_photo_url: formData.studentPhoto ? formData.studentPhoto.name : null,
-          director_signature_url: formData.directorSignature ? formData.directorSignature.name : null
+          director_signature_url: formData.directorSignature ? formData.directorSignature.name : null,
+          subjects: subjects as any,
         });
         toast.success("Alot number created successfully!");
       }
