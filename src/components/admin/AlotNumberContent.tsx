@@ -34,6 +34,8 @@ interface AlotNumber {
 
 interface AlotSubject {
   name: string;
+  theoryMax: string;
+  practicalMax: string;
   theory: string;
   practical: string;
 }
@@ -78,7 +80,7 @@ const AlotNumberContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCourse, setFilterCourse] = useState("all");
   const [subjects, setSubjects] = useState<AlotSubject[]>([]);
-  const [subjectDraft, setSubjectDraft] = useState<AlotSubject>({ name: "", theory: "", practical: "" });
+  const [subjectDraft, setSubjectDraft] = useState<AlotSubject>({ name: "", theoryMax: "", practicalMax: "", theory: "", practical: "" });
 
   const SUBJECT_OPTIONS = [
     "Fundamental",
@@ -103,7 +105,7 @@ const AlotNumberContent = () => {
       return;
     }
     setSubjects((prev) => [...prev, subjectDraft]);
-    setSubjectDraft({ name: "", theory: "", practical: "" });
+    setSubjectDraft({ name: "", theoryMax: "", practicalMax: "", theory: "", practical: "" });
   };
   const removeSubject = (i: number) =>
     setSubjects((prev) => prev.filter((_, idx) => idx !== i));
@@ -487,7 +489,7 @@ const AlotNumberContent = () => {
 
                 {/* Picker row */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end p-4 rounded-lg border border-primary/30 bg-primary/5">
-                  <div className="md:col-span-5">
+                  <div className="md:col-span-12 lg:col-span-3">
                     <label className="text-xs font-medium text-foreground mb-1 block">Subject</label>
                     <Select
                       value={subjectDraft.name}
@@ -509,29 +511,51 @@ const AlotNumberContent = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="md:col-span-3">
-                    <label className="text-xs font-medium text-foreground mb-1 block">Theory Marks</label>
+                  <div className="md:col-span-3 lg:col-span-2">
+                    <label className="text-xs font-medium text-foreground mb-1 block">Theory Max</label>
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      value={subjectDraft.theoryMax}
+                      onChange={(e) => setSubjectDraft((d) => ({ ...d, theoryMax: e.target.value }))}
+                      placeholder="Theory Max"
+                      className="bg-background"
+                    />
+                  </div>
+                  <div className="md:col-span-3 lg:col-span-2">
+                    <label className="text-xs font-medium text-foreground mb-1 block">Practical Max</label>
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      value={subjectDraft.practicalMax}
+                      onChange={(e) => setSubjectDraft((d) => ({ ...d, practicalMax: e.target.value }))}
+                      placeholder="Practical Max"
+                      className="bg-background"
+                    />
+                  </div>
+                  <div className="md:col-span-3 lg:col-span-2">
+                    <label className="text-xs font-medium text-foreground mb-1 block">Obtain Theory</label>
                     <Input
                       type="number"
                       inputMode="numeric"
                       value={subjectDraft.theory}
                       onChange={(e) => setSubjectDraft((d) => ({ ...d, theory: e.target.value }))}
-                      placeholder="Theory"
+                      placeholder="Obtain Theory"
                       className="bg-background"
                     />
                   </div>
-                  <div className="md:col-span-3">
-                    <label className="text-xs font-medium text-foreground mb-1 block">Practical Marks</label>
+                  <div className="md:col-span-3 lg:col-span-2">
+                    <label className="text-xs font-medium text-foreground mb-1 block">Obtain Practical</label>
                     <Input
                       type="number"
                       inputMode="numeric"
                       value={subjectDraft.practical}
                       onChange={(e) => setSubjectDraft((d) => ({ ...d, practical: e.target.value }))}
-                      placeholder="Practical"
+                      placeholder="Obtain Practical"
                       className="bg-background"
                     />
                   </div>
-                  <div className="md:col-span-1">
+                  <div className="md:col-span-12 lg:col-span-1">
                     <Button
                       type="button"
                       onClick={addSubject}
@@ -549,47 +573,67 @@ const AlotNumberContent = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <div className="hidden md:grid md:grid-cols-12 gap-3 text-xs font-medium text-muted-foreground px-2">
-                      <div className="md:col-span-5">Subject Name</div>
-                      <div className="md:col-span-2">Theory Marks</div>
-                      <div className="md:col-span-2">Practical Marks</div>
-                      <div className="md:col-span-2">Total</div>
-                      <div className="md:col-span-1 text-right">Action</div>
+                    <div className="hidden lg:grid lg:grid-cols-12 gap-3 text-xs font-medium text-muted-foreground px-2">
+                      <div className="lg:col-span-3">Subject Name</div>
+                      <div className="lg:col-span-2">Theory Max</div>
+                      <div className="lg:col-span-2">Practical Max</div>
+                      <div className="lg:col-span-1">Obt. Th.</div>
+                      <div className="lg:col-span-1">Obt. Pr.</div>
+                      <div className="lg:col-span-2">Total Obt.</div>
+                      <div className="lg:col-span-1 text-right">Action</div>
                     </div>
                     {subjects.map((s, i) => (
                       <div
                         key={i}
-                        className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end p-3 rounded-lg border border-border/40 bg-background"
+                        className="grid grid-cols-2 lg:grid-cols-12 gap-3 items-end p-3 rounded-lg border border-border/40 bg-background"
                       >
-                        <div className="md:col-span-5">
+                        <div className="col-span-2 lg:col-span-3">
                           <div className="h-10 flex items-center px-3 rounded-md bg-muted/50 border border-border/40 font-medium text-foreground">
                             {s.name}
                           </div>
                         </div>
-                        <div className="md:col-span-2">
+                        <div className="lg:col-span-2">
+                          <Input
+                            type="number"
+                            inputMode="numeric"
+                            value={s.theoryMax}
+                            onChange={(e) => updateSubject(i, "theoryMax", e.target.value)}
+                            placeholder="Theory Max"
+                          />
+                        </div>
+                        <div className="lg:col-span-2">
+                          <Input
+                            type="number"
+                            inputMode="numeric"
+                            value={s.practicalMax}
+                            onChange={(e) => updateSubject(i, "practicalMax", e.target.value)}
+                            placeholder="Practical Max"
+                          />
+                        </div>
+                        <div className="lg:col-span-1">
                           <Input
                             type="number"
                             inputMode="numeric"
                             value={s.theory}
                             onChange={(e) => updateSubject(i, "theory", e.target.value)}
-                            placeholder="Theory"
+                            placeholder="Obt Th"
                           />
                         </div>
-                        <div className="md:col-span-2">
+                        <div className="lg:col-span-1">
                           <Input
                             type="number"
                             inputMode="numeric"
                             value={s.practical}
                             onChange={(e) => updateSubject(i, "practical", e.target.value)}
-                            placeholder="Practical"
+                            placeholder="Obt Pr"
                           />
                         </div>
-                        <div className="md:col-span-2">
+                        <div className="col-span-2 lg:col-span-2">
                           <div className="h-10 flex items-center px-3 rounded-md bg-primary/5 border border-primary/20 font-semibold text-foreground">
                             {subjectTotal(s)}
                           </div>
                         </div>
-                        <div className="md:col-span-1 flex md:justify-end">
+                        <div className="lg:col-span-1 flex lg:justify-end">
                           <Button
                             type="button"
                             variant="ghost"
