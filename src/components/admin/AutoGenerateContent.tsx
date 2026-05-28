@@ -160,35 +160,6 @@ const AutoGenerateContent = () => {
     verifyUrl: `${window.location.origin}/verify/${form.certificateNumber}`,
   };
 
-  const marksData: MarksheetData = {
-    studentName: form.studentName,
-    fatherName: form.fatherName,
-    motherName: form.motherName,
-    studentId: form.studentId,
-    rollNumber: form.rollNumber || form.studentId,
-    examinationDate: form.examinationDate,
-    issueDate: form.issueDate,
-    place: form.place,
-    course,
-    marks: course.subjects.map((s, i) => ({
-      subject: s,
-      theoryObtained: Number(marks[i]?.theoryObtained || 0),
-      practicalObtained: Number(marks[i]?.practicalObtained || 0),
-    })),
-    totalMax: totals.totalMax,
-    totalObtained: totals.totalObtained,
-    percentage: totals.percentage,
-    grade: totals.grade,
-    result: totals.result,
-    photoUrl: form.photoUrl,
-    directorSignUrl,
-    sealUrl: "/favicon.png",
-    dob: form.dob,
-    centerCode: form.centerCode,
-    centerName: form.centerName,
-    batch: form.batch,
-  };
-
   const validate = () => {
     if (!form.studentId || !form.studentName) {
       toast.error("Student ID and Name required");
