@@ -233,7 +233,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  left: 30,
+                  left: 90,
                   top: 580,
                   width: 130,
                   display: "flex",
