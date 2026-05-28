@@ -271,6 +271,26 @@ const CertificateManagementContent = () => {
           </CardHeader>
           
           <CardContent className="p-8">
+            <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Select Registered Student
+              </label>
+              <StudentPicker
+                value={formData.studentId}
+                onSelect={(s) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    studentId: s.student_id || prev.studentId,
+                    studentName: s.full_name || prev.studentName,
+                    courseName: s.course_name || prev.courseName,
+                  }));
+                }}
+                className="w-full"
+              />
+              <p className="text-[11px] text-muted-foreground mt-2">
+                Picking a student auto-fills ID, Name and Course. You can still override below.
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Student ID*</label>
