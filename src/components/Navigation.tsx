@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Phone, Mail, ArrowRight, Sparkles, Globe, Users, Award, BookOpen, MessageSquare, Download, Search, Bell, ChevronDown, Heart, LogIn } from 'lucide-react';
+import { Menu, X, Phone, Mail, ArrowRight, Sparkles, Globe, Users, Award, BookOpen, MessageSquare, Download, Search, Bell, ChevronDown, Heart, LogIn, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -14,13 +14,16 @@ const Navigation = () => {
   const [dropdownTimeoutId, setDropdownTimeoutId] = useState<ReturnType<typeof setTimeout> | null>(null);
   const { user, loading } = useAuth();
 
-  const navItems = [
+  const baseNavItems = [
     { name: 'About', href: '/about', icon: Users },
     { name: 'Programs', href: '#training', icon: BookOpen, hasDropdown: true },
     { name: 'Partners', href: '/partners', icon: Award },
     { name: 'Donate', href: '/donation', icon: Heart },
     { name: 'Contact', href: '/contact', icon: MessageSquare },
   ];
+  const navItems = user
+    ? [...baseNavItems, { name: 'Students Corner', href: '/students-corner', icon: GraduationCap }]
+    : baseNavItems;
 
   const programsDropdownItems = [
     { name: 'Rashtiya Gram Swaraj Abhiyan', href: '/rashtiya-gram-swaraj-abhiyan' },
