@@ -289,14 +289,14 @@ const AutoGenerateContent = () => {
     }
   };
 
-  const sectionCard = "bg-[#141432] rounded-3xl border border-[#1e1e5a] overflow-hidden shadow-2xl";
-  const sectionHeader = "px-8 py-5 bg-[#1e1e5a]/30 border-b border-[#1e1e5a] flex items-center justify-between";
-  const inputCls = "w-full bg-[#0a0a1a] border border-[#1e1e5a] text-white placeholder:text-slate-600 rounded-xl px-4 py-3 focus-visible:ring-2 focus-visible:ring-[#4f46e5]/50 focus-visible:ring-offset-0 focus-visible:border-[#4f46e5]/60 h-auto";
-  const selectTriggerCls = "w-full bg-[#0a0a1a] border-[#1e1e5a] text-white rounded-xl px-4 py-3 h-auto focus:ring-2 focus:ring-[#4f46e5]/50";
+  const sectionCard = "bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm";
+  const sectionHeader = "px-8 py-5 bg-[#4f46e5]/5 border-b border-slate-200 flex items-center justify-between";
+  const inputCls = "w-full bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl px-4 py-3 focus-visible:ring-2 focus-visible:ring-[#4f46e5]/40 focus-visible:ring-offset-0 focus-visible:border-[#4f46e5] h-auto";
+  const selectTriggerCls = "w-full bg-white border-slate-200 text-slate-900 rounded-xl px-4 py-3 h-auto focus:ring-2 focus:ring-[#4f46e5]/40";
   const labelCls = "text-xs font-bold text-slate-500 uppercase tracking-wider";
 
   return (
-    <div className="dark min-h-screen bg-[#0a0a1a] text-slate-300 font-['DM_Sans',sans-serif] p-6 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-[#4f46e5]/5 text-slate-700 font-['DM_Sans',sans-serif] p-6 md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Title */}
         <div className="flex items-start gap-5">
@@ -304,10 +304,10 @@ const AutoGenerateContent = () => {
             <Sparkles className="w-7 h-7 text-[#4f46e5]" />
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight font-['Space_Grotesk',sans-serif]">
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight font-['Space_Grotesk',sans-serif]">
               Auto Certificate &amp; Marksheet Generator
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-slate-500 text-sm mt-1">
               ADCA · DCA · Typing — Professional document issuance engine
             </p>
           </div>
@@ -318,10 +318,10 @@ const AutoGenerateContent = () => {
           <div className={sectionHeader}>
             <div className="flex items-center gap-3">
               <Award className="w-5 h-5 text-[#4f46e5]" />
-              <span className="font-semibold text-white">Course &amp; Student Details</span>
+              <span className="font-semibold text-slate-900">Course &amp; Student Details</span>
             </div>
             <div className="flex items-center gap-3">
-              <Label htmlFor="manual" className="text-xs text-slate-400 uppercase tracking-wider">Manual Entry Mode</Label>
+              <Label htmlFor="manual" className="text-xs text-slate-500 uppercase tracking-wider">Manual Entry Mode</Label>
               <Switch checked={manualMode} onCheckedChange={setManualMode} id="manual" />
             </div>
           </div>
@@ -345,7 +345,7 @@ const AutoGenerateContent = () => {
               </div>
 
               <div className="md:col-span-6 space-y-2">
-                <Label className={labelCls}>Student <span className="text-slate-400 normal-case">(Auto-fill)</span></Label>
+                <Label className={labelCls}>Student <span className="text-slate-500 normal-case">(Auto-fill)</span></Label>
                 <Select value={selectedStudentKey} onValueChange={onPickStudent} disabled={manualMode}>
                   <SelectTrigger className={selectTriggerCls}>
                     <SelectValue placeholder={manualMode ? "Manual mode" : "Select student"} />
@@ -373,11 +373,11 @@ const AutoGenerateContent = () => {
                 <div className="flex items-center gap-2">
                   <Input value={form.photoUrl} onChange={(e) => setForm({ ...form, photoUrl: e.target.value })} placeholder="URL or upload →" className={inputCls} />
                   <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={handlePhotoUpload} />
-                  <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-[#0a0a1a] border-[#1e1e5a] text-slate-300 hover:bg-[#1e1e5a] hover:text-white shrink-0 h-12 w-12 rounded-xl">
+                  <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-white border-slate-200 text-slate-600 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 shrink-0 h-12 w-12 rounded-xl">
                     {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                   </Button>
                 </div>
-                {form.photoUrl && <img src={form.photoUrl} alt="" className="h-16 w-12 object-cover rounded-lg border border-[#1e1e5a] mt-1" />}
+                {form.photoUrl && <img src={form.photoUrl} alt="" className="h-16 w-12 object-cover rounded-lg border border-slate-200 mt-1" />}
               </div>
 
               <DarkField className="md:col-span-4" label="Date of Birth" type="date" value={form.dob} onChange={(v) => setForm({ ...form, dob: v })} inputCls={inputCls} labelCls={labelCls} />
@@ -387,7 +387,7 @@ const AutoGenerateContent = () => {
 
               <div className="md:col-span-4 space-y-2">
                 <Label className={labelCls}>Certificate Number</Label>
-                <div className="bg-[#0a0a1a]/50 border border-[#1e1e5a] rounded-xl px-4 py-3 text-[#4f46e5] font-mono text-sm truncate">
+                <div className="bg-[#4f46e5]/5 border border-[#4f46e5]/20 rounded-xl px-4 py-3 text-[#4f46e5] font-mono text-sm truncate">
                   {form.certificateNumber}
                 </div>
               </div>
@@ -403,31 +403,31 @@ const AutoGenerateContent = () => {
           <div className={sectionHeader}>
             <div className="flex items-center gap-3">
               <FileText className="w-5 h-5 text-[#4f46e5]" />
-              <span className="font-semibold text-white">Examination Scores — {course.code}</span>
+              <span className="font-semibold text-slate-900">Examination Scores — {course.code}</span>
             </div>
             <span className="text-xs text-slate-500 uppercase tracking-wider">{course.subjects.length} Subjects</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#0a0a1a]">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="text-left py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">#</th>
-                  <th className="text-left py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Subject</th>
-                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Theory Max</th>
-                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Theory Obt.</th>
-                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Practical Max</th>
-                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Practical Obt.</th>
-                  <th className="text-center py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1e1e5a]">Total</th>
+                  <th className="text-left py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">#</th>
+                  <th className="text-left py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Subject</th>
+                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Theory Max</th>
+                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Theory Obt.</th>
+                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Practical Max</th>
+                  <th className="text-center py-4 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Practical Obt.</th>
+                  <th className="text-center py-4 px-6 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1e1e5a]">
+              <tbody className="divide-y divide-slate-100">
                 {course.subjects.map((s, i) => {
                   const m = marks[i] || { theoryObtained: 0, practicalObtained: 0 };
                   return (
-                    <tr key={i} className="hover:bg-[#1e1e5a]/20 transition-colors">
-                      <td className="py-3 px-6 font-mono text-slate-500">{String(i + 1).padStart(2, "0")}</td>
-                      <td className="py-3 px-6 text-white font-medium">{s.name}</td>
-                      <td className="py-3 px-4 text-center text-slate-400">{s.theoryMax || "—"}</td>
+                    <tr key={i} className="hover:bg-[#4f46e5]/5 transition-colors">
+                      <td className="py-3 px-6 font-mono text-slate-400">{String(i + 1).padStart(2, "0")}</td>
+                      <td className="py-3 px-6 text-slate-900 font-medium">{s.name}</td>
+                      <td className="py-3 px-4 text-center text-slate-500">{s.theoryMax || "—"}</td>
                       <td className="py-3 px-4 text-center">
                         {s.theoryMax > 0 ? (
                           <Input
@@ -437,11 +437,11 @@ const AutoGenerateContent = () => {
                               const v = Math.min(Number(e.target.value || 0), s.theoryMax);
                               setMarks((prev) => prev.map((p, idx) => (idx === i ? { ...p, theoryObtained: v } : p)));
                             }}
-                            className="h-9 w-20 mx-auto text-center bg-[#0a0a1a] border-[#1e1e5a] text-white rounded-lg focus-visible:ring-1 focus-visible:ring-[#4f46e5]"
+                            className="h-9 w-20 mx-auto text-center bg-white border-slate-200 text-slate-900 rounded-lg focus-visible:ring-1 focus-visible:ring-[#4f46e5]"
                           />
-                        ) : <span className="text-slate-600">—</span>}
+                        ) : <span className="text-slate-300">—</span>}
                       </td>
-                      <td className="py-3 px-4 text-center text-slate-400">{s.practicalMax || "—"}</td>
+                      <td className="py-3 px-4 text-center text-slate-500">{s.practicalMax || "—"}</td>
                       <td className="py-3 px-4 text-center">
                         {s.practicalMax > 0 ? (
                           <Input
@@ -451,11 +451,11 @@ const AutoGenerateContent = () => {
                               const v = Math.min(Number(e.target.value || 0), s.practicalMax);
                               setMarks((prev) => prev.map((p, idx) => (idx === i ? { ...p, practicalObtained: v } : p)));
                             }}
-                            className="h-9 w-20 mx-auto text-center bg-[#0a0a1a] border-[#1e1e5a] text-white rounded-lg focus-visible:ring-1 focus-visible:ring-[#4f46e5]"
+                            className="h-9 w-20 mx-auto text-center bg-white border-slate-200 text-slate-900 rounded-lg focus-visible:ring-1 focus-visible:ring-[#4f46e5]"
                           />
-                        ) : <span className="text-slate-600">—</span>}
+                        ) : <span className="text-slate-300">—</span>}
                       </td>
-                      <td className="py-3 px-6 text-center font-bold text-white">{Number(m.theoryObtained || 0) + Number(m.practicalObtained || 0)}</td>
+                      <td className="py-3 px-6 text-center font-bold text-slate-900">{Number(m.theoryObtained || 0) + Number(m.practicalObtained || 0)}</td>
                     </tr>
                   );
                 })}
@@ -463,10 +463,10 @@ const AutoGenerateContent = () => {
             </table>
           </div>
 
-          <div className="p-6 bg-[#0a0a1a]/50 border-t border-[#1e1e5a] grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-6 bg-slate-50 border-t border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4">
             <DarkStat label="Total Obtained" value={`${totals.totalObtained} / ${totals.totalMax}`} />
             <DarkStat label="Percentage" value={`${totals.percentage.toFixed(2)}%`} accent="text-[#4f46e5]" />
-            <DarkStat label="Grade" value={totals.grade} accent="text-white" />
+            <DarkStat label="Grade" value={totals.grade} accent="text-slate-900" />
             <DarkStat
               label="Result"
               value={totals.result}
@@ -478,13 +478,13 @@ const AutoGenerateContent = () => {
 
         {/* Action Bar */}
         <div className="flex flex-wrap items-center justify-end gap-3 pb-4">
-          <Button onClick={() => setPreviewOpen("cert")} variant="outline" className="bg-transparent border-[#1e1e5a] text-slate-300 hover:bg-[#1e1e5a] hover:text-white rounded-xl px-6 py-3 h-auto font-semibold">
+          <Button onClick={() => setPreviewOpen("cert")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 rounded-xl px-6 py-3 h-auto font-semibold">
             <Eye className="h-4 w-4 mr-2" /> Preview Certificate
           </Button>
-          <Button onClick={() => setPreviewOpen("marks")} variant="outline" className="bg-transparent border-[#1e1e5a] text-slate-300 hover:bg-[#1e1e5a] hover:text-white rounded-xl px-6 py-3 h-auto font-semibold">
+          <Button onClick={() => setPreviewOpen("marks")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 rounded-xl px-6 py-3 h-auto font-semibold">
             <Eye className="h-4 w-4 mr-2" /> Preview Marksheet
           </Button>
-          <Button onClick={handleSave} disabled={saving} className="bg-slate-800 hover:bg-slate-700 text-white rounded-xl px-6 py-3 h-auto font-semibold">
+          <Button onClick={handleSave} disabled={saving} className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-6 py-3 h-auto font-semibold">
             {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
             Save to Database
           </Button>
@@ -542,9 +542,9 @@ const DarkStat = ({ label, value, accent, badge }: { label: string; value: strin
   <div className="text-center">
     <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">{label}</p>
     {badge ? (
-      <span className={`inline-block mt-2 px-3 py-1 rounded-lg text-sm font-bold ${value === "PASS" ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>{value}</span>
+      <span className={`inline-block mt-2 px-3 py-1 rounded-lg text-sm font-bold ${value === "PASS" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>{value}</span>
     ) : (
-      <p className={`text-xl font-bold mt-1 ${accent || "text-white"}`}>{value}</p>
+      <p className={`text-xl font-bold mt-1 ${accent || "text-slate-900"}`}>{value}</p>
     )}
   </div>
 );
