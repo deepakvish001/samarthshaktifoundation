@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
+import StudentPicker from "@/components/admin/shared/StudentPicker";
 import { Loader2, Edit, Trash2, Search, Filter, FileText, Users, Award, BarChart3, CheckCircle, Plus, BookOpen, Calendar, Hash, Upload, Image as ImageIcon } from "lucide-react";
 
 interface AlotNumber {
@@ -327,6 +328,28 @@ const AlotNumberContent = () => {
           
           <CardContent className="p-8">
             <div className="space-y-8">
+              <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                <label className="text-sm font-medium text-foreground mb-2 block">
+                  Select Registered Student
+                </label>
+                <StudentPicker
+                  value={formData.studentsId}
+                  onSelect={(s) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      studentsId: s.student_id || prev.studentsId,
+                      studentName: s.full_name || prev.studentName,
+                      studentFatherName: s.father_name || prev.studentFatherName,
+                      studentMotherName: s.mother_name || prev.studentMotherName,
+                      courseName: s.course_name || prev.courseName,
+                    }));
+                  }}
+                  className="w-full"
+                />
+                <p className="text-[11px] text-muted-foreground mt-2">
+                  Picking a student auto-fills ID, Name, Father/Mother Name and Course.
+                </p>
+              </div>
               {/* Student ID and Course Selection */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">

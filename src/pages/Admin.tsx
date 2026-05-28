@@ -73,6 +73,11 @@ import PaymentReportingContent from "@/components/admin/PaymentReportingContent"
 import StudentEditingContent from "@/components/admin/StudentEditingContent";
 import StudentManagementRealTime from "@/components/admin/StudentManagementRealTime";
 import CertificateManagementContent from "@/components/admin/CertificateManagementContent";
+import StudyCenterMasterContent from "@/components/admin/StudyCenterMasterContent";
+import TitleMasterContent from "@/components/admin/TitleMasterContent";
+import GenderMasterContent from "@/components/admin/GenderMasterContent";
+import CasteCategoryMasterContent from "@/components/admin/CasteCategoryMasterContent";
+import QualificationMasterContent from "@/components/admin/QualificationMasterContent";
 import MarksheetManagementContent from "@/components/admin/MarksheetManagementContent";
 import AttendanceManagementContent from "@/components/admin/AttendanceManagementContent";
 import PaymentModeManagementContent from "@/components/admin/PaymentModeManagementContent";
@@ -144,6 +149,11 @@ const Admin = () => {
         { label: "State Master", icon: MapPin, path: "/admin/state-master", title: "State Master", subtitle: "Manage state information" },
         { label: "District Master", icon: Map, path: "/admin/district-master", title: "District Master", subtitle: "Manage district information" },
         { label: "Course Master", icon: BookOpen, path: "/admin/course-master", title: "Course Master", subtitle: "Manage course information" },
+        { label: "Study Center Master", icon: MapPin, path: "/admin/study-center-master", title: "Study Center Master", subtitle: "Manage study centers" },
+        { label: "Title Master", icon: UserPlus, path: "/admin/title-master", title: "Title Master", subtitle: "Manage salutations (Mr./Mrs./Ms.)" },
+        { label: "Gender Master", icon: Users, path: "/admin/gender-master", title: "Gender Master", subtitle: "Manage gender options" },
+        { label: "Caste Category Master", icon: Users, path: "/admin/caste-category-master", title: "Caste Category Master", subtitle: "Manage caste categories" },
+        { label: "Qualification Master", icon: BookOpen, path: "/admin/qualification-master", title: "Qualification Master", subtitle: "Manage qualifications" },
         { label: "Add News", icon: Newspaper, path: "/admin/add-news", title: "Add News", subtitle: "Manage news and announcements" },
         { label: "Add Course Category", icon: FolderPlus, path: "/admin/add-course-category", title: "Add Course Category", subtitle: "Manage course categories" },
         { label: "Add News & Event", icon: Calendar, path: "/admin/add-competition-courses", title: "Add Competition Courses", subtitle: "Manage competition courses and events" },
@@ -490,6 +500,11 @@ const Admin = () => {
             <Route path="/state-master" element={<StateMasterContent />} />
             <Route path="/district-master" element={<DistrictMasterContent />} />
             <Route path="/course-master" element={<CourseMasterContent />} />
+            <Route path="/study-center-master" element={<StudyCenterMasterContent />} />
+            <Route path="/title-master" element={<TitleMasterContent />} />
+            <Route path="/gender-master" element={<GenderMasterContent />} />
+            <Route path="/caste-category-master" element={<CasteCategoryMasterContent />} />
+            <Route path="/qualification-master" element={<QualificationMasterContent />} />
             <Route path="/add-news" element={<AddNewsContent />} />
             <Route path="/add-course-category" element={<AddCourseCategoryContent />} />
             <Route path="/add-competition-courses" element={<AddCompetitionCoursesContent />} />

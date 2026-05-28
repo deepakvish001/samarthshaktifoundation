@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Search, FileText, Users, GraduationCap, Calendar, Award, Building, MapPin, Phone, Mail, CreditCard, User, Upload, Trash2, Save, Plus } from "lucide-react";
+import StudentPicker from "@/components/admin/shared/StudentPicker";
 
 const MakeStudentAdmitCardContent = () => {
   const { toast } = useToast();
@@ -232,6 +233,26 @@ const MakeStudentAdmitCardContent = () => {
                         <SelectItem value="DCHN">Diploma in Computer Hardware and Networking</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+
+                  <div className="md:col-span-2 lg:col-span-3 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                    <label className="text-sm font-medium text-foreground mb-2 block">
+                      Select Registered Student (auto-fills Name, Father, Mother, Course)
+                    </label>
+                    <StudentPicker
+                      value={formData.studentRollNumber}
+                      onSelect={(s) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          studentRollNumber: s.student_id || prev.studentRollNumber,
+                          studentName: s.full_name || prev.studentName,
+                          studentFatherName: s.father_name || prev.studentFatherName,
+                          studentMotherName: s.mother_name || prev.studentMotherName,
+                          course: s.course_name || prev.course,
+                        }));
+                      }}
+                      className="w-full"
+                    />
                   </div>
 
                   <div className="group">

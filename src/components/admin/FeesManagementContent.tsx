@@ -8,6 +8,7 @@ import { Receipt, Edit, Trash2, Loader2, DollarSign, FileText, TrendingUp, Users
 import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
+import StudentPicker from "@/components/admin/shared/StudentPicker";
 
 interface FeesReceipt {
   id: string;
@@ -381,6 +382,24 @@ const FeesManagementContent = () => {
           </CardHeader>
           
           <CardContent className="p-8">
+            <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Select Registered Student
+              </label>
+              <StudentPicker
+                value={studentId}
+                onSelect={(s) => {
+                  if (s.student_id) setStudentId(s.student_id);
+                  setStudent(s.full_name);
+                  if (s.course_name) setCourse(s.course_name);
+                  if (s.course_fees) setTotalFee(s.course_fees);
+                }}
+                className="w-full"
+              />
+              <p className="text-[11px] text-muted-foreground mt-2">
+                Picking a student auto-fills Student ID, Name, Course and Total Fee from registration.
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Receipt No */}
               <div className="space-y-2">
