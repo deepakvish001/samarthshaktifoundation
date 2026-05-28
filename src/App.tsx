@@ -25,16 +25,18 @@ import MyCourses from "./pages/MyCourses";
 import MyCertificates from "./pages/MyCertificates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import VerifyMarksheet from "./pages/VerifyMarksheet";
 
 const queryClient = new QueryClient();
 
 const AppContent = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isVerifyRoute = location.pathname.startsWith('/verify');
 
   return (
     <div className="min-h-screen bg-background font-sans antialiased">
-      {!isAdminRoute && <Navigation />}
+      {!isAdminRoute && !isVerifyRoute && <Navigation />}
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Index />} />
@@ -46,6 +48,9 @@ const AppContent = () => {
         <Route path="/nsqf" element={<NSQF />} />
         <Route path="/aaioe" element={<AAIOE />} />
         <Route path="/entrepreneurship-development" element={<EntrepreneurshipDevelopment />} />
+
+        {/* Public certificate verification (QR code target) */}
+        <Route path="/verify/:studentId" element={<VerifyMarksheet />} />
         
         {/* Auth routes */}
         <Route 
