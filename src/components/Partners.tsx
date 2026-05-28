@@ -9,12 +9,6 @@ const Partners = () => {
       iconBg: 'bg-blue-500/10'
     },
     {
-      name: 'DDUGKY (Deen Dayal Upadhyaya Grameen Kaushalya Yojana)',
-      icon: Users,
-      color: 'from-green-500/20 to-emerald-500/20',
-      iconBg: 'bg-green-500/10'
-    },
-    {
       name: 'PMKVY (Pradhan Mantri Kaushal Vikas Yojana)',
       icon: BookOpen,
       color: 'from-orange-500/20 to-amber-500/20',
