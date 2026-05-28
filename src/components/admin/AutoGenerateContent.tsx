@@ -93,20 +93,102 @@ const AutoGenerateContent = () => {
     }));
   }, [courseCode]);
 
-  const onPickStudent = (key: string) => {
-    setSelectedStudentKey(key);
-    const s = students.find((x) => x.student_id === key);
-    if (s) {
-      setForm((f) => ({
-        ...f,
-        studentId: s.student_id,
-        studentName: s.student_name,
-        fatherName: s.father_name || "",
-        motherName: s.mother_name || "",
-        rollNumber: s.student_id,
-        photoUrl: s.photo_url || "",
-      }));
+  const resolveImg = (value?: string | null) => {
+    const t = value?.trim();
+    if (!t) return "";
+    if (/^(https?:|data:|blob:|\/)/i.test(t)) return t;
+    if (t.includes("/")) {
+      const { data } = supabase.storage.from("avatars").getPublicUrl(t);
+      return data.publicUrl;
     }
+    return "";
+  };
+
+  const searchStudents = async () => {
+    if (!searchValue.trim()) {
+      toast.error("Please enter a search term");
+      return;
+    }
+    setSearching(true);
+    try {
+      const { data, error } = await supabase
+        .from("student_profiles")
+        .select("*")
+        .or(
+          `student_id.ilike.%${searchValue}%,full_name.ilike.%${searchValue}%,email.ilike.%${searchValue}%,phone.ilike.%${searchValue}%,course_name.ilike.%${searchValue}%`
+        )
+        .limit(10);
+      if (error) throw error;
+      setSearchResults(data || []);
+      setShowResults(true);
+      if (!data || data.length === 0) toast.info("No students found");
+    } catch (e: any) {
+      toast.error(e.message || "Search failed");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const selectStudent = async (student: any) => {
+    setShowResults(false);
+    setSearchValue(student.full_name || student.student_id);
+    const sid = student.student_id || student.id;
+
+    const { data: alotRows } = await supabase
+      .from("alot_numbers")
+      .select("*")
+      .eq("student_id", sid)
+      .order("created_at", { ascending: false })
+      .limit(1);
+    const alot: any = alotRows && alotRows.length > 0 ? alotRows[0] : null;
+
+    const courseName: string = (student.course_name || alot?.course_name || "").toString();
+    const matchedCode = Object.keys(COURSE_TEMPLATES).find((code) => {
+      const t = COURSE_TEMPLATES[code];
+      return (
+        courseName.toUpperCase().includes(code.toUpperCase()) ||
+        (t.fullName && courseName.toLowerCase().includes(t.fullName.toLowerCase()))
+      );
+    });
+    const finalCode = matchedCode || courseCode;
+    if (matchedCode && matchedCode !== courseCode) setCourseCode(matchedCode);
+
+    const photo = resolveImg(student.photo_url) || resolveImg(alot?.student_photo_url);
+    const sign = resolveImg(alot?.director_signature_url);
+    if (sign) setDirectorSignUrl(sign);
+
+    setForm((f) => ({
+      ...f,
+      studentId: sid,
+      studentName: student.full_name || alot?.student_name || "",
+      fatherName: student.father_name || alot?.student_father_name || "",
+      motherName: student.mother_name || alot?.student_mother_name || "",
+      rollNumber: sid,
+      photoUrl: photo || "",
+      dob: student.date_of_birth || f.dob,
+      centerName: student.study_center || alot?.center_name || f.centerName,
+      centerCode: alot?.center_code || f.centerCode,
+      issueDate: alot?.issue_date || f.issueDate,
+      examinationDate: alot?.course_examination_date || f.examinationDate,
+      place: alot?.place || f.place,
+    }));
+
+    if (alot?.subjects && Array.isArray(alot.subjects)) {
+      const template = COURSE_TEMPLATES[finalCode];
+      const mapped = template.subjects.map((sub, i) => {
+        const row: any =
+          (alot.subjects as any[]).find(
+            (s) => (s.name || "").toLowerCase() === sub.name.toLowerCase()
+          ) || (alot.subjects as any[])[i] || {};
+        return {
+          theoryObtained: Number(row.theory ?? row.theoryObtained ?? 0),
+          practicalObtained: Number(row.practical ?? row.practicalObtained ?? 0),
+        };
+      });
+      setMarks(mapped);
+    }
+
+    toast.success("Student data loaded");
   };
 
   const totals = useMemo(() => {
@@ -297,21 +379,39 @@ const AutoGenerateContent = () => {
                 </div>
               </div>
 
-              <div className="md:col-span-6 space-y-2">
-                <Label className={labelCls}>Student <span className="text-slate-500 normal-case">(Auto-fill)</span></Label>
-                <Select value={selectedStudentKey} onValueChange={onPickStudent} disabled={manualMode}>
-                  <SelectTrigger className={selectTriggerCls}>
-                    <SelectValue placeholder={manualMode ? "Manual mode" : "Select student"} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {students.length === 0 && <div className="px-3 py-2 text-sm text-muted-foreground">No students found</div>}
-                    {students.slice(0, 200).map((s) => (
-                      <SelectItem key={s.student_id} value={s.student_id}>
-                        {s.student_id} — {s.student_name}
-                      </SelectItem>
+              <div className="md:col-span-6 space-y-2 relative">
+                <Label className={labelCls}>Search Student <span className="text-slate-500 normal-case">(by ID, name, email, phone, course)</span></Label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Input
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && searchStudents()}
+                      placeholder="Search by name, ID, email…"
+                      disabled={manualMode}
+                      className={`${inputCls} pl-9`}
+                    />
+                  </div>
+                  <Button type="button" onClick={searchStudents} disabled={searching || manualMode} className="bg-[#4f46e5] hover:bg-[#4f46e5]/90 text-white rounded-xl px-5 h-auto">
+                    {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Search"}
+                  </Button>
+                </div>
+                {showResults && searchResults.length > 0 && (
+                  <div className="absolute z-20 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-72 overflow-y-auto">
+                    {searchResults.map((s) => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => selectStudent(s)}
+                        className="w-full text-left px-4 py-3 hover:bg-[#4f46e5]/5 border-b border-slate-100 last:border-0"
+                      >
+                        <div className="text-sm font-semibold text-slate-900">{s.full_name}</div>
+                        <div className="text-xs text-slate-500 font-mono">{s.student_id || s.id?.slice(0, 8)} · {s.course_name || "—"}</div>
+                      </button>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </div>
+                )}
               </div>
 
               <DarkField className="md:col-span-4" label={<>Student ID <span className="text-red-500">*</span></>} value={form.studentId} onChange={(v) => setForm({ ...form, studentId: v })} inputCls={inputCls} labelCls={labelCls} />
