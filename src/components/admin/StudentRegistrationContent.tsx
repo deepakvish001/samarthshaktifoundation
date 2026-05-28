@@ -11,6 +11,8 @@ import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import { Loader2, UserPlus, Search, Users, Calendar, MapPin, GraduationCap, Mail, Phone, Edit, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Copy, CheckCircle2 } from "lucide-react";
 
 interface LookupItem {
   id: string;
@@ -146,6 +148,8 @@ const StudentRegistrationContent = () => {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [credentials, setCredentials] = useState<{ id: string; password: string; name: string } | null>(null);
+  const [copied, setCopied] = useState<"id" | "pwd" | "both" | null>(null);
 
   // Get unique course categories from course master
   const courseCategories = useMemo(() => {
@@ -351,7 +355,9 @@ const StudentRegistrationContent = () => {
 
       await create(studentData);
 
-      toast.success(`Student registered! ID: ${studentId}`, { duration: 6000 });
+      // Show credentials in a persistent modal so admin can copy them
+      setCredentials({ id: studentId, password, name: formData.applicantName });
+      toast.success(`Student registered successfully!`);
       setFormData(initialFormState);
       setPhotoFile(null);
     } catch (error: any) {
@@ -1117,6 +1123,84 @@ const StudentRegistrationContent = () => {
           </div>
         </CardContent>
       </Card>
+    {/* Credentials Modal — shows Student ID + Password after registration */}
+    <Dialog open={!!credentials} onOpenChange={(open) => { if (!open) { setCredentials(null); setCopied(null); } }}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-green-700">
+            <CheckCircle2 className="h-5 w-5" /> Registration Successful
+          </DialogTitle>
+        </DialogHeader>
+        {credentials && (
+          <div className="space-y-4 pt-2">
+            <p className="text-sm text-muted-foreground">
+              Save these credentials. The student will use them to log in.
+              <br />
+              <span className="font-medium text-foreground">{credentials.name}</span>
+            </p>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Student ID</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <code className="flex-1 px-3 py-2 rounded-md bg-muted font-mono text-sm select-all">{credentials.id}</code>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard.writeText(credentials.id);
+                      setCopied("id");
+                      toast.success("Student ID copied");
+                    }}
+                  >
+                    {copied === "id" ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Password</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <code className="flex-1 px-3 py-2 rounded-md bg-muted font-mono text-sm select-all">{credentials.password}</code>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard.writeText(credentials.password);
+                      setCopied("pwd");
+                      toast.success("Password copied");
+                    }}
+                  >
+                    {copied === "pwd" ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              className="w-full"
+              variant="secondary"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `Student ID: ${credentials.id}\nPassword: ${credentials.password}`
+                );
+                setCopied("both");
+                toast.success("Both copied");
+              }}
+            >
+              {copied === "both" ? <CheckCircle2 className="h-4 w-4 mr-2 text-green-600" /> : <Copy className="h-4 w-4 mr-2" />}
+              Copy both
+            </Button>
+          </div>
+        )}
+        <DialogFooter>
+          <Button onClick={() => { setCredentials(null); setCopied(null); }}>Done</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
     </div>
   );
 };
