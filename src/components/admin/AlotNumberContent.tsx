@@ -10,6 +10,7 @@ import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import StudentPicker from "@/components/admin/shared/StudentPicker";
 import { validateStudentSelection } from "@/components/admin/shared/validateStudentSelection";
 import { Loader2, Edit, Trash2, Search, Filter, FileText, Users, Award, BarChart3, CheckCircle, Plus, BookOpen, Calendar, Hash, Upload, Image as ImageIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AlotNumber {
   id: string;
@@ -139,6 +140,20 @@ const AlotNumberContent = () => {
     }
 
     try {
+      // Upload files to storage and get public URLs
+      const uploadToStorage = async (file: File | null, prefix: string): Promise<string | null> => {
+        if (!file) return null;
+        const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `alot/${formData.studentsId}/${prefix}-${Date.now()}-${safe}`;
+        const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true, contentType: file.type });
+        if (error) throw error;
+        const { data } = supabase.storage.from('avatars').getPublicUrl(path);
+        return data.publicUrl;
+      };
+
+      const studentPhotoUrl = await uploadToStorage(formData.studentPhoto, 'photo');
+      const directorSigUrl = await uploadToStorage(formData.directorSignature, 'sign');
+
       if (editingAlot) {
         await update(editingAlot.id, {
           student_id: formData.studentsId,
@@ -155,8 +170,8 @@ const AlotNumberContent = () => {
           center_code: formData.centerCode,
           issue_date: formData.issueDate,
           place: formData.place,
-          student_photo_url: formData.studentPhoto ? formData.studentPhoto.name : undefined,
-          director_signature_url: formData.directorSignature ? formData.directorSignature.name : undefined,
+          student_photo_url: studentPhotoUrl ?? editingAlot.student_photo_url ?? undefined,
+          director_signature_url: directorSigUrl ?? editingAlot.director_signature_url ?? undefined,
           subjects: subjects as any,
         });
         toast.success("Alot number updated successfully!");
@@ -176,8 +191,8 @@ const AlotNumberContent = () => {
           center_code: formData.centerCode,
           issue_date: formData.issueDate,
           place: formData.place,
-          student_photo_url: formData.studentPhoto ? formData.studentPhoto.name : null,
-          director_signature_url: formData.directorSignature ? formData.directorSignature.name : null,
+          student_photo_url: studentPhotoUrl,
+          director_signature_url: directorSigUrl,
           subjects: subjects as any,
         });
         toast.success("Alot number created successfully!");
