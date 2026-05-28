@@ -8,6 +8,7 @@ import { Receipt, Edit, Trash2, Loader2, DollarSign, FileText, TrendingUp, Users
 import { toast } from "sonner";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
+import StudentPicker from "@/components/admin/shared/StudentPicker";
 
 interface FeesReceipt {
   id: string;
