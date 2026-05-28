@@ -34,9 +34,11 @@ export interface ValidateOptions {
   expectedFee?: string | number;
 }
 
-export type ValidateResult =
-  | { ok: true; student: ValidatedStudent }
-  | { ok: false; message: string };
+export interface ValidateResult {
+  ok: boolean;
+  message?: string;
+  student?: ValidatedStudent;
+}
 
 export async function validateStudentSelection(
   opts: ValidateOptions
