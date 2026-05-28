@@ -628,238 +628,192 @@ const StudentMarksheetContent = () => {
             <div className="flex justify-center">
               <div
                 ref={marksheetRef}
-                className="relative bg-background w-[794px] min-h-[1123px] p-10 border-[12px] border-primary/20 rounded-md shadow-elegant"
-                style={{ transform: 'scale(0.8)', transformOrigin: 'top center' }}
+                className="relative bg-white w-[794px] min-h-[1123px] shadow-elegant"
+                style={{ transform: 'scale(0.8)', transformOrigin: 'top center', fontFamily: "'Times New Roman', Times, serif", color: '#111' }}
               >
-                {/* Inner decorative frame */}
-                <div className="absolute inset-4 border-4 border-double border-primary rounded-lg">
-                  <div className="absolute inset-2 border-2 border-accent rounded-md">
-                    <div className="absolute inset-2 border border-border/30 rounded-sm bg-gradient-to-br from-accent/10 via-background to-primary/5"></div>
+                <div style={{ padding: '28px 40px', borderTop: '1px solid #555' }}>
+                  {/* Top Logo */}
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
+                    <img src="/favicon.png" alt="logo" crossOrigin="anonymous" style={{ width: 70, height: 70, objectFit: 'contain' }} />
                   </div>
-                </div>
-                
-                {/* Elegant Corner Decorations */}
-                <div className="absolute top-6 left-6 w-16 h-16 border-l-4 border-t-4 border-primary rounded-tl-xl opacity-60"></div>
-                <div className="absolute top-6 right-6 w-16 h-16 border-r-4 border-t-4 border-primary rounded-tr-xl opacity-60"></div>
-                <div className="absolute bottom-6 left-6 w-16 h-16 border-l-4 border-b-4 border-primary rounded-bl-xl opacity-60"></div>
-                <div className="absolute bottom-6 right-6 w-16 h-16 border-r-4 border-b-4 border-primary rounded-br-xl opacity-60"></div>
 
-                <div className="relative z-10 p-8 h-full flex flex-col">
-                  {/* Header */}
-                  <div className="text-center mb-6">
-                    <div className="flex items-center justify-center mb-4">
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary via-secondary to-accent border-4 border-accent shadow-xl flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-primary-foreground leading-tight">B</div>
-                          <div className="text-sm text-primary-foreground leading-none">SOFT</div>
-                        </div>
-                      </div>
+                  {/* Enroll + Sl No row */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, marginTop: 8 }}>
+                    <div>
+                      <div style={{ fontWeight: 700 }}>Enroll. Number</div>
+                      <div>{selectedStudent?.student_id || selectedStudent?.id?.slice(-8) || '—'}</div>
                     </div>
-
-                    <h1 className="text-3xl font-bold text-foreground mb-2 tracking-wide">
-                      B.SOFT COMPUTER & TECHNICAL INSTITUTE
-                    </h1>
-                    
-                    <div className="text-sm text-muted-foreground mb-4 space-y-1 font-medium">
-                      <div>NGO DARPAN ID: <span className="text-primary font-bold">UP/2011/0044943</span></div>
-                      <div>Society Regd. No.: <span className="text-primary font-bold">AZ-13610</span></div>
-                      <div>ISO 9001:2015 CERTIFIED: <span className="text-primary font-bold">UQ-252016790</span></div>
-                    </div>
-
-                    <div className="mb-6">
-                      <h2 className="text-2xl font-bold text-primary tracking-wider mb-2">
-                        DIPLOMA CERTIFICATE-CUM-MARKS SHEET
-                      </h2>
-                      <div className="mx-auto w-32 h-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-full"></div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontWeight: 700 }}>Sl. No.</div>
+                      <div>{marksheetData?.roll_number || marksheetData?.id?.slice(0, 10).toUpperCase() || '—'}</div>
                     </div>
                   </div>
 
-                  {/* Student Info & Photo */}
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex-1 grid grid-cols-2 gap-6 text-base">
-                      <div className="bg-accent/10 p-3 rounded-lg border border-accent/20">
-                        <span className="font-semibold text-accent-foreground text-sm">Enrollment No:</span>
-                        <div className="font-bold text-foreground text-lg">{selectedStudent?.id?.slice(-8) || "Not Available"}</div>
-                      </div>
-                      <div className="bg-secondary/10 p-3 rounded-lg border border-secondary/20">
-                        <span className="font-semibold text-secondary-foreground text-sm">Roll Number:</span>
-                        <div className="font-bold text-foreground text-lg">{marksheetData?.roll_number || "Not Available"}</div>
-                      </div>
-                    </div>
-                    
-                    <div className="w-24 h-32 border-3 border-border bg-muted/20 flex items-center justify-center shadow-lg rounded-lg ml-6">
-                      <div className="text-center text-muted-foreground text-sm font-semibold">
-                        <div>STUDENT</div>
-                        <div>PHOTO</div>
-                      </div>
-                    </div>
+                  {/* Institute Title */}
+                  <h1 style={{ textAlign: 'center', color: '#1d4ed8', fontWeight: 800, fontSize: 32, margin: '4px 0 6px', letterSpacing: 0.5 }}>
+                    SAMARTH SHAKTI FOUNDATION
+                  </h1>
+                  <div style={{ textAlign: 'center', fontStyle: 'italic', fontSize: 13, color: '#111', marginBottom: 6 }}>
+                    A Unit of Nesan Computer And Technical Institute
                   </div>
 
-                  {/* Certificate Text */}
-                  <div className="mb-6 text-center">
-                    <div className="bg-gradient-to-r from-accent/10 via-background to-secondary/10 p-6 rounded-xl border-2 border-border/40 shadow-inner">
-                      <p className="text-lg mb-3 leading-relaxed">
-                        This is to certify that <span className="font-bold text-foreground text-xl underline decoration-primary/50 decoration-2">
-                          {selectedStudent?.full_name || "___________________"}
+                  {/* Reg lines */}
+                  <div style={{ textAlign: 'center', fontSize: 12, lineHeight: 1.6 }}>
+                    <div>Registered Under Societies Registration Act, 1860 Regd. No. <span style={{ color: '#dc2626', fontWeight: 700 }}>UP/2019/BAL/10760</span></div>
+                    <div>MSME Reg. No. : <span style={{ color: '#dc2626', fontWeight: 700 }}>BAL/10760/2019-20</span></div>
+                    <div>ISO 9001:2015 CERTIFIED / No. <span style={{ color: '#dc2626', fontWeight: 700 }}>SSF-2024-CERT</span></div>
+                  </div>
+
+                  <div style={{ textAlign: 'center', color: '#c026d3', fontWeight: 700, fontSize: 13, margin: '10px 0 4px' }}>
+                    (Awarded to Under the Management)
+                  </div>
+
+                  <div style={{ textAlign: 'center', margin: '8px 0 4px' }}>
+                    <span style={{ color: '#0891b2', fontWeight: 700, fontSize: 16, textDecoration: 'underline' }}>
+                      {selectedStudent?.course_name || '___________________'}
+                    </span>
+                  </div>
+
+                  <h2 style={{ textAlign: 'center', color: '#dc2626', fontSize: 22, fontWeight: 700, margin: '6px 0 10px' }}>
+                    CERTIFICATE-CUM-MARKS SHEET
+                  </h2>
+
+                  {/* Photo on the right + certify body */}
+                  <div style={{ position: 'relative', minHeight: 130 }}>
+                    <div style={{ position: 'absolute', right: 0, top: -120, width: 110, height: 130, border: '1px solid #333', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#6b7280' }}>
+                      STUDENT PHOTO
+                    </div>
+
+                    <div style={{ fontSize: 14, lineHeight: 1.9, paddingRight: 130 }}>
+                      <div>
+                        This is to certify that according to organization{' '}
+                        <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Mr./श्री {selectedStudent?.full_name || '___________________'}</span>
+                      </div>
+                      <div>
+                        Son/Daughter of Mr. <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Mr./श्री ____________________</span> and Mrs. <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Mrs./श्रीमती ____________________</span>
+                      </div>
+                      <div>
+                        has passed one year <span style={{ fontWeight: 700 }}>{selectedStudent?.course_name || '___________________'}</span> Course examination held in{' '}
+                        <span style={{ fontWeight: 700, textDecoration: 'underline' }}>
+                          {marksheetData?.examination_date ? new Date(marksheetData.examination_date).toLocaleDateString('en-GB') : '__/__/____'}
                         </span>
-                      </p>
-                      <p className="text-base mb-3">
-                        Son/Daughter of Mr./Mrs. <span className="border-b-2 border-primary inline-block w-32 h-6 align-bottom mx-2"></span>
-                      </p>
-                      <p className="text-lg mb-3">
-                        has successfully completed the <span className="font-bold text-primary text-xl bg-accent/20 px-2 py-1 rounded">
-                          {selectedStudent?.course_name || "___________________"}
-                        </span> course
-                      </p>
-                      <p className="text-base mb-3">
-                        conducted by <span className="font-bold text-foreground">B.SOFT Computer & Technical Institute</span>
-                      </p>
-                      <p className="text-lg mb-2">
-                        in the year <span className="font-bold text-primary text-xl bg-primary/10 px-3 py-1 rounded-lg">
-                          {marksheetData?.examination_date ? new Date(marksheetData.examination_date).getFullYear() : new Date().getFullYear()}
-                        </span>
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Center Code: <span className="font-bold text-foreground">BSOFT001</span>
-                      </p>
+                      </div>
+                      <div>
+                        from <span style={{ color: '#dc2626', fontWeight: 700, textDecoration: 'underline' }}>Samarth Shakti Foundation</span>
+                      </div>
+                      <div>
+                        Center Code: <span style={{ fontWeight: 700, textDecoration: 'underline' }}>SSF/AZM/0001</span> . His/Her grading in Individual Papers are given below.
+                      </div>
                     </div>
                   </div>
 
-                  {/* Academic Performance Table */}
-                  <div className="mb-3">
-                    <h3 className="text-base font-bold text-primary text-center mb-2">ACADEMIC PERFORMANCE</h3>
-                    
-                    <div ref={tableRef} className="bg-background rounded-lg shadow-md border border-border/40 overflow-hidden">
-                      <table className="w-full text-xs">
-                        <thead>
-                          <tr className="bg-gradient-to-r from-primary via-primary/95 to-primary/90 text-primary-foreground">
-                            <th className="px-1 py-1.5 text-center font-bold text-xs border-r border-primary/30">Subject</th>
-                            <th className="px-1 py-1.5 text-center font-bold text-xs border-r border-primary/30">Max Theory</th>
-                            <th className="px-1 py-1.5 text-center font-bold text-xs border-r border-primary/30">Max Practical</th>
-                            <th className="px-1 py-1.5 text-center font-bold text-xs border-r border-primary/30">Obt. Theory</th>
-                            <th className="px-1 py-1.5 text-center font-bold text-xs">Obt. Practical</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {courseSubjects.map((subject, index) => (
-                            <tr key={subject.id} className={index % 2 === 0 ? "bg-accent/30" : "bg-background"}>
-                              <td className="px-1 py-1 text-left font-medium text-xs border-r border-border/30 max-w-[120px] break-words">
-                                {subject.subject}
-                              </td>
-                              <td className="px-1 py-1 text-center text-xs border-r border-border/30">{subject.theory_marks}</td>
-                              <td className="px-1 py-1 text-center text-xs border-r border-border/30">{subject.practical_marks}</td>
-                              <td className="px-1 py-1 text-center font-bold text-primary text-xs border-r border-border/30">
-                                {Math.round(parseInt(subject.theory_marks || "0") * 0.75)}
-                              </td>
-                              <td className="px-1 py-1 text-center font-bold text-secondary text-xs">
-                                {Math.round(parseInt(subject.practical_marks || "0") * 0.8)}
-                              </td>
+                  <h3 style={{ textAlign: 'center', color: '#1d4ed8', fontWeight: 700, fontSize: 16, margin: '10px 0 6px' }}>
+                    GRADES AWARDED
+                  </h3>
+
+                  {/* Marks table */}
+                  <div ref={tableRef}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, border: '1.5px solid #111' }}>
+                      <thead>
+                        <tr style={{ background: '#fff' }}>
+                          <th style={mthCell}>Subjects</th>
+                          <th style={mthCell}>Max.Theory Marks</th>
+                          <th style={mthCell}>Max.Practical Marks</th>
+                          <th style={mthCell}>Obtain Theory Marks.</th>
+                          <th style={mthCell}>Obtain Practical Marks.</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {courseSubjects.length === 0 ? (
+                          <tr><td colSpan={5} style={{ ...mtdCell, padding: 14, color: '#6b7280' }}>No subjects added for this course.</td></tr>
+                        ) : courseSubjects.map((subject) => {
+                          const theoryMax = parseInt(subject.theory_marks || '0') || 0;
+                          const pracMax = parseInt(subject.practical_marks || '0') || 0;
+                          const overallMax = courseSubjects.reduce((s, x) => s + (parseInt(x.theory_marks||'0')||0) + (parseInt(x.practical_marks||'0')||0), 0);
+                          const ratio = overallMax > 0 && marksheetData?.obtained_marks ? marksheetData.obtained_marks / overallMax : 0.8;
+                          return (
+                            <tr key={subject.id}>
+                              <td style={{ ...mtdCell, textAlign: 'left', paddingLeft: 8 }}>{subject.subject}</td>
+                              <td style={mtdCell}>{theoryMax || '—'}</td>
+                              <td style={mtdCell}>{pracMax || '—'}</td>
+                              <td style={mtdCell}>{theoryMax ? Math.round(theoryMax * ratio) : '—'}</td>
+                              <td style={mtdCell}>{pracMax ? Math.round(pracMax * ratio) : '—'}</td>
                             </tr>
-                          ))}
-                          
-                          {/* Summary Row */}
-                          <tr className="bg-gradient-to-r from-accent/30 to-secondary/30 border-t-2 border-primary">
-                            <td className="px-1 py-1.5 text-center font-bold text-foreground text-xs border-r border-border/30">
-                              OVERALL RESULT
-                            </td>
-                            <td className="px-1 py-1.5 text-center font-bold text-primary text-xs border-r border-border/30">
-                              {marksheetData?.percentage || 0}%
-                            </td>
-                            <td className="px-1 py-1.5 text-center font-bold text-secondary text-xs border-r border-border/30">
-                              Grade: {marksheetData?.grade || "N/A"}
-                            </td>
-                            <td className="px-1 py-1.5 text-center border-r border-border/30">
-                              <div className={`font-bold text-xs px-1 py-0.5 rounded ${
-                                marksheetData?.result_status === 'pass' 
-                                  ? 'bg-green-100 text-green-800' 
-                                  : 'bg-red-100 text-red-800'
-                              }`}>
-                                {marksheetData?.result_status?.toUpperCase() || "PENDING"}
-                              </div>
-                            </td>
-                            <td className="px-1 py-1.5 text-center font-bold text-secondary text-xs">
-                              Total: {marksheetData?.obtained_marks || 0}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                          );
+                        })}
+                        {(() => {
+                          const theoryMaxTotal = courseSubjects.reduce((s, x) => s + (parseInt(x.theory_marks||'0')||0), 0);
+                          const pracMaxTotal = courseSubjects.reduce((s, x) => s + (parseInt(x.practical_marks||'0')||0), 0);
+                          const overallMax = theoryMaxTotal + pracMaxTotal;
+                          const ratio = overallMax > 0 && marksheetData?.obtained_marks ? marksheetData.obtained_marks / overallMax : 0;
+                          const theoryObt = Math.round(theoryMaxTotal * ratio);
+                          const pracObt = Math.round(pracMaxTotal * ratio);
+                          const grandMax = marksheetData?.total_marks || overallMax;
+                          const grandObt = marksheetData?.obtained_marks || (theoryObt + pracObt);
+                          const pct = marksheetData?.percentage ?? (grandMax ? (grandObt / grandMax) * 100 : 0);
+                          return (
+                            <>
+                              <tr style={{ fontWeight: 700 }}>
+                                <td style={{ ...mtdCell, textAlign: 'center' }}>Total</td>
+                                <td style={mtdCell}>{theoryMaxTotal}</td>
+                                <td style={mtdCell}>{pracMaxTotal}</td>
+                                <td style={mtdCell}>{theoryObt}</td>
+                                <td style={mtdCell}>{pracObt}</td>
+                              </tr>
+                              <tr style={{ fontWeight: 700 }}>
+                                <td style={{ ...mtdCell, textAlign: 'center' }}>Grand Total</td>
+                                <td style={mtdCell} colSpan={2}>{grandMax}</td>
+                                <td style={mtdCell} colSpan={2}>{grandObt}</td>
+                              </tr>
+                              <tr style={{ fontWeight: 700 }}>
+                                <td style={{ ...mtdCell, textAlign: 'center' }}>Percentage (%)</td>
+                                <td style={{ ...mtdCell, color: '#dc2626' }} colSpan={4}>{pct.toFixed(1)} %</td>
+                              </tr>
+                              <tr style={{ fontWeight: 700 }}>
+                                <td style={{ ...mtdCell, textAlign: 'center' }}>Grade</td>
+                                <td style={{ ...mtdCell, color: '#dc2626' }} colSpan={4}>{marksheetData?.grade || '—'}</td>
+                              </tr>
+                            </>
+                          );
+                        })()}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Legend */}
+                  <div style={{ marginTop: 14 }}>
+                    <div style={{ fontWeight: 700, fontSize: 13 }}>LEGEND OF GRADES</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', fontSize: 12, marginTop: 6, rowGap: 4, columnGap: 30, paddingLeft: 12 }}>
+                      <div>S &nbsp;: 85% &amp; Above</div>
+                      <div>A &nbsp;: 75%-84%</div>
+                      <div>B &nbsp;: 65%-74%</div>
+                      <div>C &nbsp;: 55%-64%</div>
+                      <div>D &nbsp;: 50%-54%</div>
+                      <div>F &nbsp;: Less than 50% - Fail</div>
                     </div>
                   </div>
 
-                  {/* Enhanced Footer Section */}
-                  <div className="grid grid-cols-3 gap-6 items-end mt-8">
-                    {/* Grading System */}
-                    <div className="bg-gradient-to-br from-muted/50 to-accent/50 p-4 rounded-xl border-2 border-border/40 shadow-lg">
-                      <h4 className="font-bold text-foreground mb-3 text-base flex items-center gap-2">
-                        GRADING SYSTEM
-                      </h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between items-center bg-green-100 px-2 py-1 rounded">
-                          <span className="font-semibold">A+:</span>
-                          <span className="text-green-700 font-bold">85%+</span>
-                        </div>
-                        <div className="flex justify-between items-center bg-blue-100 px-2 py-1 rounded">
-                          <span className="font-semibold">A:</span>
-                          <span className="text-blue-700 font-bold">75-84%</span>
-                        </div>
-                        <div className="flex justify-between items-center bg-purple-100 px-2 py-1 rounded">
-                          <span className="font-semibold">B:</span>
-                          <span className="text-purple-700 font-bold">65-74%</span>
-                        </div>
-                        <div className="flex justify-between items-center bg-yellow-100 px-2 py-1 rounded">
-                          <span className="font-semibold">C:</span>
-                          <span className="text-yellow-700 font-bold">50-64%</span>
-                        </div>
-                      </div>
+                  {/* Signature row */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 30, fontSize: 13 }}>
+                    <div>
+                      <div><b>Issue Date :</b> {marksheetData?.examination_date ? new Date(marksheetData.examination_date).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB')}</div>
+                      <div style={{ marginTop: 6 }}><b>Place :</b> AZAMGARH</div>
                     </div>
-                    
-                    {/* Issue Date */}
-                    <div className="text-center">
-                      <div className="bg-accent/10 p-4 rounded-xl border-2 border-accent/20 mb-4">
-                        <div className="text-sm mb-2">
-                          <div className="font-bold text-foreground flex items-center justify-center gap-2 mb-2">
-                            Issue Date:
-                          </div>
-                          <div className="font-bold text-lg text-primary">
-                            {marksheetData?.examination_date 
-                              ? new Date(marksheetData.examination_date).toLocaleDateString('en-GB')
-                              : new Date().toLocaleDateString('en-GB')
-                            }
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-secondary/10 border-2 border-secondary/20 p-3 rounded-xl">
-                        <div className="font-bold text-secondary-foreground text-sm">Verify Online</div>
-                        <div className="text-foreground font-mono text-lg font-bold">
-                          {selectedStudent?.id?.slice(-8) || "N/A"}
-                        </div>
-                      </div>
+                    <div style={{ textAlign: 'center', fontSize: 11, color: '#374151' }}>
+                      <div style={{ width: 90, height: 90, border: '1px dashed #9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>QR</div>
                     </div>
-                    
-                    {/* Digital Signature */}
-                    <div className="text-center">
-                      <div className="w-32 h-16 border-3 border-border bg-muted/20 mx-auto mb-3 flex items-center justify-center rounded-xl shadow-lg">
-                        <div className="text-sm text-muted-foreground font-bold">Digital Seal</div>
-                      </div>
-                      <div className="border-b-2 border-primary w-32 mx-auto mb-2"></div>
-                      <div className="font-bold text-foreground text-base">DIRECTOR</div>
-                      <div className="text-sm text-muted-foreground font-semibold">B.SOFT Institute</div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontStyle: 'italic', marginBottom: 4 }}>Digitally signed by</div>
+                      <div style={{ borderTop: '1px solid #111', paddingTop: 4, minWidth: 160, fontWeight: 700 }}>SECRETARY/DIRECTOR</div>
                     </div>
                   </div>
 
-                  {/* Contact Information */}
-                  <div className="text-center mt-6 text-sm">
-                    <div className="bg-gradient-to-r from-accent/10 to-secondary/10 p-4 rounded-xl border border-border/40">
-                      <div className="text-foreground font-semibold mb-2">
-                        <span className="font-bold">Head Office:</span> Near Union Bank Of India, Bina Soft Educational & Welfare Society
-                      </div>
-                      <div className="text-muted-foreground">
-                        Vill & Post BILARIYAGAN J, AZAMGARH - 276121, Uttar Pradesh
-                      </div>
-                      <div className="text-muted-foreground font-medium mt-2">
-                        www.binasoftedu.org.in
-                      </div>
-                    </div>
+                  {/* Footer notes */}
+                  <div style={{ textAlign: 'center', marginTop: 16, fontSize: 11, color: '#374151' }}>
+                    This Diploma may be Verified at <span style={{ color: '#1d4ed8' }}>www.samarthshaktifoundation.org</span> using the diploma holder's enrollment number
+                  </div>
+                  <div style={{ textAlign: 'center', marginTop: 4, fontSize: 11, fontWeight: 700 }}>
+                    Head Office Address - Samarth Shakti Foundation, AZAMGARH - 276121, Uttar Pradesh
                   </div>
                 </div>
               </div>
@@ -872,3 +826,19 @@ const StudentMarksheetContent = () => {
 };
 
 export default StudentMarksheetContent;
+
+const mthCell: React.CSSProperties = {
+  border: '1px solid #111',
+  padding: '6px 6px',
+  fontWeight: 700,
+  textAlign: 'center',
+  fontSize: 12,
+  background: '#fff',
+};
+
+const mtdCell: React.CSSProperties = {
+  border: '1px solid #111',
+  padding: '5px 6px',
+  textAlign: 'center',
+  fontSize: 12,
+};
