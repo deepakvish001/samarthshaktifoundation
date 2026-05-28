@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { AdminPresenceIndicator } from "@/components/admin/AdminPresenceIndicator";
-import { Loader2, Users, CheckCircle, Clock, Search, UserCheck, Download, Mail, Phone, GraduationCap, MapPin, Calendar, Shield } from "lucide-react";
+import { Loader2, Users, CheckCircle, Clock, Search, UserCheck, Download, Mail, Phone, GraduationCap, MapPin, Calendar, Shield, Eye, EyeOff, Copy, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 
 interface StudentProfile {
@@ -22,6 +22,8 @@ interface StudentProfile {
   enrollment_date: string;
   created_at: string;
   updated_at: string;
+  student_id?: string;
+  login_password?: string;
 }
 
 const StudentApprovalContent = () => {
@@ -46,6 +48,19 @@ const StudentApprovalContent = () => {
   });
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({});
+
+  const togglePassword = (id: string) =>
+    setVisiblePasswords((p) => ({ ...p, [id]: !p[id] }));
+
+  const copyText = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(`${label} copied`);
+    } catch {
+      toast.error("Copy failed");
+    }
+  };
 
   // Filtered students based on search
   const filteredStudents = students.filter(student =>
@@ -245,6 +260,8 @@ const StudentApprovalContent = () => {
                 <TableRow className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary">
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Approve</TableHead>
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Student Name</TableHead>
+                  <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Student ID</TableHead>
+                  <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Password</TableHead>
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Email</TableHead>
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Phone</TableHead>
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Course Name</TableHead>
@@ -256,7 +273,7 @@ const StudentApprovalContent = () => {
               <TableBody>
                 {filteredStudents.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                       {searchTerm ? "No students found matching your search." : "No student profiles found."}
                     </TableCell>
                   </TableRow>
@@ -281,6 +298,60 @@ const StudentApprovalContent = () => {
                           <Users className="h-4 w-4 text-primary" />
                           <span className="font-medium text-foreground">{student.full_name}</span>
                         </div>
+                      </TableCell>
+                      <TableCell className="text-center p-4 border-r border-border">
+                        {student.student_id ? (
+                          <div className="flex items-center justify-center gap-2">
+                            <code className="px-2 py-1 rounded bg-muted text-foreground font-mono text-xs">
+                              {student.student_id}
+                            </code>
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7"
+                              onClick={() => copyText(student.student_id!, "Student ID")}
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-center p-4 border-r border-border">
+                        {student.login_password ? (
+                          <div className="flex items-center justify-center gap-2">
+                            <KeyRound className="h-4 w-4 text-secondary" />
+                            <code className="px-2 py-1 rounded bg-muted text-foreground font-mono text-xs min-w-[80px] inline-block">
+                              {visiblePasswords[student.id] ? student.login_password : "••••••••"}
+                            </code>
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7"
+                              onClick={() => togglePassword(student.id)}
+                            >
+                              {visiblePasswords[student.id] ? (
+                                <EyeOff className="h-3.5 w-3.5" />
+                              ) : (
+                                <Eye className="h-3.5 w-3.5" />
+                              )}
+                            </Button>
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7"
+                              onClick={() => copyText(student.login_password!, "Password")}
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
                       </TableCell>
                       <TableCell className="text-center p-4 border-r border-border">
                         <div className="flex items-center justify-center space-x-2">
