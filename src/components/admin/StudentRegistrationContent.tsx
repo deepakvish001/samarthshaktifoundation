@@ -630,10 +630,12 @@ const StudentRegistrationContent = () => {
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400 max-w-xs">
                     <SelectValue placeholder="Select One" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {genders.length > 0 ? (
+                      genders.map((g) => <SelectItem key={g.id} value={g.name}>{g.name}</SelectItem>)
+                    ) : (
+                      <SelectItem value="no-data" disabled>No genders configured</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -667,11 +669,12 @@ const StudentRegistrationContent = () => {
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400 max-w-xs">
                     <SelectValue placeholder="Select One" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="general">General</SelectItem>
-                    <SelectItem value="obc">OBC</SelectItem>
-                    <SelectItem value="sc">SC</SelectItem>
-                    <SelectItem value="st">ST</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {casteCategories.length > 0 ? (
+                      casteCategories.map((c) => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)
+                    ) : (
+                      <SelectItem value="no-data" disabled>No categories configured</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -870,11 +873,12 @@ const StudentRegistrationContent = () => {
                   <SelectTrigger className="h-8 text-xs border-2 border-gray-400">
                     <SelectValue placeholder="Select One" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10th">10th</SelectItem>
-                    <SelectItem value="12th">12th</SelectItem>
-                    <SelectItem value="graduate">Graduate</SelectItem>
-                    <SelectItem value="postgraduate">Post Graduate</SelectItem>
+                  <SelectContent className="bg-popover z-50">
+                    {qualifications.length > 0 ? (
+                      qualifications.map((q) => <SelectItem key={q.id} value={q.name}>{q.name}</SelectItem>)
+                    ) : (
+                      <SelectItem value="no-data" disabled>No qualifications configured</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
