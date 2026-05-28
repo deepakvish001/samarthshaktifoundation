@@ -156,6 +156,14 @@ const StudentMarksheetContent = () => {
           ? (alot as any).subjects
           : [];
 
+        // Enrich selected student with names / photo from alot if profile is missing them
+        setSelectedStudent((prev) => prev ? ({
+          ...prev,
+          father_name: prev.father_name || (alot as any).student_father_name || undefined,
+          mother_name: prev.mother_name || (alot as any).student_mother_name || undefined,
+          photo_url: prev.photo_url || (alot as any).student_photo_url || undefined,
+        }) : prev);
+
         // Derive course subjects from alot if master list is empty
         if (subjectsList.length === 0 && alotSubjects.length > 0) {
           subjectsList = alotSubjects.map((s: any, idx: number) => ({
@@ -702,7 +710,7 @@ const StudentMarksheetContent = () => {
                         <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Mr./श्री {selectedStudent?.full_name || '___________________'}</span>
                       </div>
                       <div>
-                        Son/Daughter of Mr. <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Mr./श्री ____________________</span> and Mrs. <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Mrs./श्रीमती ____________________</span>
+                        Son/Daughter of Mr. <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Mr./श्री {selectedStudent?.father_name || '____________________'}</span> and Mrs. <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Mrs./श्रीमती {selectedStudent?.mother_name || '____________________'}</span>
                       </div>
                       <div>
                         has passed one year <span style={{ fontWeight: 700 }}>{selectedStudent?.course_name || '___________________'}</span> Course examination held in{' '}
@@ -812,7 +820,19 @@ const StudentMarksheetContent = () => {
                       <div style={{ marginTop: 6 }}><b>Place :</b> AZAMGARH</div>
                     </div>
                     <div style={{ textAlign: 'center', fontSize: 11, color: '#374151' }}>
-                      <div style={{ width: 90, height: 90, border: '1px dashed #9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>QR</div>
+                      {selectedStudent?.student_id ? (
+                        <>
+                          <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=2&data=${encodeURIComponent(`${window.location.origin}/verify/${selectedStudent.student_id}`)}`}
+                            alt="verification QR"
+                            crossOrigin="anonymous"
+                            style={{ width: 90, height: 90 }}
+                          />
+                          <div style={{ fontSize: 9, marginTop: 2 }}>Scan to verify</div>
+                        </>
+                      ) : (
+                        <div style={{ width: 90, height: 90, border: '1px dashed #9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>QR</div>
+                      )}
                     </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontStyle: 'italic', marginBottom: 4 }}>Digitally signed by</div>
