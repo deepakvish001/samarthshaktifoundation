@@ -24,161 +24,252 @@ export interface CertificateData {
 
 export const CertificateTemplate = forwardRef<HTMLDivElement, { data: CertificateData }>(
   ({ data }, ref) => {
+    // Format dates as DD.MM.YYYY for the body sentence
+    const fmt = (s?: string) => {
+      if (!s) return "—";
+      const d = new Date(s);
+      if (isNaN(d.getTime())) return s;
+      const dd = String(d.getDate()).padStart(2, "0");
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      return `${dd}.${mm}.${d.getFullYear()}`;
+    };
+    // Derive a "period from" — issueDate minus course duration is unknown here, so we
+    // just show the issue date as the awarded date and let admin fill DOB for start.
+    const awardedOn = fmt(data.issueDate);
+    const periodFrom = data.dob ? fmt(data.dob) : awardedOn;
+    const periodTo = awardedOn;
+
     return (
       <div
         ref={ref}
         style={{
           width: "1123px",
           height: "794px",
-          background: "linear-gradient(135deg, #fffaf0 0%, #fef3c7 50%, #fffaf0 100%)",
-          fontFamily: "Georgia, 'Times New Roman', serif",
-          color: "#1a1a1a",
+          background: "#ffffff",
+          fontFamily: "'Times New Roman', Georgia, serif",
+          color: "#0a0a0a",
           position: "relative",
-          padding: "30px",
+          padding: "0",
           boxSizing: "border-box",
           overflow: "hidden",
         }}
       >
-        {/* Corner ornaments */}
-        <CornerOrnament position="tl" />
-        <CornerOrnament position="tr" />
-        <CornerOrnament position="bl" />
-        <CornerOrnament position="br" />
-
-        {/* Watermark logo */}
-        <img
-          src="/favicon.png"
-          alt=""
-          crossOrigin="anonymous"
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            height: 500,
-            opacity: 0.05,
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Decorative gold border */}
+        {/* Decorative outer border — multi-color frame, curved corners */}
         <div
           style={{
-            border: "6px double #b8860b",
-            outline: "2px solid #d4af37",
-            outlineOffset: "6px",
-            borderRadius: "12px",
-            height: "100%",
-            padding: "30px 60px",
-            position: "relative",
+            position: "absolute",
+            inset: 0,
+            background:
+              "conic-gradient(from 90deg at 50% 50%, #0b2a6b 0deg, #1e40af 60deg, #b91c1c 120deg, #f59e0b 180deg, #1e40af 240deg, #0b2a6b 360deg)",
+            padding: "14px",
             boxSizing: "border-box",
-            background: "rgba(255,255,255,0.4)",
           }}
         >
-          {/* Header */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px", marginBottom: "10px" }}>
-            <img src="/favicon.png" alt="logo" style={{ width: 80, height: 80, objectFit: "contain" }} crossOrigin="anonymous" />
-            <div style={{ textAlign: "center" }}>
-              <h1 style={{ fontSize: "34px", margin: 0, color: "#7c2d12", fontWeight: 700, letterSpacing: "1px" }}>
-                SAMARTH SHAKTI FOUNDATION
+          <div style={{ width: "100%", height: "100%", background: "#fff", borderRadius: "0", position: "relative", boxSizing: "border-box" }}>
+            {/* Inner thin red border */}
+            <div style={{ position: "absolute", inset: 8, border: "2px solid #b91c1c", pointerEvents: "none" }} />
+
+            {/* Curved corner arcs (decorative) */}
+            <CornerArc position="tl" />
+            <CornerArc position="tr" />
+            <CornerArc position="bl" />
+            <CornerArc position="br" />
+
+            <div style={{ position: "relative", padding: "26px 50px", boxSizing: "border-box", height: "100%" }}>
+              {/* Top row: Sl No. / Reg No. */}
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0a0a0a", fontWeight: 600 }}>
+                <span>Sl No. <b>NCTI/{data.certificateNumber}</b></span>
+                <span>Reg No. <b>{data.studentId}</b></span>
+              </div>
+
+              {/* ISO line */}
+              <div style={{ textAlign: "center", marginTop: 6, fontSize: 14, color: "#0a0a0a" }}>
+                An ISO 9001:2015 Certified Education Organization
+              </div>
+
+              {/* Main institute name */}
+              <h1
+                style={{
+                  textAlign: "center",
+                  margin: "4px 60px 2px",
+                  fontSize: 36,
+                  fontWeight: 900,
+                  color: "#0b2a6b",
+                  letterSpacing: "0.5px",
+                  lineHeight: 1.05,
+                }}
+              >
+                NESAN COMPUTER AND TECHNICAL INSTITUTE
               </h1>
-              <p style={{ margin: 0, fontSize: "13px", color: "#374151", fontStyle: "italic" }}>
-                Registered under Govt. of India | An ISO Certified Organization
-              </p>
-            </div>
-          </div>
+              <div style={{ textAlign: "center", fontStyle: "italic", fontSize: 15, color: "#0a0a0a" }}>
+                A Unit of Samarth Shakti Foundation
+              </div>
 
-          <div style={{ borderTop: "2px solid #b8860b", margin: "10px 0" }} />
+              {/* Green band */}
+              <div
+                style={{
+                  margin: "8px auto 0",
+                  background: "#15803d",
+                  color: "#fff",
+                  textAlign: "center",
+                  fontWeight: 700,
+                  fontSize: 15,
+                  padding: "5px 12px",
+                  width: "fit-content",
+                  border: "1px solid #064e2c",
+                }}
+              >
+                Registered Under Societies Registration Act, 1860 · MSME Reg No BAL/10760/2019-20
+              </div>
 
-          <div style={{ textAlign: "center", marginTop: "10px" }}>
-            <h2 style={{ fontSize: "28px", margin: 0, color: "#b8860b", fontWeight: 700, letterSpacing: "4px" }}>
-              CERTIFICATE OF COMPLETION
-            </h2>
-            <p style={{ fontSize: "14px", color: "#4b5563", marginTop: "4px" }}>
-              Certificate No: <b>{data.certificateNumber}</b> &nbsp;|&nbsp; Student ID: <b>{data.studentId}</b>
-              {data.batch ? <> &nbsp;|&nbsp; Batch: <b>{data.batch}</b></> : null}
-            </p>
-          </div>
+              {/* Top-right ISO badge */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 24,
+                  right: 60,
+                  width: 92,
+                  height: 92,
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, #fff 55%, #0b2a6b 56%)",
+                  border: "3px solid #b91c1c",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  fontSize: 11,
+                  fontWeight: 800,
+                  color: "#0b2a6b",
+                  lineHeight: 1.1,
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                }}
+              >
+                NCTI<br/>ISO 9001<br/>:2015
+              </div>
 
-          {/* Photo */}
-          {data.photoUrl && (
-            <img
-              src={data.photoUrl}
-              alt="student"
-              crossOrigin="anonymous"
-              style={{
-                position: "absolute",
-                top: "120px",
-                right: "70px",
-                width: "110px",
-                height: "130px",
-                objectFit: "cover",
-                border: "3px solid #b8860b",
-                borderRadius: "4px",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
-              }}
-            />
-          )}
+              {/* Certificate of Achievement ribbon */}
+              <div style={{ textAlign: "center", marginTop: 22 }}>
+                <div
+                  style={{
+                    display: "inline-block",
+                    fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
+                    fontSize: 46,
+                    color: "#b91c1c",
+                    padding: "2px 50px",
+                    borderTop: "2px solid #b91c1c",
+                    borderBottom: "2px solid #b91c1c",
+                    letterSpacing: "1px",
+                    fontWeight: 700,
+                  }}
+                >
+                  Certificate of Achievement
+                </div>
+              </div>
 
-          {/* Body */}
-          <div style={{ marginTop: "30px", textAlign: "center", padding: "0 60px", lineHeight: 1.8 }}>
-            <p style={{ fontSize: "18px" }}>This is to certify that</p>
-            <h3 style={{ fontSize: "34px", color: "#7c2d12", margin: "10px 0", borderBottom: "2px dashed #b8860b", display: "inline-block", padding: "0 40px", fontFamily: "'Brush Script MT', cursive" }}>
-              {data.studentName}
-            </h3>
-            <p style={{ fontSize: "15px", marginTop: "12px" }}>
-              Son/Daughter of <b>{data.fatherName || "—"}</b> and <b>{data.motherName || "—"}</b>
-              {data.dob ? <> &nbsp;·&nbsp; DOB: <b>{data.dob}</b></> : null}
-            </p>
-            <p style={{ fontSize: "15px" }}>
-              has successfully completed the course
-            </p>
-            <h4 style={{ fontSize: "26px", color: "#b8860b", margin: "6px 0", fontWeight: 700 }}>
-              {data.course.certificateTitle}
-            </h4>
-            <p style={{ fontSize: "15px" }}>
-              of duration <b>{data.course.duration}</b>, securing <b>{data.percentage.toFixed(2)}%</b> with grade <b>{data.grade}</b>.
-            </p>
-            {(data.centerName || data.centerCode) && (
-              <p style={{ fontSize: "13px", color: "#4b5563", marginTop: 4 }}>
-                Examination conducted at <b>{data.centerName}</b>{data.centerCode ? ` (Code: ${data.centerCode})` : ""}
-              </p>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div style={{ position: "absolute", bottom: "50px", left: "60px", right: "60px", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-            <div style={{ textAlign: "center" }}>
+              {/* QR (left) */}
               {data.verifyUrl && (
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(data.verifyUrl)}`}
                   alt="verify"
                   crossOrigin="anonymous"
-                  style={{ width: 80, height: 80, marginBottom: 4 }}
+                  style={{ position: "absolute", top: 215, left: 60, width: 80, height: 80 }}
                 />
               )}
-              <p style={{ fontSize: "10px", margin: 0, color: "#6b7280" }}>Scan to verify</p>
-              <p style={{ fontSize: "13px", margin: 0, color: "#374151" }}>
-                Date: <b>{data.issueDate}</b>
-              </p>
-              <p style={{ fontSize: "13px", margin: 0, color: "#374151" }}>
-                Place: <b>{data.place}</b>
-              </p>
-            </div>
-            {data.sealUrl && (
-              <div style={{ textAlign: "center" }}>
-                <img src={data.sealUrl} alt="seal" crossOrigin="anonymous" style={{ width: 100, height: 100, opacity: 0.9 }} />
-                <p style={{ fontSize: 10, margin: 0, color: "#6b7280" }}>Official Seal</p>
-              </div>
-            )}
-            <div style={{ textAlign: "center" }}>
-              {data.directorSignUrl && (
-                <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 50, objectFit: "contain", marginBottom: 4 }} />
+
+              {/* Photo (right) */}
+              {data.photoUrl && (
+                <img
+                  src={data.photoUrl}
+                  alt="student"
+                  crossOrigin="anonymous"
+                  style={{
+                    position: "absolute",
+                    top: 305,
+                    right: 70,
+                    width: 110,
+                    height: 130,
+                    objectFit: "cover",
+                    border: "2px solid #0b2a6b",
+                  }}
+                />
               )}
-              <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 4, minWidth: 180 }}>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 700 }}>Director</p>
-                <p style={{ margin: 0, fontSize: 11, color: "#6b7280" }}>Samarth Shakti Foundation</p>
+
+              {/* Body */}
+              <div
+                style={{
+                  marginTop: 30,
+                  padding: "0 200px 0 60px",
+                  fontSize: 16,
+                  lineHeight: 1.7,
+                  color: "#0a0a0a",
+                  textAlign: "justify",
+                }}
+              >
+                This is to certify That{" "}
+                <b>{data.studentName}</b>
+                {data.fatherName ? <>, Son/Daughter of <b>{data.fatherName}</b></> : null}
+                {data.motherName ? <> and <b>{data.motherName}</b></> : null}{" "}
+                Has Successfully Completed The Course of{" "}
+                <b>{data.course.certificateTitle}</b> At Our Authorised Study Centre{" "}
+                <b>{data.centerName || "—"}</b>
+                {data.centerCode ? <> (Code: <b>{data.centerCode}</b>)</> : null}
+                , Period from <b>{periodFrom}</b> to <b>{periodTo}</b>. This Certificate Was Awarded on{" "}
+                <b>{awardedOn}</b>. Securing <b>{data.percentage.toFixed(2)}%</b> with grade <b>{data.grade}</b>.
+              </div>
+
+              {/* Footer: logos row + signature */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 60,
+                  left: 50,
+                  right: 50,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                }}
+              >
+                <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+                  <FooterBadge label="NCTI" sub="Education" color="#0b2a6b" />
+                  <FooterBadge label="SSF" sub="Foundation" color="#b91c1c" />
+                  <FooterBadge label="MSME" sub="Govt. of India" color="#15803d" />
+                  <FooterBadge label="ISO" sub="9001:2015" color="#0b2a6b" />
+                  <FooterBadge label="SRA" sub="1860" color="#b91c1c" />
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  {data.directorSignUrl ? (
+                    <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 44, objectFit: "contain" }} />
+                  ) : (
+                    <div style={{ height: 44, fontFamily: "'Brush Script MT', cursive", fontSize: 26, color: "#0b2a6b" }}>
+                      Authorised
+                    </div>
+                  )}
+                  <div style={{ borderTop: "1px solid #0a0a0a", paddingTop: 2, minWidth: 200, fontSize: 13, fontWeight: 700 }}>
+                    Chairman's Signature
+                  </div>
+                  <div style={{ fontSize: 11, color: "#374151" }}>
+                    Nesan Computer and Technical Institute
+                  </div>
+                </div>
+              </div>
+
+              {/* Grading scale red strip */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 22,
+                  left: 50,
+                  right: 50,
+                  background: "#b91c1c",
+                  color: "#fff",
+                  textAlign: "center",
+                  fontWeight: 700,
+                  fontSize: 13,
+                  padding: "5px 8px",
+                  letterSpacing: "0.5px",
+                }}
+              >
+                AA&gt;=90%, A+&gt;=80%, A&gt;=60%, B+&gt;=45%, B&gt;=35%, C&gt;=30%
               </div>
             </div>
           </div>
@@ -189,12 +280,40 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
 );
 CertificateTemplate.displayName = "CertificateTemplate";
 
-const CornerOrnament = ({ position }: { position: "tl" | "tr" | "bl" | "br" }) => {
-  const map: Record<string, React.CSSProperties> = {
-    tl: { top: 10, left: 10, borderTop: "4px solid #b8860b", borderLeft: "4px solid #b8860b" },
-    tr: { top: 10, right: 10, borderTop: "4px solid #b8860b", borderRight: "4px solid #b8860b" },
-    bl: { bottom: 10, left: 10, borderBottom: "4px solid #b8860b", borderLeft: "4px solid #b8860b" },
-    br: { bottom: 10, right: 10, borderBottom: "4px solid #b8860b", borderRight: "4px solid #b8860b" },
+const CornerArc = ({ position }: { position: "tl" | "tr" | "bl" | "br" }) => {
+  const size = 110;
+  const base: React.CSSProperties = {
+    position: "absolute",
+    width: size,
+    height: size,
+    border: "6px solid #f59e0b",
+    borderRadius: "50%",
+    background: "transparent",
   };
-  return <div style={{ position: "absolute", width: 40, height: 40, ...map[position] }} />;
+  const map: Record<string, React.CSSProperties> = {
+    tl: { top: -size / 2, left: -size / 2 },
+    tr: { top: -size / 2, right: -size / 2 },
+    bl: { bottom: -size / 2, left: -size / 2 },
+    br: { bottom: -size / 2, right: -size / 2 },
+  };
+  return <div style={{ ...base, ...map[position] }} />;
 };
+
+const FooterBadge = ({ label, sub, color }: { label: string; sub: string; color: string }) => (
+  <div style={{ textAlign: "center", minWidth: 60 }}>
+    <div
+      style={{
+        background: color,
+        color: "#fff",
+        fontWeight: 800,
+        fontSize: 13,
+        padding: "4px 10px",
+        borderRadius: 4,
+        border: "1.5px solid #0a0a0a",
+      }}
+    >
+      {label}
+    </div>
+    <div style={{ fontSize: 9, color: "#374151", marginTop: 2, fontWeight: 600 }}>{sub}</div>
+  </div>
+);
