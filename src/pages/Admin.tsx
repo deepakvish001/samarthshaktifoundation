@@ -452,37 +452,6 @@ const Admin = () => {
               {activeMeta.subtitle}
             </p>
           </div>
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-4">
-              <div className="relative group cursor-pointer">
-                <Mail className="h-7 w-7 text-gray-600 group-hover:text-blue-600 transition-colors duration-200" />
-                <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold flex items-center justify-center shadow-lg animate-pulse">
-                  3
-                </Badge>
-              </div>
-              <div className="relative group cursor-pointer">
-                <Bell className="h-7 w-7 text-gray-600 group-hover:text-orange-600 transition-colors duration-200" />
-                <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold flex items-center justify-center shadow-lg">
-                  11
-                </Badge>
-              </div>
-              <div className="relative group cursor-pointer">
-                <Users className="h-7 w-7 text-gray-600 group-hover:text-red-600 transition-colors duration-200" />
-                <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold flex items-center justify-center shadow-lg">
-                  2
-                </Badge>
-              </div>
-              <div className="h-8 w-px bg-gray-300 mx-2"></div>
-              <div className="flex items-center space-x-3 cursor-pointer group">
-                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-lg group-hover:shadow-xl transition-shadow duration-200"></div>
-                <div>
-                  <span className="font-bold text-gray-800 group-hover:text-purple-600 transition-colors duration-200">Admin</span>
-                  <div className="text-xs text-gray-500">Administrator</div>
-                </div>
-                <Settings className="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors duration-200" />
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Dashboard Content */}
