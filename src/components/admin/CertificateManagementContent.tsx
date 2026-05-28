@@ -10,6 +10,7 @@ import { useAdminRealTime } from "@/hooks/useAdminRealTime";
 import { useOptimisticCrud } from "@/hooks/useOptimisticCrud";
 import { AdminPresenceIndicator } from "@/components/admin/AdminPresenceIndicator";
 import StudentPicker from "@/components/admin/shared/StudentPicker";
+import { validateStudentSelection } from "@/components/admin/shared/validateStudentSelection";
 
 interface CertificateManagement {
   id: string;
@@ -83,6 +84,15 @@ const CertificateManagementContent = () => {
       return;
     }
 
+    const check = await validateStudentSelection({
+      studentId: formData.studentId,
+      expectedCourse: formData.courseName,
+    });
+    if (!check.ok) {
+      toast.error(check.message);
+      return;
+    }
+
     try {
       await update(editingCertificate.id, {
         student_id: formData.studentId,
@@ -112,6 +122,15 @@ const CertificateManagementContent = () => {
 
     if (!formData.studentId || !formData.studentName || !formData.courseName || !formData.certificateNumber) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    const check = await validateStudentSelection({
+      studentId: formData.studentId,
+      expectedCourse: formData.courseName,
+    });
+    if (!check.ok) {
+      toast.error(check.message);
       return;
     }
 
