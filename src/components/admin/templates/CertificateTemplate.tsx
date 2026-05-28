@@ -150,7 +150,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   src="/lovable-uploads/nesan-logo.png"
                   alt="SSF Logo"
                   crossOrigin="anonymous"
-                  style={{ width: "92%", height: "92%", objectFit: "contain", imageRendering: "auto" as any }}
+                  style={{ width: "112%", height: "112%", objectFit: "cover", transform: "scale(1.05)" }}
                 />
               </div>
               {/* Top-left MSME logo */}
