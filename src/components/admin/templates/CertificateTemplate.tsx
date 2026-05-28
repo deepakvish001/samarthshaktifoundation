@@ -153,7 +153,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   style={{ width: "92%", height: "92%", objectFit: "contain" }}
                 />
               </div>
-              {/* Top-left placeholder mirror — keeps header visually balanced */}
+              {/* Top-left MSME logo */}
               <div
                 style={{
                   position: "absolute",
@@ -169,17 +169,14 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   justifyContent: "center",
                   overflow: "hidden",
                   boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-                  fontFamily: "'Times New Roman', serif",
-                  textAlign: "center",
-                  lineHeight: 1.05,
-                  color: "#0b2a6b",
-                  fontWeight: 900,
                 }}
               >
-                <div>
-                  <div style={{ fontSize: 20, letterSpacing: 1 }}>NCTI</div>
-                  <div style={{ fontSize: 8, marginTop: 2, color: "#b91c1c", fontWeight: 700 }}>EST. 2018</div>
-                </div>
+                <img
+                  src="/cert-logos/msme-full.png"
+                  alt="MSME"
+                  crossOrigin="anonymous"
+                  style={{ width: "88%", height: "88%", objectFit: "contain" }}
+                />
               </div>
 
               {/* Certificate of Achievement ribbon */}
