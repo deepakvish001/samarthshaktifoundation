@@ -230,22 +230,32 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  bottom: 56,
+                  bottom: 64,
                   left: 50,
                   right: 50,
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: "flex-end",
+                  alignItems: "center",
                 }}
               >
-                <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 12,
+                    alignItems: "center",
+                    background: "#ffffff",
+                    padding: "6px 10px",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: 4,
+                  }}
+                >
                   {["ncti", "ssf", "msme", "iso", "sra"].map((n) => (
                     <img
                       key={n}
                       src={`/cert-logos/${n}.png`}
                       alt={n}
                       crossOrigin="anonymous"
-                      style={{ height: 54, width: "auto", objectFit: "contain" }}
+                      style={{ height: 64, width: "auto", objectFit: "contain", display: "block" }}
                     />
                   ))}
                 </div>
