@@ -76,15 +76,15 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
             <CornerArc position="bl" />
             <CornerArc position="br" />
 
-            <div style={{ position: "relative", padding: "22px 140px 22px 140px", boxSizing: "border-box", height: "100%" }}>
+            <div style={{ position: "relative", padding: "26px 160px 22px 160px", boxSizing: "border-box", height: "100%" }}>
               {/* Top row: Sl No. / Reg No. */}
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0a0a0a", fontWeight: 600 }}>
-                <span>Sl No. <b>{slNo}</b></span>
-                <span>Reg No. <b>{regNo}</b></span>
+                <span>Sl No.&nbsp;<b>{slNo}</b></span>
+                <span>Reg No.&nbsp;<b>{regNo}</b></span>
               </div>
 
               {/* ISO line */}
-              <div style={{ textAlign: "center", marginTop: 6, fontSize: 14, color: "#0a0a0a" }}>
+              <div style={{ textAlign: "center", marginTop: 4, fontSize: 13, color: "#0a0a0a", letterSpacing: 0.3 }}>
                 An ISO 9001:2015 Certified Education Organization
               </div>
 
@@ -92,17 +92,17 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <h1
                 style={{
                   textAlign: "center",
-                  margin: "4px 0 2px",
-                  fontSize: 32,
+                  margin: "2px 0 2px",
+                  fontSize: 30,
                   fontWeight: 900,
                   color: "#b91c1c",
-                  letterSpacing: "0.3px",
+                  letterSpacing: "0.4px",
                   lineHeight: 1.1,
                 }}
               >
                 NESAN COMPUTER AND TECHNICAL INSTITUTE
               </h1>
-              <div style={{ textAlign: "center", fontStyle: "italic", fontSize: 15, color: "#0a0a0a" }}>
+              <div style={{ textAlign: "center", fontStyle: "italic", fontSize: 14, color: "#374151" }}>
                 A Venture of Samarth Shakti Foundation
               </div>
 
@@ -132,10 +132,10 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  top: 22,
-                  right: 40,
-                  width: 100,
-                  height: 100,
+                  top: 26,
+                  right: 36,
+                  width: 110,
+                  height: 110,
                   borderRadius: "50%",
                   background: "#fff",
                   border: "3px solid #b91c1c",
@@ -157,10 +157,10 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               <div
                 style={{
                   position: "absolute",
-                  top: 22,
-                  left: 40,
-                  width: 100,
-                  height: 100,
+                  top: 26,
+                  left: 36,
+                  width: 110,
+                  height: 110,
                   borderRadius: "50%",
                   background: "#fff",
                   border: "3px solid #0b2a6b",
@@ -180,24 +180,25 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               </div>
 
               {/* Certificate of Achievement ribbon */}
-              <div style={{ textAlign: "center", marginTop: 16 }}>
-                <div style={{ fontSize: 14, color: "#b91c1c", letterSpacing: 8, marginBottom: 2 }}>❖ ❖ ❖</div>
+              <div style={{ textAlign: "center", marginTop: 14 }}>
+                <div style={{ fontSize: 12, color: "#b91c1c", letterSpacing: 8, marginBottom: 2 }}>❖ ❖ ❖</div>
                 <div
                   style={{
                     display: "inline-block",
                     fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
-                    fontSize: 46,
+                    fontSize: 44,
                     color: "#b91c1c",
-                    padding: "2px 80px",
+                    padding: "0 70px",
                     borderTop: "2px solid #b91c1c",
                     borderBottom: "2px solid #b91c1c",
                     letterSpacing: "1px",
                     fontWeight: 700,
+                    lineHeight: 1.25,
                   }}
                 >
                   Certificate of Achievement
                 </div>
-                <div style={{ fontSize: 14, color: "#b91c1c", letterSpacing: 8, marginTop: 2 }}>❖ ❖ ❖</div>
+                <div style={{ fontSize: 12, color: "#b91c1c", letterSpacing: 8, marginTop: 2 }}>❖ ❖ ❖</div>
               </div>
 
               {/* QR (left) */}
@@ -206,7 +207,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(data.verifyUrl)}`}
                   alt="verify"
                   crossOrigin="anonymous"
-                  style={{ position: "absolute", top: 360, left: 50, width: 96, height: 96, border: "1px solid #0b2a6b", padding: 3, background: "#fff" }}
+                  style={{ position: "absolute", top: 372, left: 46, width: 96, height: 96, border: "1px solid #0b2a6b", padding: 3, background: "#fff" }}
                 />
               )}
 
@@ -218,8 +219,8 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   crossOrigin="anonymous"
                   style={{
                     position: "absolute",
-                    top: 350,
-                    right: 50,
+                    top: 362,
+                    right: 46,
                     width: 110,
                     height: 130,
                     objectFit: "cover",
@@ -231,39 +232,42 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               {/* Body */}
               <div
                 style={{
-                  marginTop: 22,
+                  marginTop: 18,
                   padding: "0 170px",
                   fontSize: 15,
-                  lineHeight: 1.8,
+                  lineHeight: 1.7,
                   color: "#0a0a0a",
                   textAlign: "center",
                 }}
               >
-                <div style={{ fontSize: 15, color: "#374151", marginBottom: 6 }}>This is to certify that</div>
+                <div style={{ fontSize: 14, color: "#374151", marginBottom: 4, letterSpacing: 0.5 }}>
+                  This is to certify that
+                </div>
                 <div
                   style={{
                     fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
-                    fontSize: 40,
+                    fontSize: 42,
                     color: "#0b2a6b",
                     fontWeight: 700,
                     lineHeight: 1.1,
-                    margin: "2px 40px 6px",
+                    margin: "2px auto 8px",
                     borderBottom: "1.5px solid #0b2a6b",
                     paddingBottom: 4,
+                    maxWidth: 560,
                   }}
                 >
                   {data.studentName}
                 </div>
-                <div style={{ textAlign: "justify", textAlignLast: "center", fontSize: 15, lineHeight: 1.8 }}>
+                <div style={{ textAlign: "justify", textAlignLast: "center", fontSize: 15, lineHeight: 1.85 }}>
                   {data.fatherName ? <>Son/Daughter of <b>{data.fatherName}</b></> : null}
                   {data.motherName ? <> and <b>{data.motherName}</b></> : null}
                   {(data.fatherName || data.motherName) ? ", " : ""}
                   has successfully completed the course of{" "}
-                  <b>{data.course.certificateTitle} ({data.course.code})</b> at our Authorised Study Centre{" "}
+                  <b>{data.course.certificateTitle}&nbsp;({data.course.code})</b> at our Authorised Study Centre{" "}
                   <b>{data.centerName || "—"}</b>
-                  {data.centerCode ? <> (Code: <b>{data.centerCode}</b>)</> : null}
-                  {data.batch ? <>, Batch <b>{data.batch}</b></> : null}
-                  , during the period <b>{periodFrom}</b> to <b>{periodTo}</b>, securing{" "}
+                  {data.centerCode ? <> (Code:&nbsp;<b>{data.centerCode}</b>)</> : null}
+                  {data.batch ? <>, Batch&nbsp;<b>{data.batch}</b></> : null}, during the period{" "}
+                  <b>{periodFrom}</b> to <b>{periodTo}</b>, securing{" "}
                   <b>{data.percentage.toFixed(2)}%</b> marks with grade <b>{data.grade}</b>.
                 </div>
               </div>
@@ -274,15 +278,17 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   position: "absolute",
                   left: 170,
                   right: 170,
-                  bottom: 150,
+                  bottom: 170,
                   display: "flex",
                   justifyContent: "space-between",
                   fontSize: 13,
                   color: "#0a0a0a",
+                  borderTop: "1px dashed #cbd5e1",
+                  paddingTop: 6,
                 }}
               >
-                <span>Date of Issue: <b>{awardedOn}</b></span>
-                <span>Place: <b>{data.place || "—"}</b></span>
+                <span>Date of Issue:&nbsp;<b>{awardedOn}</b></span>
+                <span>Place:&nbsp;<b>{data.place || "—"}</b></span>
               </div>
 
               {/* Footer: logos row + signature */}
@@ -291,7 +297,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
                   position: "absolute",
                   bottom: 60,
                   left: 50,
-                  right: 50,
+                  right: 46,
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "flex-end",
@@ -299,16 +305,16 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, { data: Certificat
               >
                 <div style={{ textAlign: "center" }}>
                   {data.directorSignUrl ? (
-                    <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 44, objectFit: "contain" }} />
+                    <img src={data.directorSignUrl} alt="sign" crossOrigin="anonymous" style={{ height: 48, objectFit: "contain" }} />
                   ) : (
-                    <div style={{ height: 44, fontFamily: "'Brush Script MT', cursive", fontSize: 26, color: "#0b2a6b" }}>
+                    <div style={{ height: 48, fontFamily: "'Brush Script MT', cursive", fontSize: 28, color: "#0b2a6b" }}>
                       Authorised
                     </div>
                   )}
-                  <div style={{ borderTop: "1px solid #0a0a0a", paddingTop: 2, minWidth: 220, fontSize: 13, fontWeight: 700 }}>
+                  <div style={{ borderTop: "1px solid #0a0a0a", paddingTop: 3, minWidth: 230, fontSize: 13, fontWeight: 700 }}>
                     Chairman's Signature
                   </div>
-                  <div style={{ fontSize: 11, color: "#374151" }}>
+                  <div style={{ fontSize: 11, color: "#374151", marginTop: 1 }}>
                     Nesan Computer and Technical Institute
                   </div>
                 </div>
