@@ -19,7 +19,8 @@ import {
   Shield, 
   BookOpen, 
   Award,
-  ChevronDown
+  ChevronDown,
+  GraduationCap
 } from 'lucide-react';
 
 const UserProfileNav = () => {
@@ -121,7 +122,12 @@ const UserProfileNav = () => {
             <Award className="h-4 w-4 mr-2 text-primary" />
             <span>Certificates</span>
           </DropdownMenuItem>
-          
+
+          <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm" onClick={() => navigate('/students-corner')}>
+            <GraduationCap className="h-4 w-4 mr-2 text-primary" />
+            <span>Students Corner</span>
+          </DropdownMenuItem>
+
           <DropdownMenuItem className="cursor-pointer p-2 rounded-md hover:bg-muted/50 transition-colors text-sm" onClick={() => navigate('/settings')}>
             <Settings className="h-4 w-4 mr-2 text-primary" />
             <span>Settings</span>
