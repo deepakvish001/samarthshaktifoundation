@@ -41,6 +41,10 @@ interface Props {
   onSelect: (student: PickedStudent) => void;
   placeholder?: string;
   className?: string;
+  /** When true (default) only active students with the required fields
+   * (student_id, full_name, course_name) are listed. Set to false to
+   * show every row — useful for debugging. */
+  onlyValid?: boolean;
 }
 
 /**
@@ -49,10 +53,11 @@ interface Props {
  * student is passed back so the parent form can auto-fill ID, name,
  * course, photo, etc.
  */
-export default function StudentPicker({ value, onSelect, placeholder, className }: Props) {
+export default function StudentPicker({ value, onSelect, placeholder, className, onlyValid = true }: Props) {
   const [open, setOpen] = useState(false);
   const [students, setStudents] = useState<PickedStudent[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showAll, setShowAll] = useState(!onlyValid);
 
   useEffect(() => {
     let cancelled = false;
@@ -61,7 +66,7 @@ export default function StudentPicker({ value, onSelect, placeholder, className 
       const { data, error } = await (supabase as any)
         .from("student_profiles")
         .select(
-          "id, student_id, full_name, email, phone, course_name, course_category, course_fees, father_name, mother_name, photo_url, gender, date_of_birth, caste_category, study_center, address, city, state, district, pin_code"
+          "id, student_id, full_name, email, phone, course_name, course_category, course_fees, father_name, mother_name, photo_url, gender, date_of_birth, caste_category, study_center, address, city, state, district, pin_code, status"
         )
         .order("created_at", { ascending: false });
       if (cancelled) return;
@@ -93,6 +98,18 @@ export default function StudentPicker({ value, onSelect, placeholder, className 
     () => students.find((s) => s.student_id === value),
     [students, value]
   );
+
+  const visibleStudents = useMemo(() => {
+    if (showAll) return students;
+    return students.filter((s: any) =>
+      (!s.status || s.status === "active") &&
+      !!s.student_id &&
+      !!s.full_name &&
+      !!s.course_name
+    );
+  }, [students, showAll]);
+
+  const hiddenCount = students.length - visibleStudents.length;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -130,7 +147,7 @@ export default function StudentPicker({ value, onSelect, placeholder, className 
               {loading ? "Loading students..." : "No registered student matches."}
             </CommandEmpty>
             <CommandGroup>
-              {students.map((s) => {
+              {visibleStudents.map((s) => {
                 const haystack = [
                   s.student_id,
                   s.full_name,
@@ -174,6 +191,18 @@ export default function StudentPicker({ value, onSelect, placeholder, className 
               })}
             </CommandGroup>
           </CommandList>
+          {hiddenCount > 0 && (
+            <div className="flex items-center justify-between border-t px-3 py-2 text-[10px] text-muted-foreground bg-muted/30">
+              <span>{hiddenCount} incomplete/inactive hidden</span>
+              <button
+                type="button"
+                className="text-primary hover:underline"
+                onClick={() => setShowAll((v) => !v)}
+              >
+                {showAll ? "Hide incomplete" : "Show all"}
+              </button>
+            </div>
+          )}
         </Command>
       </PopoverContent>
     </Popover>
