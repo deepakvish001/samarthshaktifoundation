@@ -327,6 +327,28 @@ const AlotNumberContent = () => {
           
           <CardContent className="p-8">
             <div className="space-y-8">
+              <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                <label className="text-sm font-medium text-foreground mb-2 block">
+                  Select Registered Student
+                </label>
+                <StudentPicker
+                  value={formData.studentsId}
+                  onSelect={(s) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      studentsId: s.student_id || prev.studentsId,
+                      studentName: s.full_name || prev.studentName,
+                      studentFatherName: s.father_name || prev.studentFatherName,
+                      studentMotherName: s.mother_name || prev.studentMotherName,
+                      courseName: s.course_name || prev.courseName,
+                    }));
+                  }}
+                  className="w-full"
+                />
+                <p className="text-[11px] text-muted-foreground mt-2">
+                  Picking a student auto-fills ID, Name, Father/Mother Name and Course.
+                </p>
+              </div>
               {/* Student ID and Course Selection */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
