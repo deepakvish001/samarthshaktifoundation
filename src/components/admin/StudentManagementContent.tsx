@@ -277,13 +277,14 @@ const StudentManagementContent = () => {
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Course</TableHead>
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Location</TableHead>
                   <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Status</TableHead>
-                  <TableHead className="text-primary-foreground font-bold text-center py-4">Enrollment Date</TableHead>
+                  <TableHead className="text-primary-foreground font-bold text-center py-4 border-r border-primary/30">Enrollment Date</TableHead>
+                  <TableHead className="text-primary-foreground font-bold text-center py-4">Login Password</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredStudents.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                       {searchTerm ? "No students found matching your search." : "No students registered yet."}
                     </TableCell>
                   </TableRow>
@@ -310,6 +311,16 @@ const StudentManagementContent = () => {
                             className="text-destructive hover:text-destructive hover:bg-destructive/10 p-2 rounded-lg transition-colors"
                           >
                             <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleIssueNewPassword(student)}
+                            disabled={reissuing === student.id}
+                            title="Issue a new login password"
+                            className="text-amber-600 hover:text-amber-700 hover:bg-amber-500/10 p-2 rounded-lg transition-colors"
+                          >
+                            {reissuing === student.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <KeyRound className="h-4 w-4" />}
                           </Button>
                         </div>
                       </TableCell>
@@ -354,10 +365,29 @@ const StudentManagementContent = () => {
                           {student.status || 'Pending'}
                         </span>
                       </TableCell>
-                      <TableCell className="text-center p-4">
+                      <TableCell className="text-center p-4 border-r border-border">
                         <span className="text-foreground">
                           {student.enrollment_date ? new Date(student.enrollment_date).toLocaleDateString() : "-"}
                         </span>
+                      </TableCell>
+                      <TableCell className="text-center p-4">
+                        {student.password_changed_at ? (
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
+                              <ShieldAlert className="h-3 w-3" />
+                              Changed by student
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">
+                              on {new Date(student.password_changed_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                        ) : student.login_password ? (
+                          <code className="px-2 py-1 text-xs rounded bg-muted text-foreground font-mono">
+                            {student.login_password}
+                          </code>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))
@@ -367,6 +397,54 @@ const StudentManagementContent = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={!!newCred} onOpenChange={(o) => !o && setNewCred(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>New password issued</DialogTitle>
+            <DialogDescription>
+              Share these credentials with {newCred?.name}. The previous password no longer works.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-2 p-3 rounded-md bg-muted">
+              <div>
+                <div className="text-xs text-muted-foreground">Student ID</div>
+                <div className="font-mono font-semibold">{newCred?.student_id}</div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  if (newCred?.student_id) navigator.clipboard.writeText(newCred.student_id);
+                  toast.success("Student ID copied");
+                }}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex items-center justify-between gap-2 p-3 rounded-md bg-muted">
+              <div>
+                <div className="text-xs text-muted-foreground">New password</div>
+                <div className="font-mono font-semibold">{newCred?.password}</div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  if (newCred?.password) navigator.clipboard.writeText(newCred.password);
+                  toast.success("Password copied");
+                }}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setNewCred(null)}>Done</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
