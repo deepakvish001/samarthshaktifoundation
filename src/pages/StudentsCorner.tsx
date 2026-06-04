@@ -50,15 +50,15 @@ type MarksResult = {
 
 const fetchStudent = async (studentId: string): Promise<StudentDetails | null> => {
   if (!studentId) return null;
-  const { data } = await supabase
-    .from("student_profiles")
+  const { data } = await (supabase as any)
+    .from("student_profiles_public")
     .select("full_name,student_id,course_name,father_name,mother_name,date_of_birth,photo_url,study_center")
     .eq("student_id", studentId)
     .limit(1);
   const student = (data?.[0] as StudentDetails) || null;
   if (student && !student.photo_url) {
-    const { data: alot } = await supabase
-      .from("alot_numbers")
+    const { data: alot } = await (supabase as any)
+      .from("alot_numbers_public")
       .select("student_photo_url")
       .eq("student_id", studentId)
       .not("student_photo_url", "is", null)
