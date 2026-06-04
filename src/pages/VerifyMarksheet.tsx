@@ -47,12 +47,12 @@ const VerifyMarksheet = () => {
     (async () => {
       setLoading(true);
       try {
-        const { data: students } = await supabase
-          .from("student_profiles_public" as any)
+        const { data: students } = await (supabase as any)
+          .from("student_profiles_public")
           .select("id,student_id,full_name,course_name,father_name,mother_name,photo_url")
           .eq("student_id", studentId)
           .limit(1);
-        const s = students?.[0] as StudentRow | undefined;
+        const s = (students?.[0] as unknown) as StudentRow | undefined;
 
         const { data: mk } = await supabase
           .from("marksheet_management")
@@ -60,8 +60,8 @@ const VerifyMarksheet = () => {
           .eq("student_id", studentId)
           .maybeSingle();
 
-        const { data: alotRows } = await supabase
-          .from("alot_numbers_public" as any)
+        const { data: alotRows } = await (supabase as any)
+          .from("alot_numbers_public")
           .select("*")
           .eq("student_id", studentId)
           .order("created_at", { ascending: false })
