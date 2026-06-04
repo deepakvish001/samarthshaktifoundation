@@ -112,13 +112,10 @@ const Login = () => {
 
     // If it doesn't look like an email, treat as Student ID and look up email
     if (!validateEmail(emailToUse)) {
-      const { data, error: lookupError } = await supabase
-        .from('student_profiles')
-        .select('email')
-        .eq('student_id', emailToUse)
-        .maybeSingle();
+      const { data: email, error: lookupError } = await (supabase as any)
+        .rpc('get_student_email_by_id', { _student_id: emailToUse });
 
-      if (lookupError || !data?.email) {
+      if (lookupError || !email) {
         setIsLoading(false);
         toast({
           title: 'Login failed',
@@ -127,7 +124,7 @@ const Login = () => {
         });
         return;
       }
-      emailToUse = data.email;
+      emailToUse = email as string;
     }
 
     const { error } = await signIn(emailToUse, signInForm.password);

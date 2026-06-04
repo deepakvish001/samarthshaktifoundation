@@ -2016,11 +2016,110 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      alot_numbers_public: {
+        Row: {
+          center_code: string | null
+          center_name: string | null
+          course_examination_date: string | null
+          course_name: string | null
+          created_at: string | null
+          director_signature_url: string | null
+          id: string | null
+          issue_date: string | null
+          obtain_practical_marks: string | null
+          obtain_theory_marks: string | null
+          place: string | null
+          practical_max_marks: string | null
+          student_id: string | null
+          student_photo_url: string | null
+          subjects: Json | null
+          theory_max_marks: string | null
+        }
+        Insert: {
+          center_code?: string | null
+          center_name?: string | null
+          course_examination_date?: string | null
+          course_name?: string | null
+          created_at?: string | null
+          director_signature_url?: string | null
+          id?: string | null
+          issue_date?: string | null
+          obtain_practical_marks?: string | null
+          obtain_theory_marks?: string | null
+          place?: string | null
+          practical_max_marks?: string | null
+          student_id?: string | null
+          student_photo_url?: string | null
+          subjects?: Json | null
+          theory_max_marks?: string | null
+        }
+        Update: {
+          center_code?: string | null
+          center_name?: string | null
+          course_examination_date?: string | null
+          course_name?: string | null
+          created_at?: string | null
+          director_signature_url?: string | null
+          id?: string | null
+          issue_date?: string | null
+          obtain_practical_marks?: string | null
+          obtain_theory_marks?: string | null
+          place?: string | null
+          practical_max_marks?: string | null
+          student_id?: string | null
+          student_photo_url?: string | null
+          subjects?: Json | null
+          theory_max_marks?: string | null
+        }
+        Relationships: []
+      }
+      student_profiles_public: {
+        Row: {
+          course_category: string | null
+          course_name: string | null
+          date_of_birth: string | null
+          father_name: string | null
+          full_name: string | null
+          id: string | null
+          mother_name: string | null
+          photo_url: string | null
+          student_id: string | null
+          study_center: string | null
+        }
+        Insert: {
+          course_category?: string | null
+          course_name?: string | null
+          date_of_birth?: string | null
+          father_name?: string | null
+          full_name?: string | null
+          id?: string | null
+          mother_name?: string | null
+          photo_url?: string | null
+          student_id?: string | null
+          study_center?: string | null
+        }
+        Update: {
+          course_category?: string | null
+          course_name?: string | null
+          date_of_birth?: string | null
+          father_name?: string | null
+          full_name?: string | null
+          id?: string | null
+          mother_name?: string | null
+          photo_url?: string | null
+          student_id?: string | null
+          study_center?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       generate_enrollment_number: { Args: { _year: number }; Returns: string }
       generate_student_id: { Args: never; Returns: string }
+      get_student_email_by_id: {
+        Args: { _student_id: string }
+        Returns: string
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
