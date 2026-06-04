@@ -2018,22 +2018,58 @@ export type Database = {
     Views: {
       alot_numbers_public: {
         Row: {
+          center_code: string | null
+          center_name: string | null
+          course_examination_date: string | null
           course_name: string | null
+          created_at: string | null
+          director_signature_url: string | null
           id: string | null
+          issue_date: string | null
+          obtain_practical_marks: string | null
+          obtain_theory_marks: string | null
+          place: string | null
+          practical_max_marks: string | null
           student_id: string | null
           student_photo_url: string | null
+          subjects: Json | null
+          theory_max_marks: string | null
         }
         Insert: {
+          center_code?: string | null
+          center_name?: string | null
+          course_examination_date?: string | null
           course_name?: string | null
+          created_at?: string | null
+          director_signature_url?: string | null
           id?: string | null
+          issue_date?: string | null
+          obtain_practical_marks?: string | null
+          obtain_theory_marks?: string | null
+          place?: string | null
+          practical_max_marks?: string | null
           student_id?: string | null
           student_photo_url?: string | null
+          subjects?: Json | null
+          theory_max_marks?: string | null
         }
         Update: {
+          center_code?: string | null
+          center_name?: string | null
+          course_examination_date?: string | null
           course_name?: string | null
+          created_at?: string | null
+          director_signature_url?: string | null
           id?: string | null
+          issue_date?: string | null
+          obtain_practical_marks?: string | null
+          obtain_theory_marks?: string | null
+          place?: string | null
+          practical_max_marks?: string | null
           student_id?: string | null
           student_photo_url?: string | null
+          subjects?: Json | null
+          theory_max_marks?: string | null
         }
         Relationships: []
       }
