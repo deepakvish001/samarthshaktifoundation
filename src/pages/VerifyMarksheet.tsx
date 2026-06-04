@@ -48,7 +48,7 @@ const VerifyMarksheet = () => {
       setLoading(true);
       try {
         const { data: students } = await supabase
-          .from("student_profiles")
+          .from("student_profiles_public" as any)
           .select("id,student_id,full_name,course_name,father_name,mother_name,photo_url")
           .eq("student_id", studentId)
           .limit(1);
@@ -61,7 +61,7 @@ const VerifyMarksheet = () => {
           .maybeSingle();
 
         const { data: alotRows } = await supabase
-          .from("alot_numbers")
+          .from("alot_numbers_public" as any)
           .select("*")
           .eq("student_id", studentId)
           .order("created_at", { ascending: false })
