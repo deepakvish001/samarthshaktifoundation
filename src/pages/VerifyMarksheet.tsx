@@ -167,6 +167,12 @@ const VerifyMarksheet = () => {
   const grandObt = marksheet?.obtained_marks || theoryObt + pracObt;
   const pct = marksheet?.percentage ?? (grandMax ? (grandObt / grandMax) * 100 : 0);
 
+  // The public verify page must reflect the actual result — not just "a
+  // record with this student ID exists". Only a marksheet on file with
+  // result_status "pass" is a valid, verified certificate; a failed
+  // result or no marksheet at all must never render the green checkmark.
+  const isVerifiedPass = marksheet?.result_status === "pass";
+
   return (
     <div className="min-h-screen bg-slate-100 py-8 px-4">
       <div className="mx-auto bg-white shadow-xl" style={{ width: "min(794px, 100%)", minHeight: 1123, color: "#111", fontFamily: "'Times New Roman', Times, serif" }}>
@@ -309,7 +315,13 @@ const VerifyMarksheet = () => {
           </div>
           <div style={{ textAlign: "center", marginTop: 4, fontSize: 11, fontWeight: 700 }}>Head Office Address - Samarth Shakti Foundation, AZAMGARH - 276121, Uttar Pradesh</div>
 
-          <div className="mt-6 text-center text-xs text-emerald-700 font-semibold">✓ Verified certificate · Issued by Samarth Shakti Foundation</div>
+          {isVerifiedPass ? (
+            <div className="mt-6 text-center text-xs text-emerald-700 font-semibold">✓ Verified certificate · Issued by Samarth Shakti Foundation</div>
+          ) : marksheet ? (
+            <div className="mt-6 text-center text-xs text-red-700 font-semibold">✗ Result: {marksheet.result_status.toUpperCase()} · This is not a valid pass certificate</div>
+          ) : (
+            <div className="mt-6 text-center text-xs text-red-700 font-semibold">✗ No examination result on file for this ID · Not a valid certificate</div>
+          )}
         </div>
       </div>
     </div>
