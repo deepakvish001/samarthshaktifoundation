@@ -311,6 +311,7 @@ const StudentApprovalContent = () => {
                               variant="ghost"
                               className="h-7 w-7"
                               onClick={() => copyText(student.student_id!, "Student ID")}
+                              aria-label="Copy student ID"
                             >
                               <Copy className="h-3.5 w-3.5" />
                             </Button>
@@ -332,6 +333,7 @@ const StudentApprovalContent = () => {
                               variant="ghost"
                               className="h-7 w-7"
                               onClick={() => togglePassword(student.id)}
+                              aria-label={visiblePasswords[student.id] ? "Hide password" : "Show password"}
                             >
                               {visiblePasswords[student.id] ? (
                                 <EyeOff className="h-3.5 w-3.5" />
@@ -345,6 +347,7 @@ const StudentApprovalContent = () => {
                               variant="ghost"
                               className="h-7 w-7"
                               onClick={() => copyText(student.login_password!, "Password")}
+                              aria-label="Copy password"
                             >
                               <Copy className="h-3.5 w-3.5" />
                             </Button>
