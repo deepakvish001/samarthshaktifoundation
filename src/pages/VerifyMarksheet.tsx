@@ -285,13 +285,17 @@ const VerifyMarksheet = () => {
 
           <div style={{ marginTop: 14 }}>
             <div style={{ fontWeight: 700, fontSize: 13 }}>LEGEND OF GRADES</div>
+            {/* Must mirror calcGrade() in src/lib/courseTemplates.ts — that
+                function is what actually assigns the grade shown above, so
+                the legend has to describe the same cutoffs. */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", fontSize: 12, marginTop: 6, rowGap: 4, columnGap: 30, paddingLeft: 12 }}>
-              <div>S &nbsp;: 85% &amp; Above</div>
-              <div>A &nbsp;: 75%-84%</div>
-              <div>B &nbsp;: 65%-74%</div>
-              <div>C &nbsp;: 55%-64%</div>
-              <div>D &nbsp;: 50%-54%</div>
-              <div>F &nbsp;: Less than 50% - Fail</div>
+              <div>A+ : 90% &amp; Above</div>
+              <div>A &nbsp;: 80%-89%</div>
+              <div>B+ : 70%-79%</div>
+              <div>B &nbsp;: 60%-69%</div>
+              <div>C &nbsp;: 50%-59%</div>
+              <div>D &nbsp;: 40%-49%</div>
+              <div>F &nbsp;: Less than 40% - Fail</div>
             </div>
           </div>
 
