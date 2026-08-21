@@ -455,11 +455,19 @@ const AutoGenerateContent = () => {
                 <div className="flex items-center gap-2">
                   <Input value={form.photoUrl} onChange={(e) => setForm({ ...form, photoUrl: e.target.value })} placeholder="URL or upload →" className={inputCls} />
                   <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={handlePhotoUpload} />
-                  <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-white border-slate-200 text-slate-600 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 shrink-0 h-12 w-12 rounded-xl">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    aria-label={uploading ? "Uploading student photo" : "Upload student photo"}
+                    className="bg-white border-slate-200 text-slate-600 hover:bg-[#4f46e5]/5 hover:text-[#4f46e5] hover:border-[#4f46e5]/40 shrink-0 h-12 w-12 rounded-xl"
+                  >
                     {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                   </Button>
                 </div>
-                {form.photoUrl && <img src={form.photoUrl} alt="" className="h-16 w-12 object-cover rounded-lg border border-slate-200 mt-1" />}
+                {form.photoUrl && <img src={form.photoUrl} alt="Student photo preview" className="h-16 w-12 object-cover rounded-lg border border-slate-200 mt-1" />}
               </div>
 
               <DarkField className="md:col-span-4" label="Date of Birth" type="date" value={form.dob} onChange={(v) => setForm({ ...form, dob: v })} inputCls={inputCls} labelCls={labelCls} />
